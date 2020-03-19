@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b9b866b8bfef07c62856",
-    "url": "/peer2school/dist/css/app.835f3428.css"
+    "revision": "72c8327575a631f489ef",
+    "url": "/peer2school/dist/css/app.31223026.css"
   },
   {
     "revision": "1ba2ae710d927f13d483fd5d1e548c9b",
@@ -68,12 +68,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/peer2school/dist/img/icons/safari-pinned-tab.svg"
   },
   {
-    "revision": "7421ef946f07d51f674345f1b441d689",
+    "revision": "0431bd0f59e40af052a60ac6f6630568",
     "url": "/peer2school/dist/index.html"
   },
   {
-    "revision": "b9b866b8bfef07c62856",
-    "url": "/peer2school/dist/js/app.70d26e25.js"
+    "revision": "72c8327575a631f489ef",
+    "url": "/peer2school/dist/js/app.0165687b.js"
   },
   {
     "revision": "376816c8092724d4691c",
