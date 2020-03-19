@@ -4,21 +4,28 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 let config = {
   productionSourceMap: false,
-  devServer: {},
 }
 
 if (isProduction) {
+
+  // Path on GitHub Pages
   config.publicPath = `peer2school/dist`
-}
 
-config.devServer.disableHostCheck = true
+  // Don't load workbox stuff from third party site
+  config.pwa = {
+    workboxOptions: {
+      importWorkboxFrom: 'local',
+      exclude: [/\.htaccess/],
+      skipWaiting: true,
+    },
+  }
+} else {
 
-config.pwa = {
-  workboxOptions: {
-    importWorkboxFrom: 'local', // no workbox, we do it ourselves
-    exclude: [/\.htaccess/],
-    skipWaiting: true,
-  },
+  // Allow debugging from multiple devices in the local network
+  config.devServer = {
+    disableHostCheck: true,
+  }
+
 }
 
 module.exports = config
