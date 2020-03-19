@@ -11,19 +11,16 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("peer2school/dist/workbox-v4.3.1/workbox-sw.js");
+workbox.setConfig({modulePathPrefix: "peer2school/dist/workbox-v4.3.1"});
 
 importScripts(
-  "/precache-manifest.c6198e27393b2c55c5cb7622044fe83f.js"
+  "peer2school/dist/precache-manifest.85f458535532abf057214a94ea350081.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "peer2school"});
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
+workbox.core.skipWaiting();
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to
