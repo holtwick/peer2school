@@ -3,14 +3,9 @@
 <template>
   <div>
 
-    <div class="video-local">
-      <app-video :stream="state.stream"></app-video>
-    </div>
-
-    <div class="video-remote">
-      <div class="peer" v-for="peer in state.status">
-        <app-video :stream="peer.peer.stream"></app-video>
-      </div>
+    <div class="video">
+      <app-video :stream="state.stream" class="peer"/>
+      <app-video v-for="peer in state.status" :stream="peer.peer.stream" class="peer"/>
     </div>
 
     <h2>Chat</h2>
@@ -25,23 +20,22 @@
       </ol>
     </form>
 
-    <pre>{{ state }}</pre>
-
   </div>
 </template>
 
 <style lang="scss">
-.video-local {
-
-}
-
-.video-remote {
+.video {
   display: flex;
-
-  .peer {
-    border: 1px solid red;
-  }
 }
+
+.peer {
+  border: 1px solid red;
+  max-width: 20rem;
+  max-height: 20rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
 </style>
 
 <script>

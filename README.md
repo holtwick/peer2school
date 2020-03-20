@@ -15,4 +15,7 @@ Simple P2P teaching platform starting from the 1st class
 - [Projektbeschreibung / -anmeldung](docs-de/projektbeschreibung.md)
 - [Konzeption](docs-de/konzept.md)
 
---- 
+---
+
+Follow [@apperdeck](https://twitter.com/apperdeck) and [@holtwick](https://twitter.com/holtwick) for updates.
+
