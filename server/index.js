@@ -1,2 +1,0 @@
-// Signaling Server for WebRTC
-
