@@ -2,14 +2,10 @@
 
 <template>
   <div>
-    <h1>WebRTC</h1>
-
-    <h2>Peers</h2>
 
     <ol>
       <li v-for="peer in status">
         Peer {{peer.name}} {{peer.active}}
-        <video></video>
       </li>
     </ol>
 
@@ -24,15 +20,13 @@
       <button type="submit">Send</button>
     </form>
 
-    <pre>{{status}}</pre>
-
+    <pre>{{ state }}</pre>
 
   </div>
 </template>
 
 <script>
 
-import { WebRTC } from '../lib/webrtc'
 
 const log = require('debug')('sandbox:webrtc')
 
@@ -63,7 +57,6 @@ export default {
     },
   },
   async mounted() {
-    webrtc = new WebRTC()
 
     webrtc.on('stream', stream => {
 
