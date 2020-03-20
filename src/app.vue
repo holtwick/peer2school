@@ -1,5 +1,5 @@
 <template>
-  <app-main id="app"/>
+  <app-main id="app" class="app"/>
 </template>
 
 <script>
@@ -13,6 +13,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "css/index";
+
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
