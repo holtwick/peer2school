@@ -1,7 +1,10 @@
 <template>
-  <video ref="video">
+  <div>
+    Video:
+    <video ref="video">
 
-  </video>
+    </video>
+  </div>
 </template>
 
 <style lang="scss"></style>
@@ -18,6 +21,7 @@ navigator.getUserMedia = (
   navigator.msGetUserMedia
 )
 
+log('getUserMedia', navigator.getUserMedia)
 
 export default {
   name: 'app-webrtc',
@@ -80,12 +84,16 @@ export default {
     }
 
     if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+      log('variant1')
       navigator.getUserMedia({
         audio: true,
+        video: true,
       }, addMedia, errorHandler)
     } else {
+      log('variant2')
       navigator.mediaDevices.getUserMedia({
         audio: true,
+        video: true,
       }).then(addMedia).catch(errorHandler)
     }
 

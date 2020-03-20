@@ -21,9 +21,13 @@ if (isProduction) {
   }
 } else {
 
-  // Allow debugging from multiple devices in the local network
   config.devServer = {
+
+    // Allow debugging from multiple devices in the local network
     disableHostCheck: true,
+
+    // Some API (like WebRTC getUserMedia) is only allowed in secure context
+    https: true,
   }
 
 }
