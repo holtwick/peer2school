@@ -60,6 +60,11 @@ export default {
   },
   async mounted() {
     webrtc = new WebRTC()
+
+    webrtc.on('stream', stream => {
+
+    })
+
     webrtc.on('status', info => {
       this.status = info.status
     })

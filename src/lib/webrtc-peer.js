@@ -49,17 +49,17 @@ export class WebRTCPeer extends Emitter {
       // p.send('whatever' + Math.random())
       this.emit('connect', event)
     })
+
+    this.peer.on('stream', stream => {
+      this.emit('stream', stream)
+    })
+
   }
 
-  // We got a signal from the remote peer and will use it now to establish
-  // the connection.
+  // We got a signal from the remote peer and will use it now to establish the connection
   signal(data) {
     this.peer.signal(data)
   }
-
-  // send(data) {
-  //   this.peer.send(data)
-  // }
 
   postMessage(data) {  // Channel compat
     this.peer.send(data)
