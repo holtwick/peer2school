@@ -37,20 +37,25 @@ export function getUserMedia(fn) {
     log('error', err)
   }
 
-  // Solution via https://stackoverflow.com/a/47958949/140927
-  // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
-  const opt = {
-    audio: true,
-    video: {
-      facingMode: 'user',
-      frameRate: {
-        ideal: 10,
+  try {
+    // Solution via https://stackoverflow.com/a/47958949/140927
+    // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
+    const opt = {
+      audio: true,
+      video: {
+        facingMode: 'user',
+        frameRate: {
+          ideal: 10,
+        },
       },
-    },
+    }
+    if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+      navigator.getUserMedia(opt, fn, errorHandler)
+    } else {
+      navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
+    }
   }
-  if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
-    navigator.getUserMedia(opt, fn, errorHandler)
-  } else {
-    navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
+  catch (err) {
+      console.error('Exception:', err)
   }
 }

@@ -15,7 +15,7 @@ importScripts("/peer2school/dist/workbox-v4.3.1/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "/peer2school/dist/workbox-v4.3.1"});
 
 importScripts(
-  "/peer2school/dist/precache-manifest.a89cd1d4c3c31c7d197eba0776907f09.js"
+  "/peer2school/dist/precache-manifest.710f4d7d3e8174653f8ddf41ae2b02f5.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "peer2school"});
