@@ -11,10 +11,13 @@ import Peer from 'simple-peer'
 
 const log = require('debug')('app:app-webrtc')
 
-navigator.getUserMedia = (navigator.getUserMedia ||
+navigator.getUserMedia = (
+  navigator.getUserMedia ||
   navigator.webkitGetUserMedia ||
   navigator.mozGetUserMedia ||
-  navigator.msGetUserMedia)
+  navigator.msGetUserMedia
+)
+
 
 export default {
   name: 'app-webrtc',
@@ -60,8 +63,33 @@ export default {
     }
 
     // then, anytime later...
-    navigator.getUserMedia({ video: true, audio: true }, addMedia, () => {
-    })
+
+    async function getMedia(pc) {
+      let stream = null
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(constraints)
+        /* use the stream */
+      } catch (err) {
+        /* handle the error */
+      }
+    }
+
+    function errorHandler(err) {
+      log('error', err)
+    }
+
+    if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+      navigator.getUserMedia({
+        audio: true,
+      }, addMedia, errorHandler)
+    } else {
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+      }).then(addMedia).catch(errorHandler)
+    }
+
+    // navigator.getUserMedia({ video: true, audio: true }, addMedia, () => {})
   },
 }
 </script>
