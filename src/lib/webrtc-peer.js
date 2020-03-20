@@ -17,6 +17,8 @@ export class WebRTCPeer extends Emitter {
     this.initiator = opt.initiator
     this.id = 'webrtc-peer' + ctr++
     this.active = false
+    this.stream = null
+
     log('peer', this.id)
 
     this.peer = new SimplePeer(opt)
@@ -51,9 +53,14 @@ export class WebRTCPeer extends Emitter {
     })
 
     this.peer.on('stream', stream => {
+      this.stream = stream
       this.emit('stream', stream)
     })
 
+  }
+
+  addStream(stream) {
+    this.peer.addStream(stream)
   }
 
   // We got a signal from the remote peer and will use it now to establish the connection

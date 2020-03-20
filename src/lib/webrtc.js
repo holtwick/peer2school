@@ -105,6 +105,10 @@ export class WebRTC extends Emitter {
     this.emit('status', { status })
   }
 
+  getPeer(id) {
+    return this.peerConnections[id] || null
+  }
+
   handlePeer({ remote, wrtc, local, initiator = false } = {}) {
     let peer = new WebRTCPeer({
       local,

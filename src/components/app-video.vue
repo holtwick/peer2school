@@ -1,35 +1,53 @@
 <template>
-  <video ref="video"></video>
+  <video ref="video"/>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+
+</style>
 
 <script>
-import { session } from '../lib/session'
+
 import { connectStreamToVideoElement } from '../lib/usermedia'
 
 export default {
   name: 'app-video',
   props: {
-    id: {
-      type: String,
-      default: 0,
+    stream: {
+      type: Object,
+      default: null,
     },
   },
   data() {
     return {}
   },
   methods: {
-    async doConnectStream(id) {
-      let stream = session.getPeer(id).stream
+    async doConnectStream(stream) {
+      // peer2.on('stream', stream => {
+      //   log('stream')
+      //
+      //   // got remote video stream, now let's show it in a video tag
+      //   if ('srcObject' in video) {
+      //     video.srcObject = stream
+      //   } else {
+      //     video.src = window.URL.createObjectURL(stream) // for older browsers
+      //   }
+      //   video.play()
+      // })
+
+      // function addMedia(stream) {
+      //   log('addMedia')
+      //   peer1.addStream(stream) // <- add streams to peer dynamically
+      // }
+
       connectStreamToVideoElement(stream, this.$refs.video)
     },
   },
   async mounted() {
-    await this.doConnectStream(id)
+    await this.doConnectStream(this.stream)
   },
   watch: {
-    id(value) {
+    stream(value) {
       this.doConnectStream(value)
     },
   },
