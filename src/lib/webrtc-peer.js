@@ -5,7 +5,7 @@ import { Emitter } from './emitter'
 
 const log = require('debug')('app:webrtc-peer')
 
-export class SeaWebRTCPeer extends Emitter {
+export class WebRTCPeer extends Emitter {
 
   ctr = 1
 

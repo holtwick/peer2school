@@ -2,7 +2,7 @@
 
 import io from 'socket.io-client'
 import { Emitter } from './emitter'
-import { SeaWebRTCPeer } from './webrtc-peer'
+import { WebRTCPeer } from './webrtc-peer'
 
 const log = require('debug')('app:webrtc')
 
@@ -10,7 +10,7 @@ const signalServerURL = 'ws://localhost:4445'
 // const signalServerURL = 'wss://signal.peer.school'
 
 // Handles multiple connections, one to each peer
-export class SeaWebRTC extends Emitter {
+export class WebRTC extends Emitter {
 
   peerConnections = {}
 
@@ -100,7 +100,7 @@ export class SeaWebRTC extends Emitter {
   }
 
   handlePeer({ remote, wrtc, local, initiator = false } = {}) {
-    let peer = new SeaWebRTCPeer({
+    let peer = new WebRTCPeer({
       local,
       remote,
       // name: remote,

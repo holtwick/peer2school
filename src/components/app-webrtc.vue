@@ -13,9 +13,9 @@ video {
 
 <script>
 
-import { SeaWebRTC } from '../lib/webrtc'
+import { WebRTC } from '../lib/webrtc'
 
-let rtc = new SeaWebRTC('sample')
+let rtc = new WebRTC('sample')
 
 const log = require('debug')('app:app-webrtc')
 
