@@ -28,6 +28,10 @@ if (isProduction) {
 
     // Some API (like WebRTC getUserMedia) is only allowed in secure context
     https: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+    },
   }
 
 }

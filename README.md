@@ -4,9 +4,15 @@ Simple P2P teaching platform starting from the 1st class
 
 <https://wirvsvirushackathon.org/>
 
+- [Website](https://peer.school)
+- [Online Demo](https://holtwick.github.io/peer2school/dist/index.html)
+- [Signaling Server to establish WebRTC connections](https://github.com/holtwick/peer2school-server)
+
 ---
 
 **The following is in German language due to the related German language hackathon**
 
-- [Online Demo](https://holtwick.github.io/peer2school/dist/index.html)
-- [Projektbeschreibung](docs-de/projektbeschreibung.md)
+- [Projektbeschreibung / -anmeldung](docs-de/projektbeschreibung.md)
+- [Konzeption](docs-de/konzept.md)
+
+--- 

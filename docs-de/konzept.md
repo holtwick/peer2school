@@ -1,4 +1,4 @@
-# Konzept: Peer2School
+# Konzeption: Peer2School
 
 Im ersten Schritt steht ausschließlich die möglichst einfache und unkomplizierte Kommunikation im Vordergrund.
 
