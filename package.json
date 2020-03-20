@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "register-service-worker": "^1.7.1",
+    "simple-peer": "^9.6.2",
     "vue": "^2.6.11"
   },
   "devDependencies": {
