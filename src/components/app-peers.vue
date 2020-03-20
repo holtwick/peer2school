@@ -8,17 +8,18 @@
       <app-video v-for="peer in state.status" :stream="peer.peer.stream" class="peer"/>
     </div>
 
-    <h2>Chat</h2>
-
-    <form @submit.prevent.stop="doSend">
-      <ol>
-        <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
-        <li>
-          <input placeholder="Send message" v-model="message">
-          <button type="submit">Send</button>
-        </li>
-      </ol>
-    </form>
+    <div class="chat">
+      <h2>Chat</h2>
+      <form @submit.prevent.stop="doSend">
+        <ol>
+          <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
+          <li>
+            <input placeholder="Send message" v-model="message">
+            <button type="submit">Send</button>
+          </li>
+        </ol>
+      </form>
+    </div>
 
   </div>
 </template>
