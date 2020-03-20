@@ -1,4 +1,4 @@
-require('debug').enable('*')
+require('debug').enable('*,-sock*,-engine*')
 
 import Vue from 'vue'
 import App from './app.vue'
