@@ -26,9 +26,8 @@ socket.on('empty', (room) => {
   log('Room ' + room + ' is empty')
 })
 
-socket.on('join', (room) => {
-  log('Making request to join room ' + room)
-  log('You are the initiator!')
+socket.on('joined', ({room, peers}) => {
+  log(`Did join room ${roomt} with peers ${peers}`)
 })
 
 socket.on('log', (array) => {
