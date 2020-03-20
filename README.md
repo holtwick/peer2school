@@ -9,4 +9,5 @@ Simple P2P teaching platform starting from the 1st class
 **The following is in German language due to the related German language hackathon**
 
 - [Online Demo](https://holtwick.github.io/peer2school/dist/index.html)
-- [Projektbeschreibung](docs-de/projektbeschreibung.md)
+- [Projektbeschreibung / -anmeldung](docs-de/projektbeschreibung.md)
+- [Konzeption](docs-de/konzept.md)
