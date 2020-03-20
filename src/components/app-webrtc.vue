@@ -75,17 +75,16 @@ export default {
       audio: true,
       video: {
         facingMode: 'user',
-        // frameRate: {
-        //   ideal: 10,
-        //   max: 15,
-        // },
+        frameRate: {
+          ideal: 10,
+        },
       },
     }
-    if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
-      navigator.getUserMedia(opt, addMedia, errorHandler)
-    } else {
-      navigator.mediaDevices.getUserMedia(opt).then(addMedia).catch(errorHandler)
-    }
+    // if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+    //   navigator.getUserMedia(opt, addMedia, errorHandler)
+    // } else {
+    //   navigator.mediaDevices.getUserMedia(opt).then(addMedia).catch(errorHandler)
+    // }
   },
 }
 </script>
