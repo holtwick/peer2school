@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 
 let room = 'sample' //  prompt('Enter room name:');
 
-const signalServerURL = 'ws://localhost:2020'
+const signalServerURL = 'ws://localhost:4445'
 
 const socket = io.connect(signalServerURL, {
   transports: ['websocket'],
@@ -10,24 +10,15 @@ const socket = io.connect(signalServerURL, {
 
 const log = require('debug')('app:signal')
 
-let isInitiator
-
-if (room !== '') {
-  log('Joining room ' + room)
-  socket.emit('create or join', room)
-}
-
-socket.on('full', (room) => {
-  log('Room ' + room + ' is full')
+socket.on('connect', () => {
+  if (room !== '') {
+    log('Joining room ' + room)
+    socket.emit('join', { room })
+  }
 })
 
-socket.on('empty', (room) => {
-  isInitiator = true
-  log('Room ' + room + ' is empty')
-})
-
-socket.on('joined', ({room, peers}) => {
-  log(`Did join room ${roomt} with peers ${peers}`)
+socket.on('joined', ({ room, peers }) => {
+  log(`Did join room ${room} with peers ${peers}`)
 })
 
 socket.on('log', (array) => {
