@@ -1,6 +1,7 @@
 // Copyright (c) 2020 Dirk Holtwick. All rights reserved. https://holtwick.de/copyright
 
 import io from 'socket.io-client'
+import { assert } from './assert'
 import { Emitter } from './emitter'
 import { WebRTCPeer } from './webrtc-peer'
 
@@ -16,17 +17,21 @@ export class WebRTC extends Emitter {
 
   constructor({
                 wrtc, // wrtc is used for unit testing via node.js
-                room,
+                room = 'sample',
               } = {}) {
     super()
+    assert(room, 'room cannot be empty')
+
+    log('webrtc reaches out to', signalServerURL)
 
     // https://socket.io/docs/client-api/
     this.io = io(signalServerURL, {
       transports: ['websocket'],
     })
+    assert(this.io, `should not fail to reach out to ${signalServerURL}`)
 
     this.io.on('connect', () => {
-      log('connected')
+      log('connect', this.io.id)
       this.emit('io', {
         online: true,
       })
@@ -35,6 +40,7 @@ export class WebRTC extends Emitter {
     })
 
     this.io.on('disconnect', () => {
+      log('disconnect')
       this.emit('io', {
         online: false,
       })
@@ -52,9 +58,9 @@ export class WebRTC extends Emitter {
     })
 
     // Receive all other currently available peers
-    this.io.on('joined', ({ peers }) => {
+    this.io.on('joined', ({ room, peers }) => {
       const local = this.io.id
-      log('me', local, 'peers', peers)
+      log('me', local, room, 'peers', peers)
 
       // We will try to establish a separate connection to all of them
       // If the new participant (us) initiates the connections, the others do
@@ -103,7 +109,6 @@ export class WebRTC extends Emitter {
     let peer = new WebRTCPeer({
       local,
       remote,
-      // name: remote,
       initiator,
       trickle: false,
       wrtc,

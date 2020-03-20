@@ -5,20 +5,20 @@ import { Emitter } from './emitter'
 
 const log = require('debug')('app:webrtc-peer')
 
-export class WebRTCPeer extends Emitter {
+let ctr = 1
 
-  ctr = 1
+export class WebRTCPeer extends Emitter {
 
   constructor({ remote, local, ...opt } = {}) {
     super()
 
-    log('peer', name)
-
     this.remote = remote
     this.local = local
     this.initiator = opt.initiator
-    this.id = 'webrtc-peer' + this.ctr++
+    this.id = 'webrtc-peer' + ctr++
     this.active = false
+    log('peer', this.id)
+
     this.peer = new SimplePeer(opt)
 
     // We receive a connection error
