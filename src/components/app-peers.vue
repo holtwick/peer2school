@@ -5,7 +5,7 @@
 
     <div class="video -fit">
       <app-video :stream="state.stream" class="peer"/>
-      <app-video v-for="peer in state.status" :stream="peer.peer.stream" class="peer"/>
+      <app-video v-for="peer in state.status" :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
     </div>
 
     <app-chat class="chat"/>
@@ -15,6 +15,7 @@
 
 <style lang="scss">
 .video {
+  padding: 1rem;
   display: flex;
   flex-wrap: wrap;
 }
