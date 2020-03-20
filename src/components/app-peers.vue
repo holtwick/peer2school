@@ -9,25 +9,20 @@
 
     <div class="video-remote">
       <div class="peer" v-for="peer in state.status">
-        <app-video :id="peer.remote"></app-video>
+        <app-video :stream="peer.peer.stream"></app-video>
       </div>
     </div>
 
-    <ol>
-      <li v-for="peer in status">
-        Peer {{peer.name}} {{peer.active}}
-      </li>
-    </ol>
-
     <h2>Chat</h2>
 
-    <ol>
-      <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
-    </ol>
-
     <form @submit.prevent.stop="doSend">
-      <input placeholder="Send message" v-model="message">
-      <button type="submit">Send</button>
+      <ol>
+        <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
+        <li>
+          <input placeholder="Send message" v-model="message">
+          <button type="submit">Send</button>
+        </li>
+      </ol>
     </form>
 
     <pre>{{ state }}</pre>

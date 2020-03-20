@@ -6,7 +6,7 @@ export let state = {
   peers: [],
   status: {},
   chat: [],
-  stream: null
+  stream: null,
 }
 
 getUserMedia(stream => {
@@ -23,9 +23,11 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
-// webrtc.on('stream', stream => {
-//
-// })
+webrtc.on('connected', ({ peer }) => {
+  setTimeout(() => {
+    peer.addStream(state.stream)
+  }, 1000)
+})
 
 export function sendChatMessage(msg) {
   webrtc.send('chat', {
