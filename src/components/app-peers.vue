@@ -12,7 +12,7 @@
     <h2>Chat</h2>
 
     <ol>
-      <li v-for="msg in messages">{{msg.sender}}: <b>{{msg.msg}}</b></li>
+      <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
     </ol>
 
     <form @submit.prevent.stop="doSend">
@@ -27,6 +27,8 @@
 
 <script>
 
+
+import { sendChatMessage } from '../state'
 
 const log = require('debug')('sandbox:webrtc')
 
@@ -45,29 +47,12 @@ export default {
   },
   methods: {
     doSend() {
-      webrtc.send('chat', {
-        sender: webrtc.io.id,
-        msg: this.message,
-      })
-      this.messages.push({
-        sender: 'me',
-        msg: this.message,
-      })
+      sendChatMessage(this.message)
       this.message = ''
     },
   },
   async mounted() {
 
-    webrtc.on('stream', stream => {
-
-    })
-
-    webrtc.on('status', info => {
-      this.status = info.status
-    })
-    webrtc.on('chat', msg => {
-      this.messages.push(msg)
-    })
   },
 }
 </script>
