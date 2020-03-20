@@ -2,8 +2,8 @@ require('debug').enable('*')
 
 import Vue from 'vue'
 import App from './app.vue'
-import './registerServiceWorker'
-import './signal'
+import './lib/registerServiceWorker'
+import './lib/signal'
 
 Vue.config.productionTip = false
 

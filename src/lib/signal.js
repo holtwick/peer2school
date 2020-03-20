@@ -19,8 +19,9 @@ socket.on('connect', () => {
 
 socket.on('joined', ({ room, peers }) => {
   log(`Did join room ${room} with peers ${peers}`)
+
 })
 
-socket.on('log', (array) => {
-  log('log', array)
-})
+// socket.on('log', (array) => {
+//   log('log', array)
+// })
