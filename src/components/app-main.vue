@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Peer2School</h1>
-    <app-jitsi></app-jitsi>
+    <app-webrtc></app-webrtc>
   </div>
 </template>
 
@@ -9,21 +9,16 @@
 
 <script>
 import AppJitsi from './app-jitsi'
+import AppWebrtc from './app-webrtc'
+
 export default {
   name: 'app-main',
-  components: { AppJitsi },
+  components: { AppWebrtc, AppJitsi },
   data() {
-    return {
-      counter: 0,
-    }
+    return {}
   },
-  methods: {
-    doSome() {
-
-    },
-  },
+  methods: {},
   async mounted() {
-
   },
 }
 </script>
