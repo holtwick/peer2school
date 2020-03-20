@@ -2,6 +2,7 @@
   <div>
     <h1>Peer2School</h1>
     <app-webrtc></app-webrtc>
+    <!--    <app-jitsi></app-jitsi>-->
   </div>
 </template>
 

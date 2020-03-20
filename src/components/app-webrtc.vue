@@ -33,8 +33,6 @@ export default {
     const peer1 = new Peer({ initiator: true }) // you don't need streams here
     const peer2 = new Peer()
 
-    // await this.$nextTick()
-
     let video = this.$refs.video //  document.querySelector('video')
     log('video', video)
 

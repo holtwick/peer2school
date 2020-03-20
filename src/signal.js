@@ -4,7 +4,9 @@ let room = 'sample' //  prompt('Enter room name:');
 
 const signalServerURL = 'ws://localhost:2020'
 
-const socket = io.connect(signalServerURL)
+const socket = io.connect(signalServerURL, {
+  transports: ['websocket'],
+})
 
 const log = require('debug')('app:signal')
 
