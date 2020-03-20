@@ -7,8 +7,8 @@ import { WebRTCPeer } from './webrtc-peer'
 
 const log = require('debug')('app:webrtc')
 
-const signalServerURL = 'ws://localhost:4445'
-// const signalServerURL = 'wss://signal.peer.school'
+// const signalServerURL = 'ws://localhost:4445'
+const signalServerURL = 'wss://signal.peer.school'
 // const signalServerURL = `ws://192.168.0.111:4445`
 
 // Handles multiple connections, one to each peer
@@ -27,7 +27,7 @@ export class WebRTC extends Emitter {
 
     // https://socket.io/docs/client-api/
     this.io = io(signalServerURL, {
-      transports: ['websocket'],
+      // transports: ['websocket'],
     })
     assert(this.io, `should not fail to reach out to ${signalServerURL}`)
 
