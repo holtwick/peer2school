@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Peer2School</h1>
+    <h1>Room {{ state.room }}</h1>
     <app-peers></app-peers>
     <!--    <app-webrtc></app-webrtc>-->
     <!--    <app-jitsi></app-jitsi>-->

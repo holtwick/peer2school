@@ -7,10 +7,11 @@
     <h2>Peers</h2>
 
     <ol>
-      <li v-for="peer in status">Peer {{peer.name}} {{peer.active}}</li>
+      <li v-for="peer in status">
+        Peer {{peer.name}} {{peer.active}}
+        <video></video>
+      </li>
     </ol>
-
-    <pre>{{status}}</pre>
 
     <h2>Chat</h2>
 
@@ -22,6 +23,9 @@
       <input placeholder="Send message" v-model="message">
       <button type="submit">Send</button>
     </form>
+
+    <pre>{{status}}</pre>
+
 
   </div>
 </template>
