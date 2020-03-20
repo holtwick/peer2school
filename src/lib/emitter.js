@@ -12,7 +12,7 @@ export class Emitter {
   on(key, fn) {
     let subscribers = this.subscribers[key] || []
     subscribers.push(fn)
-    this.subscribers = subscribers
+    this.subscribers[key] = subscribers
   }
 
 }
