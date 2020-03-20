@@ -9,6 +9,7 @@ const log = require('debug')('app:webrtc')
 
 const signalServerURL = 'ws://localhost:4445'
 // const signalServerURL = 'wss://signal.peer.school'
+// const signalServerURL = `ws://192.168.0.111:4445`
 
 // Handles multiple connections, one to each peer
 export class WebRTC extends Emitter {
@@ -96,13 +97,17 @@ export class WebRTC extends Emitter {
   }
 
   updateStatus() {
-    let status = Object.values(this.peerConnections).map(p => {
-      let { active, initiator, local, remote } = p
+    let status = Object.values(this.peerConnections).map(peer => {
+      let { active, initiator, local, remote } = peer
       return {
-        active, initiator, local, remote,
+        active, initiator, local, remote, peer
       }
     })
     this.emit('status', { status })
+  }
+
+  getPeer(id) {
+    return this.peerConnections[id] || null
   }
 
   handlePeer({ remote, wrtc, local, initiator = false } = {}) {
@@ -142,6 +147,10 @@ export class WebRTC extends Emitter {
 
     peer.on('message', data => {
       this.emit('message', data)  // Channel compat
+    })
+
+    peer.on('stream', stream => {
+
     })
 
     return peer

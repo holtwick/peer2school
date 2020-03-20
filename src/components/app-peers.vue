@@ -2,40 +2,58 @@
 
 <template>
   <div>
-    <h1>WebRTC</h1>
 
-    <h2>Peers</h2>
+    <div class="video-local">
+      <app-video :stream="state.stream"></app-video>
+    </div>
 
-    <ol>
-      <li v-for="peer in status">Peer {{peer.name}} {{peer.active}}</li>
-    </ol>
-
-    <pre>{{status}}</pre>
+    <div class="video-remote">
+      <div class="peer" v-for="peer in state.status">
+        <app-video :stream="peer.peer.stream"></app-video>
+      </div>
+    </div>
 
     <h2>Chat</h2>
 
-    <ol>
-      <li v-for="msg in messages">{{msg.sender}}: <b>{{msg.msg}}</b></li>
-    </ol>
-
     <form @submit.prevent.stop="doSend">
-      <input placeholder="Send message" v-model="message">
-      <button type="submit">Send</button>
+      <ol>
+        <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
+        <li>
+          <input placeholder="Send message" v-model="message">
+          <button type="submit">Send</button>
+        </li>
+      </ol>
     </form>
+
+    <pre>{{ state }}</pre>
 
   </div>
 </template>
 
+<style lang="scss">
+.video-local {
+
+}
+
+.video-remote {
+  display: flex;
+
+  .peer {
+    border: 1px solid red;
+  }
+}
+</style>
+
 <script>
 
-import { WebRTC } from '../lib/webrtc'
+import { sendChatMessage } from '../state'
+import AppVideo from './app-video'
 
 const log = require('debug')('sandbox:webrtc')
 
-let webrtc
-
 export default {
   name: 'app-peers',
+  components: { AppVideo },
   data() {
     return {
       items: [],
@@ -47,25 +65,12 @@ export default {
   },
   methods: {
     doSend() {
-      webrtc.send('chat', {
-        sender: webrtc.io.id,
-        msg: this.message,
-      })
-      this.messages.push({
-        sender: 'me',
-        msg: this.message,
-      })
+      sendChatMessage(this.message)
       this.message = ''
     },
   },
   async mounted() {
-    webrtc = new WebRTC()
-    webrtc.on('status', info => {
-      this.status = info.status
-    })
-    webrtc.on('chat', msg => {
-      this.messages.push(msg)
-    })
+
   },
 }
 </script>
