@@ -1,25 +1,14 @@
 <!-- Copyright (c) 2019 Dirk Holtwick. All rights reserved. https://holtwick.de/copyright -->
 
 <template>
-  <div>
+  <div class="hstack">
 
-    <div class="video">
+    <div class="video -fit">
       <app-video :stream="state.stream" class="peer"/>
       <app-video v-for="peer in state.status" :stream="peer.peer.stream" class="peer"/>
     </div>
 
-    <div class="chat">
-      <h2>Chat</h2>
-      <form @submit.prevent.stop="doSend">
-        <ol>
-          <li v-for="msg in state.chat">{{msg.sender}}: <b>{{msg.msg}}</b></li>
-          <li>
-            <input placeholder="Send message" v-model="message">
-            <button type="submit">Send</button>
-          </li>
-        </ol>
-      </form>
-    </div>
+    <app-chat class="chat"/>
 
   </div>
 </template>
@@ -27,10 +16,18 @@
 <style lang="scss">
 .video {
   display: flex;
+  flex-wrap: wrap;
+}
+
+.chat {
+  width: 20rem;
+  background: #eee;
+  padding: 1rem;
 }
 
 .peer {
-  border: 1px solid red;
+  // border: 1px solid red;
+  background: #333;
   max-width: 20rem;
   max-height: 20rem;
   margin-right: 1rem;
@@ -42,13 +39,14 @@
 <script>
 
 import { sendChatMessage } from '../state'
+import AppChat from './app-chat'
 import AppVideo from './app-video'
 
 const log = require('debug')('sandbox:webrtc')
 
 export default {
   name: 'app-peers',
-  components: { AppVideo },
+  components: { AppChat, AppVideo },
   data() {
     return {
       items: [],

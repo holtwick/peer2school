@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h1>Room {{ state.room }}</h1>
-    <app-peers></app-peers>
-  </div>
+  <app-peers></app-peers>
 </template>
 
 <style lang="scss"></style>
