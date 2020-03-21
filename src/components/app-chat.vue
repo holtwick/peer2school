@@ -1,5 +1,5 @@
 <template>
-  <div class="text">
+  <div>
     <h3>Chat</h3>
     <form @submit.prevent.stop="doSend">
       <div v-for="msg in state.chat">
@@ -11,7 +11,7 @@
       </div>
     </form>
     <form>
-      <button @click="pointOut" type ="submit"><img src="./img/aufzeigen.png" ref="pointPic" style=""></button>
+      <button @click="pointOut" type="submit"><img src="./img/aufzeigen.png" ref="pointPic" style=""></button>
     </form>
   </div>
 </template>
@@ -24,7 +24,7 @@ import { sendChatMessage } from '../state'
 export default {
   name: 'app-chat',
   data() {
-    return {pointsOut : false}
+    return { pointsOut: false }
   },
   methods: {
     doSend() {
@@ -37,16 +37,13 @@ export default {
       let pic = this.$refs.pointPic
 
 
-      if(!this.pointsOut)
-      {
-        pic.style.backgroundColor = "orange"
-        sendChatMessage("*Zeigt auf!*")
+      if (!this.pointsOut) {
+        pic.style.backgroundColor = 'orange'
+        sendChatMessage('*Zeigt auf!*')
         this.pointsOut = true
-      }
-      else
-      {
-        pic.style.backgroundColor = ""
-        sendChatMessage("*Zeigt nicht mehr auf!*")
+      } else {
+        pic.style.backgroundColor = ''
+        sendChatMessage('*Zeigt nicht mehr auf!*')
         this.pointsOut = false
       }
     },
