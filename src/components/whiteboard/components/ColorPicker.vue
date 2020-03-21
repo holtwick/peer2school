@@ -21,7 +21,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss">
 .colorPicker {
   justify-content: space-between;

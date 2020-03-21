@@ -18,7 +18,7 @@ export default {}
   background: #fff;
   padding: 10px 5px;
   border-radius: 5px;
-  left: 65px;
+  right: 65px;
   top: 0;
   box-shadow: 0px 10px 30px 8px rgba(0, 0, 0, 0.2);
 

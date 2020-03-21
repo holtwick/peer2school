@@ -30,8 +30,8 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 170px;
-  left: 10px;
+  top: 10rem;
+  right: 1rem;
   padding: 10px;
   background: #fff;
   border-radius: 5px;

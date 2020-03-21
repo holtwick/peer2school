@@ -247,12 +247,12 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 10px;
-  left: 10px;
+  top: 1rem;
+  right: 1rem;
   padding: 10px;
   background: #fff;
-  border-radius: 5px;
-  box-shadow: 0px 10px 30px 8px rgba(0, 0, 0, 0.4);
+  border-radius: 0.25rem;
+  box-shadow: 0 10px 30px 8px rgba(0, 0, 0, 0.4);
 
   .actionsPanel {
     .tool:not(:last-child) {
