@@ -11,7 +11,9 @@
       </div>
     </form>
     <form @submit.prevent.stop="pointOut">
-      <button type ="submit"><img src="./img/aufzeigen.png"></button>
+      <div id="picBackground">
+      <button type ="submit"><img src="./img/aufzeigen.png" id="pointPic" style=""></button>
+      </div>
     </form>
   </div>
 </template>
@@ -34,6 +36,14 @@ export default {
     pointOut() {
       sendChatMessage("*Zeigt auf!*")
       this.message = ''
+
+      var pic = document.getElementById("pointPic");
+      var picBackground = document.getElementById("pointPic");
+
+      if(picBackground.style.backgroundColor != "grey")
+        picBackground.style.backgroundColor = "grey";
+      else
+        picBackground.style.backgroundColor = "";
     },
   },
   async mounted() {
