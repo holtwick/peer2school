@@ -14,12 +14,11 @@ export let state = {
   room,
   teacher,
   peers: [],
-  teacher_stream: [],
+  teacher_streams: [],
   status: {},
   chat: [],
   stream: null,
 }
-
 
 getUserMedia(stream => {
   state.stream = stream
@@ -31,19 +30,24 @@ export let webrtc = new WebRTC({ room })
 webrtc.on('status', info => {
   state.status = info.status
   // Set the teacher id
-  if(state.teacher && 
-    !(state.teacher_stream.find(s => s === webrtc.io.id)) ) {
-      console.log("DEBUG DEBUG" )
-      state.teacher_stream.push(webrtc.io.id)
+  if(state.teacher 
+    ) {
+      console.log("DEBUG DEBUG " + webrtc.io.id )
+      sendChatMessage("TEACHER_STREAM")
+      state.teacher_streams.push(webrtc.io.id)
   }
 })
 
 webrtc.on('chat', msg => {
-  state.chat.push(msg)
+  if(msg.msg === "TEACHER_STREAM"
+      && !(state.teacher_streams.find(s => s === msg.sender))) 
+    state.teacher_streams.push(msg.sender)
+  else
+    state.chat.push(msg)
 })
 
 webrtc.on('connected', ({ peer }) => {
-  console.log("DEBUG: " + peer)
+  console.log("DEBUG: peer " + peer)
   setTimeout(() => {
     peer.addStream(state.stream)
   }, 1000)
