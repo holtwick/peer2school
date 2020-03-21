@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     url() {
-      return `https://peer.school/room/${this.state.room}`
+      return `https://peer.school/class/${this.state.room}`
     },
   },
   methods: {},
