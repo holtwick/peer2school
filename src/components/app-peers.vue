@@ -2,7 +2,6 @@
 
 <template>
   <div class="hstack">
-
     <app-chat class="chat"/>
 
     <div class="video -fit">

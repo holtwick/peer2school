@@ -7,7 +7,11 @@
         Share <a :href="url">{{ url }}</a>
       </div>
     </div>
-    <app-peers class="-fit"></app-peers>
+
+    <div class="video">
+      <app-video :stream="state.stream" :visible="true" class="peer"/>
+      <app-video v-for="peer in state.status" :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
+    </div>
   </div>
 </template>
 
@@ -32,15 +36,25 @@
     }
   }
 }
+
+.video {
+  width: 20%;
+  padding: 1rem;
+  background: #eee;
+  overflow: auto;
+  overflow-y: scroll;
+  max-height: 80%;
+}
+
 </style>
 
 <script>
-import AppPeers from './app-peers'
+import AppVideo from './app-video'
 
 export default {
   name: 'app-teacher',
   components: {
-    AppPeers,
+    AppVideo,
   },
   data() {
     return {}
