@@ -1,11 +1,11 @@
 // Copyright (c) 2020 Dirk Holtwick. All rights reserved. https://holtwick.de/copyright
 
-import { base32Encode, UUID } from './uuid'
+import { base32Encode, UUID, UUID_length } from './uuid'
 
 describe('UUID', () => {
 
   it('should convert to Base32', () => {
-    expect(UUID().length).toEqual(26)
+    expect(UUID().length).toEqual(UUID_length)
     expect(UUID()).not.toEqual(UUID())
     console.log(UUID())
   })
