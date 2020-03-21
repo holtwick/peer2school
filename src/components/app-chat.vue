@@ -19,7 +19,7 @@
 <style lang="scss"></style>
 
 <script>
-import { sendChatMessage } from '../state'
+import { sendChatMessage, sendPointOutInfo } from '../state'
 
 export default {
   name: 'app-chat',
