@@ -33,17 +33,22 @@ webrtc.on('status', info => {
   if(state.teacher 
     ) {
       console.log("DEBUG DEBUG " + webrtc.io.id )
-      sendChatMessage("TEACHER_STREAM")
+      webrtc.send('teacher_streams', {
+        sender: webrtc.io.id,
+      })
       state.teacher_streams.push(webrtc.io.id)
   }
 })
 
 webrtc.on('chat', msg => {
-  if(msg.msg === "TEACHER_STREAM"
-      && !(state.teacher_streams.find(s => s === msg.sender))) 
-    state.teacher_streams.push(msg.sender)
-  else
     state.chat.push(msg)
+})
+
+webrtc.on('teacher_streams', msg => {
+  console.log("DEBUG DEBUG -> " + msg.sender)
+  if(!(state.teacher_streams.find(s => s === msg.sender)))
+    state.teacher_streams.push(msg.sender)
+
 })
 
 webrtc.on('connected', ({ peer }) => {
@@ -63,6 +68,9 @@ export function sendChatMessage(msg) {
     msg,
   })
 }
+
+
+
 
 export function getPeer(id) {
   return webrtc.peerConnections[id]
