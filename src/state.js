@@ -32,8 +32,8 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
-webrtc.on('point_out', msg => {
-  state.status = msg
+webrtc.on('point_out', pointsOut => {
+  state.status.pointsOut = pointsOut
 })
 
 webrtc.on('connected', ({ peer }) => {
@@ -54,6 +54,8 @@ export function sendChatMessage(msg) {
 }
 
 export function sendPointOutInfo(pointsOut) {
+
+  
   webrtc.send('point_out', {
     sender: webrtc.io.id,
     pointsOut,
