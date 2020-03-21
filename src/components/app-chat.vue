@@ -24,7 +24,7 @@ import { sendChatMessage } from '../state'
 export default {
   name: 'app-chat',
   data() {
-    return {}
+    return {poit_out : false}
   },
   methods: {
     doSend() {
@@ -37,15 +37,17 @@ export default {
       var pic = document.getElementById("pointPic")
 
 
-      if(pic.style.backgroundColor != "orange")
+      if(!this.poit_out)
       {
         pic.style.backgroundColor = "orange"
         sendChatMessage("*Zeigt auf!*")
+        this.poit_out = true
       }
       else
       {
         pic.style.backgroundColor = ""
         sendChatMessage("*Zeigt nicht mehr auf!*")
+        this.poit_out = false
       }
     },
   },
