@@ -3,12 +3,12 @@
 <template>
   <div class="hstack">
 
+    <app-chat class="chat"/>
+
     <div class="video -fit">
       <app-video :stream="state.stream" class="peer"/>
       <app-video v-for="peer in state.status" :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
     </div>
-
-    <app-chat class="chat"/>
 
   </div>
 </template>
@@ -21,7 +21,7 @@
 }
 
 .chat {
-  width: 20rem;
+  width: 20%;
   background: #eee;
   padding: 1rem;
 }
