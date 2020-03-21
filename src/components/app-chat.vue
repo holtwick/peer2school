@@ -24,33 +24,29 @@ import { sendChatMessage, sendPointOutInfo } from '../state'
 export default {
   name: 'app-chat',
   data() {
-    return {pointsOut : false}
+    return {pointsOutState : false}
   },
   methods: {
     doSend() {
       sendChatMessage(this.message)
       this.message = ''
-
-      console.log(this.state.status.pointsOut)
     },
     pointOut() {
-      this.message = this.message //wtf, warning prevention...
-
       let pic = this.$refs.pointPic
 
 
-      if(!this.pointsOut)
+      if(!this.pointsOutState)
       {
         pic.style.backgroundColor = "orange"
-        this.pointsOut = true
+        this.pointsOutState = true
       }
       else
       {
         pic.style.backgroundColor = ""
-        this.pointsOut = false
+        this.pointsOutState = false
       }
 
-      sendPointOutInfo(this.pointsOut)
+      sendPointOutInfo(this.pointsOutState)
     },
   },
   async mounted() {
