@@ -37,3 +37,4 @@ export function UUID() {
   return base32Encode(Buffer.from(array))
 }
 
+export const UUID_length = 26
