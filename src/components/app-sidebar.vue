@@ -10,14 +10,22 @@
 <style lang="scss">
 .sidebar {
   width: 20%;
+  min-width: 8rem;
   background: #eee;
   padding: 1rem;
 }
 </style>
 
 <script>
+import AppChat from './app-chat'
+import AppVideo from './app-video'
+
 export default {
   name: 'app-sidebar',
+  components: {
+    AppChat,
+    AppVideo,
+  },
   data() {
     return {}
   },
