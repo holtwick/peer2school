@@ -33,13 +33,14 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
-webrtc.on('point_out', info => {
-  if(info.point_out){
-    state.pointOuts.push(info.sender)
+webrtc.on('point_out', point_out => {
+  if(point_out.point_out){
+    state.pointOuts.push(point_out.sender)
   }
   else{
-    state.pointOuts.splice(state.pointOuts.indexOf(info.sender))
+    state.pointOuts.splice(state.pointOuts.indexOf(point_out.sender))
   }
+
 })
 
 webrtc.on('connected', ({ peer }) => {
@@ -68,14 +69,14 @@ export function sendPointOutInfo(point_out) {
   })
 
   // local
-  if(info.point_out){
-    state.pointOuts.push(info.sender)
+
+  if(point_out.point_out){
+    state.pointOuts.push(point_out.sender)
   }
   else{
-    state.pointOuts.splice(state.pointOuts.indexOf(info.sender))
-
+    state.pointOuts.splice(state.pointOuts.indexOf(point_out.sender))
   }
-  
+
 }
 
 export function getPeer(id) {
