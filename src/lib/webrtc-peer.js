@@ -18,6 +18,7 @@ export class WebRTCPeer extends Emitter {
     this.id = 'webrtc-peer' + ctr++
     this.active = false
     this.stream = null
+    this.name = "unknown";
 
     log('peer', this.id)
 
@@ -70,6 +71,10 @@ export class WebRTCPeer extends Emitter {
 
   postMessage(data) {  // Channel compat
     this.peer.send(data)
+  }
+
+  setName(name) {
+    this.name = name;
   }
 
   close() {

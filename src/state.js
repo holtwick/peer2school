@@ -38,6 +38,11 @@ webrtc.on('connected', ({ peer }) => {
   }, 1000)
 })
 
+export function setPeerName(name) {
+  var status = {name: name};
+  webrtc.send('status', { status })
+}
+
 export function sendChatMessage(msg) {
   webrtc.send('chat', {
     sender: webrtc.io.id,
