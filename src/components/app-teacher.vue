@@ -1,13 +1,18 @@
 <template>
-  <div class="vstack">
-    <div class="header hstack">
-      <h1 class="-fit">peer.school</h1>
-      <div class="link">
-        <span>TEACHER</span>
-        Share <a :href="url">{{ url }}</a>
+  <div>
+    <div class="vstack">
+      <div class="header hstack">
+        <h1 class="-fit">peer.school</h1>
+        <div class="link">
+          <span>TEACHER</span>
+          Share <a :href="url">{{ url }}</a>
+        </div>
       </div>
     </div>
-    <app-peers class="-fit"></app-peers>
+    <div class="hstack">
+      <app-peers class="-fit"></app-peers> <br>
+      <app-student-list class=""></app-student-list>
+    </div>
   </div>
 </template>
 
@@ -36,11 +41,12 @@
 
 <script>
 import AppPeers from './app-peers'
+import AppStudentList from './app-student-list'
 
 export default {
   name: 'app-teacher',
   components: {
-    AppPeers,
+    AppPeers, AppStudentList
   },
   data() {
     return {}
