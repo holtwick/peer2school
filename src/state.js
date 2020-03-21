@@ -38,7 +38,7 @@ webrtc.on('point_out', point_out => {
     state.pointOuts.push(point_out.sender)
   }
   else{
-    state.pointOuts.splice(state.pointOuts.indexOf(point_out.sender))
+    state.pointOuts.splice(state.pointOuts.indexOf(point_out.sender), 1)
   }
 
 })
@@ -58,6 +58,7 @@ export function sendChatMessage(msg) {
     sender: 'me',
     msg,
   })
+  console.log(state.pointOuts)
 }
 
 export function sendPointOutInfo(point_out) {
@@ -68,13 +69,13 @@ export function sendPointOutInfo(point_out) {
     point_out: point_out,
   })
 
+  
   // local
-
-  if(point_out.point_out){
-    state.pointOuts.push(point_out.sender)
+  if(point_out){
+    state.pointOuts.push(webrtc.io.id)
   }
   else{
-    state.pointOuts.splice(state.pointOuts.indexOf(point_out.sender))
+    state.pointOuts.splice(state.pointOuts.indexOf(webrtc.io.id), 1)
   }
 
 }
