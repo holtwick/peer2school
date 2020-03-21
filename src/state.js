@@ -61,10 +61,21 @@ export function sendChatMessage(msg) {
 
 export function sendPointOutInfo(point_out) {
 
+  // remote
   webrtc.send('point_out', {
     sender: webrtc.io.id,
     point_out: point_out,
   })
+
+  // local
+  if(info.point_out){
+    state.pointOuts.push(info.sender)
+  }
+  else{
+    state.pointOuts.splice(state.pointOuts.indexOf(info.sender))
+
+  }
+  
 }
 
 export function getPeer(id) {
