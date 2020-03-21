@@ -10,6 +10,7 @@
 
 <script>
 import paper from 'paper'
+import 'vue-slider-component/theme/default.css'
 import HistoryPanel from './panel/HistoryPanel'
 import MainPanel from './panel/MainPanel'
 

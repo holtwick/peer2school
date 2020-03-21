@@ -7,7 +7,6 @@
     :height="3"
     :interval="2"
     :processStyle="{'background': 'black'}"
-    :bgStyle="{'backgroundColor': '#e6e9f0'}"
     :sliderStyle="{'backgroundColor': 'black', 'boxShadow': 'unset'}"
     tooltip="none"
     :width="'168px'"

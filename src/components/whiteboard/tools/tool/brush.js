@@ -1,7 +1,7 @@
 import paper from 'paper'
-import store from '../../store/store'
 import { DrawAction } from '../action'
 import history from '../history'
+import { store } from '../paperStore'
 import { createLayer } from '../shared'
 
 let local = {
@@ -11,7 +11,7 @@ let local = {
 function onMouseDown() {
   let layer = createLayer()
   local.path = new paper.Path()
-  let rgb = hexToRgb(store.getters.toolArgs.color || '#000000')
+  let rgb = hexToRgb(store.toolArgs.color || '#000000')
   local.path.fillColor = `rgba(${rgb.r},${rgb.g},${rgb.b},0.4)`
   layer.addChild(local.path)
 }
@@ -19,8 +19,8 @@ function onMouseDown() {
 function onMouseDrag(event) {
   if (!local.path) return
   var step = event.delta
-  step.x *= store.getters.toolArgs.size / 2.8
-  step.y *= store.getters.toolArgs.size / 2.8
+  step.x *= store.toolArgs.size / 2.8
+  step.y *= store.toolArgs.size / 2.8
   step.angle += 90
 
   var top = event.middlePoint.add(step)
@@ -35,7 +35,7 @@ function onMouseUp() {
   local.path.simplify()
   const action = new DrawAction({
     layer: local.path.layer.name,
-    tool: store.getters.tool,
+    tool: store.tool,
     points: local.path.segments.map(seg => {
       return {
         x: seg._point._x,
