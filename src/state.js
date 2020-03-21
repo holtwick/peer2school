@@ -38,7 +38,10 @@ webrtc.on('point_out', pointsOut => {
     state.pointOuts.push(pointsOut.sender)
   }
   else{
-    state.pointOuts.splice(state.pointOuts.indexOf(pointsOut.sender), 1)
+    index = state.pointOuts.indexOf(pointsOut.sender)
+
+    if(index >= 0)
+      state.pointOuts.splice(index, 1)
   }
 
 })
@@ -73,8 +76,12 @@ export function sendPointOutInfo(pointsOutInfo) {
   if(pointsOutInfo){
     state.pointOuts.push(webrtc.io.id)
   }
-  else{
-    state.pointOuts.splice(state.pointOuts.indexOf(webrtc.io.id), 1)
+  else
+  {
+    index = state.pointOuts.indexOf(webrtc.io.id)
+
+    if(index >= 0)
+      state.pointOuts.splice(index, 1)
   }
 
 }
