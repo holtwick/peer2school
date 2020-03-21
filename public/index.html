@@ -31,16 +31,16 @@
   <link rel=icon type=image/png sizes=16x16 href=/peer2school/dist/img/icons/favicon-16x16.png>
   <link rel=manifest href="../dist/manifest.json">
 
-	<!--- Set width for Mobile Devices -!-->
-	<script>
-		//Set correct width height on mobile browsers
-		var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-		if (isChrome) {
-			$('head').append('<meta name="viewport" content="width=device-width, initial-scale=0.52, maximum-scale=1" />');
-		} else {
-			$('head').append('<meta name="viewport" content="width=1400" />');
-		}
-	</script>
+  <!--- Set width for Mobile Devices -!-->
+  <script>
+  //Set correct width height on mobile browsers
+  var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  if (isChrome) {
+	$('head').append('<meta name="viewport" content="width=device-width, initial-scale=0.52, maximum-scale=1" />');
+  } else {
+	$('head').append('<meta name="viewport" content="width=1400" />');
+  }
+  </script>
 </head>
 
 <body>
