@@ -9,7 +9,7 @@ let config = {
 if (isProduction) {
 
   // Path on GitHub Pages
-  config.publicPath = `/peer2school/dist`
+  config.publicPath = `/dist`
 
   // Don't load workbox stuff from third party site
   config.pwa = {
