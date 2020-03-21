@@ -30,11 +30,9 @@ export default {
       console.log("DEBUG DEBUG DEBUG: " + msg);
       if (msg.msg == "*Zeigt auf!*") this.pointingUp.push(msg.sender);
       else if (msg.msg == "*Zeigt nicht mehr auf!*") {
-        for (var i = 0; i < this.pointingUp.length; i++) {
-          if (this.pointingUp[i] == msg.sender) {
-            this.pointingUp.splice(i, 1);
-          }
-        }
+        this.pointingUp = this.pointingUp.filter(
+          student => student == msg.sender
+        );
       }
     }
   },
