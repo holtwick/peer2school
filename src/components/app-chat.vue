@@ -40,15 +40,15 @@ export default {
       if(!this.pointsOut)
       {
         pic.style.backgroundColor = "orange"
-        sendChatMessage("*Zeigt auf!*")
         this.pointsOut = true
       }
       else
       {
         pic.style.backgroundColor = ""
-        sendChatMessage("*Zeigt nicht mehr auf!*")
         this.pointsOut = false
       }
+
+      sendPointOutInfo(pointsOut)
     },
   },
   async mounted() {
