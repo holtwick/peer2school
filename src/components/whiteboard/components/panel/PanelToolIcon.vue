@@ -1,6 +1,6 @@
 <template>
   <div :class="{ active : isActive }" class="tool">
-    <i :color="toolColor" :icon="icon">{{icon}}</i>
+    <i :color="toolColor" :data-f7-icon="icon"></i>
   </div>
 </template>
 

@@ -14,7 +14,7 @@
         @click.native="toggleEraserSettings(); setWhiteboardTool('eraser')"
         toolColor="#133337"
         :isActive="tool === 'eraser'"
-        icon="eraser"
+        icon="minus"
       />
       <!-- Shape select -->
       <panelToolIcon
@@ -36,14 +36,14 @@
             @click.native="setWhiteboardTool('pencil')"
             :toolColor="toolColor"
             :isActive="tool === 'pencil'"
-            icon="pencil-alt"
+            icon="pencil"
           />
           <!-- Brush select -->
           <panelToolIcon
             @click.native="setWhiteboardTool('brush')"
             :toolColor="toolColor"
             :isActive="tool === 'brush'"
-            icon="paint-brush"
+            icon="paintbrush"
           />
         </div>
         <!-- ColorPicker -->
@@ -98,14 +98,14 @@
             @click.native="setWhiteboardTool('triangle')"
             :toolColor="shapeColor"
             :isActive="tool === 'triangle'"
-            icon="exclamation-triangle"
+            icon="triangle"
           />
           <!-- Line select -->
           <panelToolIcon
             @click.native="setWhiteboardTool('line')"
             :toolColor="shapeColor"
             :isActive="tool === 'line'"
-            icon="slash"
+            icon="minus"
           />
         </div>
         <!-- ColorPicker -->
@@ -200,29 +200,29 @@ export default {
     // Active
     activeTool: function () {
       if (this.tool === 'pencil') {
-        return 'pencil-alt'
+        return 'pencil'
       } else if (this.tool === 'brush') {
-        return 'paint-brush'
+        return 'paintbrush'
       } else {
-        return 'pencil-alt'
+        return 'pencil'
       }
     },
     activeShape: function () {
-      if (this.tool === 'cricle') {
+      if (this.tool === 'circle') {
         return 'circle'
       } else if (this.tool === 'square') {
         return 'square'
       } else if (this.tool === 'triangle') {
-        return 'exclamation-triangle'
+        return 'triangle'
       } else if (this.tool === 'line') {
-        return 'slash'
+        return 'minus'
       } else {
         return 'circle'
       }
     },
-    // tool: function () {
-    //   return this.$store.getters.tool
-    // },
+    tool() {
+      return this.store.tool
+    },
     // Color
     toolColor: function () {
       return this.store.toolArgs.color

@@ -1,7 +1,7 @@
 <template>
   <div class="historyPanel">
-    <panelToolIcon @click.native="undo" icon="undo"/>
-    <panelToolIcon @click.native="redo" icon="redo"/>
+    <panelToolIcon @click.native="undo" icon="arrow_counterclockwise"/>
+    <panelToolIcon @click.native="redo" icon="arrow_clockwise"/>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 10rem;
+  top: 11rem;
   right: 1rem;
   padding: 10px;
   background: #fff;
