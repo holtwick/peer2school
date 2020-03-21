@@ -8,6 +8,8 @@
       <div>
         <input placeholder="Send message" v-model="message">
         <!--        <button type="submit">Send message</button>-->
+        <br>
+        <button>Melden</button>
       </div>
     </form>
   </div>
