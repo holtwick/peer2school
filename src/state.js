@@ -9,14 +9,17 @@ let teacher = hash.endsWith(teacherToken)
 let room = hash.substr(0, UUID_length)
 location.hash = `#${hash}`
 
+
 export let state = {
   room,
   teacher,
   peers: [],
+  teacher_stream: "",
   status: {},
   chat: [],
   stream: null,
 }
+
 
 getUserMedia(stream => {
   state.stream = stream
@@ -24,8 +27,13 @@ getUserMedia(stream => {
 
 export let webrtc = new WebRTC({ room })
 
+
 webrtc.on('status', info => {
   state.status = info.status
+  // Set the teacher id
+  if(teacher) {
+    state.teacher_stream = webrtc.io.id
+  }
 })
 
 webrtc.on('chat', msg => {
@@ -33,6 +41,7 @@ webrtc.on('chat', msg => {
 })
 
 webrtc.on('connected', ({ peer }) => {
+  console.log("DEBUG: " + peer)
   setTimeout(() => {
     peer.addStream(state.stream)
   }, 1000)
