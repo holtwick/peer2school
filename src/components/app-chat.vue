@@ -34,16 +34,22 @@ export default {
       this.message = ''
     },
     pointOut() {
-      sendChatMessage("*Zeigt auf!*")
-      this.message = ''
 
-      var pic = document.getElementById("pointPic");
-      var picBackground = document.getElementById("pointPic");
+      var pic = document.getElementById("pointPic")
+      var picBackground = document.getElementById("pointPic")
 
-      if(picBackground.style.backgroundColor != "grey")
-        picBackground.style.backgroundColor = "grey";
+      if(picBackground.style.backgroundColor != "orange")
+      {
+        picBackground.style.backgroundColor = "orange"
+        pic.src="./img/nicht_aufzeigen.png"
+        sendChatMessage("*Zeigt auf!*")
+      }
       else
-        picBackground.style.backgroundColor = "";
+      {
+        picBackground.style.backgroundColor = ""
+        pic.src="./img/aufzeigen.png"
+        sendChatMessage("*Zeigt nicht mehr auf!*")
+      }
     },
   },
   async mounted() {
