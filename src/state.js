@@ -32,6 +32,10 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
+webrtc.on('point_out', msg => {
+  state.status = msg
+})
+
 webrtc.on('connected', ({ peer }) => {
   setTimeout(() => {
     peer.addStream(state.stream)
@@ -46,6 +50,13 @@ export function sendChatMessage(msg) {
   state.chat.push({
     sender: 'me',
     msg,
+  })
+}
+
+export function sendPointOutInfo(pointsOut) {
+  webrtc.send('point_out', {
+    sender: webrtc.io.id,
+    pointsOut,
   })
 }
 
