@@ -11,7 +11,7 @@
       </div>
     </form>
     <form @submit.prevent.stop="pointOut">
-      <button type ="submit">Melden</button>
+      <button type ="submit"><img src="img/aufzeigen.png"></button>
     </form>
   </div>
 </template>
