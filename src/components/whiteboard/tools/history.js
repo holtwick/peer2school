@@ -1,3 +1,5 @@
+const log = require('debug')('app:history')
+
 class History {
 
   constructor(limit) {
@@ -6,6 +8,7 @@ class History {
   }
 
   add(action) {
+    log('add', action)
     if (this.history.length >= this.limit || this.current === this.history.length - 1) {
       this.history.shift()
     }

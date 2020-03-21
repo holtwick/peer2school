@@ -131,6 +131,8 @@
 
 <script>
 import colorPalette from '../../config/colorPalette.js'
+import { store } from '../../tools/paperStore'
+import tools from '../../tools/tool/tools'
 import ColorPicker from '../ColorPicker'
 import RangeSlider from '../RangeSlider'
 import PanelToolIcon from './PanelToolIcon'
@@ -149,19 +151,7 @@ export default {
       isEraserSettingsOpened: false,
       isShapeSettingsOpened: false,
       colors: colorPalette,
-      tool: null,
-      toolArgs: {
-        size: 2,
-        color: '#000000',
-      },
-      eraserArgs: {
-        size: 2,
-        color: '#133337',
-      },
-      shapeArgs: {
-        size: 2,
-        color: '#000000',
-      },
+      store,
     }
   },
   methods: {
@@ -183,24 +173,27 @@ export default {
     },
     // Set Color
     setToolColor(color) {
-      this.toolArgs.color = color
+      this.store.toolArgs.color = color
     },
     setShapeColor(color) {
-      this.shapeArgs.color = color
+      this.store.shapeArgs.color = color
     },
     // Set size
     setToolSize(size) {
-      this.toolArgs.size = size
+      this.store.toolArgs.size = size
     },
     setEraserSize(size) {
-      this.eraserArgs.size = size
+      this.store.eraserArgs.size = size
     },
     setShapeSize(size) {
-      this.shapeArgs.size = size
+      this.store.shapeArgs.size = size
     },
     // Set tool
     setWhiteboardTool(tool) {
-      this.tool = tool
+      this.store.tool = tool
+      if (tools[tool]) {
+        tools[tool].activate()
+      }
     },
   },
   computed: {
@@ -232,20 +225,20 @@ export default {
     // },
     // Color
     toolColor: function () {
-      return this.toolArgs.color
+      return this.store.toolArgs.color
     },
     shapeColor: function () {
-      return this.shapeArgs.color
+      return this.store.shapeArgs.color
     },
     // Size
     toolSize: function () {
-      return this.toolArgs.size
+      return this.store.toolArgs.size
     },
     eraserSize: function () {
-      return this.eraserArgs.size
+      return this.store.eraserArgs.size
     },
     shapeSize: function () {
-      return this.shapeArgs.size
+      return this.store.shapeArgs.size
     },
   },
   mounted() {

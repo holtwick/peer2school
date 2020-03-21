@@ -1,7 +1,7 @@
 import paper from 'paper'
-import store from '../../store/store'
 import { DrawAction } from '../action'
 import history from '../history'
+import { store } from '../paperStore'
 import { createLayer } from '../shared'
 
 let local = {
@@ -14,8 +14,8 @@ function onMouseDown(event) {
   let layer = createLayer()
   local.path = new paper.Shape.Circle({
     center: event.point,
-    strokeColor: store.getters.shapeArgs.color,
-    strokeWidth: store.getters.shapeArgs.size,
+    strokeColor: store.shapeArgs.color,
+    strokeWidth: store.shapeArgs.size,
   })
   layer.addChild(local.path)
   local.center = event.point
@@ -30,7 +30,7 @@ function onMouseDrag(event) {
 function onMouseUp() {
   const action = new DrawAction({
     layer: local.path.layer.name,
-    tool: store.getters.tool,
+    tool: store.tool,
     center: local.center,
     radius: local.path.radius,
   })
