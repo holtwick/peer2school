@@ -3,10 +3,11 @@ import { UUID, UUID_length } from './lib/uuid'
 import { WebRTC } from './lib/webrtc'
 
 // Force a unique room ID
-let hash = (location.hash || `#${UUID()}.teacher`).substr(1)
-let teacher = hash.endsWith('.teacher')
-let room = hash.substr(1, UUID_length)
-location.hash = `#${room}`
+const teacherToken = '.teacher'
+let hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
+let teacher = hash.endsWith(teacherToken)
+let room = hash.substr(0, UUID_length)
+location.hash = `#${hash}`
 
 export let state = {
   room,

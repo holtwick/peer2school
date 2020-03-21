@@ -3,6 +3,7 @@
     <div class="header hstack">
       <h1 class="-fit">peer.school</h1>
       <div class="link">
+
         <span v-if="state.teacher">TEACHER</span>
         <span v-else>STUDENT</span>
 
