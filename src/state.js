@@ -1,13 +1,16 @@
 import { getUserMedia } from './lib/usermedia'
-import { UUID } from './lib/uuid'
+import { UUID, UUID_length } from './lib/uuid'
 import { WebRTC } from './lib/webrtc'
 
 // Force a unique room ID
-let room = (location.hash || `#${UUID()}`).substr(1)
+let hash = (location.hash || `#${UUID()}.teacher`).substr(1)
+let teacher = hash.endsWith('.teacher')
+let room = hash.substr(1, UUID_length)
 location.hash = `#${room}`
 
 export let state = {
   room,
+  teacher,
   peers: [],
   status: {},
   chat: [],
