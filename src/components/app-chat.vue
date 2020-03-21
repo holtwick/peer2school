@@ -11,9 +11,7 @@
       </div>
     </form>
     <form @submit.prevent.stop="pointOut">
-      <div id="picBackground">
       <button type ="submit"><img src="./img/aufzeigen.png" id="pointPic" style=""></button>
-      </div>
     </form>
   </div>
 </template>
@@ -34,20 +32,19 @@ export default {
       this.message = ''
     },
     pointOut() {
+      this.message = this.message //wtf, warning prevention...
 
       var pic = document.getElementById("pointPic")
-      var picBackground = document.getElementById("pointPic")
 
-      if(picBackground.style.backgroundColor != "orange")
+
+      if(pic.style.backgroundColor != "orange")
       {
-        picBackground.style.backgroundColor = "orange"
-        pic.src="./img/nicht_aufzeigen.png"
+        pic.style.backgroundColor = "orange"
         sendChatMessage("*Zeigt auf!*")
       }
       else
       {
-        picBackground.style.backgroundColor = ""
-        pic.src="./img/aufzeigen.png"
+        pic.style.backgroundColor = ""
         sendChatMessage("*Zeigt nicht mehr auf!*")
       }
     },
