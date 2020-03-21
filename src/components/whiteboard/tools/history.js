@@ -1,11 +1,12 @@
 class History {
+
   constructor(limit) {
     this.limit = limit
     this.clear()
   }
 
   add(action) {
-    if (this.history.length >= this.limit || this.current == this.history.length - 1) {
+    if (this.history.length >= this.limit || this.current === this.history.length - 1) {
       this.history.shift()
     }
     this.history.push(action)
@@ -28,6 +29,7 @@ class History {
     this.history = []
     this.current = 0
   }
+
 }
 
 // Default size 20

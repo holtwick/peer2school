@@ -149,6 +149,19 @@ export default {
       isEraserSettingsOpened: false,
       isShapeSettingsOpened: false,
       colors: colorPalette,
+      tool: null,
+      toolArgs: {
+        size: 2,
+        color: '#000000',
+      },
+      eraserArgs: {
+        size: 2,
+        color: '#133337',
+      },
+      shapeArgs: {
+        size: 2,
+        color: '#000000',
+      },
     }
   },
   methods: {
@@ -170,28 +183,28 @@ export default {
     },
     // Set Color
     setToolColor(color) {
-      this.$store.dispatch('setToolColor', color)
+      this.toolArgs.color = color
     },
     setShapeColor(color) {
-      this.$store.dispatch('setShapeColor', color)
+      this.shapeArgs.color = color
     },
     // Set size
     setToolSize(size) {
-      this.$store.dispatch('setToolSize', size)
+      this.toolArgs.size = size
     },
     setEraserSize(size) {
-      this.$store.dispatch('setEraserSize', size)
+      this.eraserArgs.size = size
     },
     setShapeSize(size) {
-      this.$store.dispatch('setShapeSize', size)
+      this.shapeArgs.size = size
     },
     // Set tool
     setWhiteboardTool(tool) {
-      this.$store.dispatch('setWhiteboardTool', tool)
+      this.tool = tool
     },
   },
   computed: {
-    // Acitve
+    // Active
     activeTool: function () {
       if (this.tool === 'pencil') {
         return 'pencil-alt'
@@ -214,29 +227,29 @@ export default {
         return 'circle'
       }
     },
-    tool: function () {
-      return this.$store.getters.tool
-    },
+    // tool: function () {
+    //   return this.$store.getters.tool
+    // },
     // Color
     toolColor: function () {
-      return this.$store.getters.toolArgs.color
+      return this.toolArgs.color
     },
     shapeColor: function () {
-      return this.$store.getters.shapeArgs.color
+      return this.shapeArgs.color
     },
     // Size
     toolSize: function () {
-      return this.$store.getters.toolArgs.size
+      return this.toolArgs.size
     },
     eraserSize: function () {
-      return this.$store.getters.eraserArgs.size
+      return this.eraserArgs.size
     },
     shapeSize: function () {
-      return this.$store.getters.shapeArgs.size
+      return this.shapeArgs.size
     },
   },
   mounted() {
-    this.$store.dispatch('setWhiteboardTool', 'pencil')
+    this.setWhiteboardTool('pencil')
   },
 }
 </script>
