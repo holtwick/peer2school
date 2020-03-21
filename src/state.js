@@ -58,7 +58,6 @@ export function sendChatMessage(msg) {
     sender: 'me',
     msg,
   })
-  console.log(state.pointOuts)
 }
 
 export function sendPointOutInfo(pointsOutInfo) {
