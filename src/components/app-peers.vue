@@ -5,8 +5,10 @@
 
     <div class="vstack sidebar text">
       <app-video :stream="state.stream" class="peer"/>
+
       <app-video v-for="peer in state.status" :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
-      <app-chat class="chat"/>
+
+      <app-chat/>
     </div>
 
     <app-whiteboard class="-fit"></app-whiteboard>
@@ -22,20 +24,9 @@
   padding: 1rem;
 }
 
-/*.video {*/
-/*  padding: 1rem;*/
-/*  display: flex;*/
-/*  flex-wrap: wrap;*/
-
-/*}*/
-
-.chat {
-
-}
-
 .peer {
   background: #333;
-  max-width: 20rem;
+  width: 100%;
   max-height: 20rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
