@@ -13,7 +13,8 @@ Simple P2P teaching platform starting from the 1st class
 **The following is in German language due to the related German language hackathon**
 
 - [Projektbeschreibung / -anmeldung](docs-de/projektbeschreibung.md)
-- [Konzeption](docs-de/konzept.md)
+- Erste [Konzeption](docs-de/konzept.md)
+- [Setup](docs-de/setup.md) um mit der Entwicklung loszulegen
 
 ---
 
