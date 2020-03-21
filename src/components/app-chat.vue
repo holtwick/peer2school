@@ -30,6 +30,8 @@ export default {
     doSend() {
       sendChatMessage(this.message)
       this.message = ''
+
+      console.log(this.state.status.pointsOut)
     },
     pointOut() {
       this.message = this.message //wtf, warning prevention...
@@ -48,7 +50,7 @@ export default {
         this.pointsOut = false
       }
 
-      sendPointOutInfo(pointsOut)
+      sendPointOutInfo(this.pointsOut)
     },
   },
   async mounted() {
