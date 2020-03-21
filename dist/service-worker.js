@@ -11,11 +11,11 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts("/peer2school/dist/workbox-v4.3.1/workbox-sw.js");
-workbox.setConfig({modulePathPrefix: "/peer2school/dist/workbox-v4.3.1"});
+importScripts("/dist/workbox-v4.3.1/workbox-sw.js");
+workbox.setConfig({modulePathPrefix: "/dist/workbox-v4.3.1"});
 
 importScripts(
-  "/peer2school/dist/precache-manifest.dd95c65fda40c84b44f69dfd382b7601.js"
+  "/dist/precache-manifest.47d3f4a37a6ab2065d72d3bb9eff0ed6.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "peer2school"});
