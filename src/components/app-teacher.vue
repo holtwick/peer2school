@@ -43,7 +43,7 @@
   background: #eee;
   overflow: auto;
   overflow-y: scroll;
-  max-height: 80%;
+  max-height: 90%;
 }
 
 </style>

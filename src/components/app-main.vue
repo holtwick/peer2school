@@ -9,7 +9,7 @@
       <div class="video -fit">
         <app-video :stream="state.stream" class="peer" />
         <div v-for="peer in state.status" :key="peer.remote">
-          <app-video v-if="state.teacher_stream.find(peer.remote) >= 0"  :stream="peer.peer.stream" :visible="true" class="peer"/>
+          <app-video v-if="state.teacher_stream.find(s => s === peer.remote)"  :stream="peer.peer.stream" :visible="true" class="peer"/>
           <app-video v-else :stream="peer.peer.stream" class="peer"/>
         </div>
       </div>
