@@ -33,8 +33,8 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
-//pointsOut.state -> true = activates point out
-//                   false = deactivates point out
+//pointsOut.state -> true = point out is activated 
+//                   false = point out is deactivates 
 webrtc.on('point_out', pointsOut => {
   if(pointsOut.state){
     state.pointOuts.push(pointsOut.sender)
@@ -42,10 +42,9 @@ webrtc.on('point_out', pointsOut => {
   else{
     senderIndex = state.pointOuts.indexOf(pointsOut.sender)
 
-    if(senderIndex >= 0)
+    if(senderIndex >= 0) //check if sender is in list
       state.pointOuts.splice(senderIndex, 1)
   }
-
 })
 
 webrtc.on('connected', ({ peer }) => {
@@ -82,7 +81,7 @@ export function sendPointOutInfo(pointsOutInfo) {
   {
     senderIndex = state.pointOuts.indexOf(webrtc.io.id)
 
-    if(senderIndex >= 0)
+    if(senderIndex >= 0) //check if sender is in list
       state.pointOuts.splice(senderIndex, 1)
   }
 
