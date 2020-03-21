@@ -10,8 +10,8 @@
         <!--        <button type="submit">Send message</button>-->
       </div>
     </form>
-    <form @submit.prevent.stop="pointOut">
-      <button type ="submit"><img src="./img/aufzeigen.png" id="pointPic" style=""></button>
+    <form>
+      <button @click="pointOut" type ="submit"><img src="./img/aufzeigen.png" ref="pointPic" style=""></button>
     </form>
   </div>
 </template>
@@ -34,7 +34,7 @@ export default {
     pointOut() {
       this.message = this.message //wtf, warning prevention...
 
-      var pic = document.getElementById("pointPic")
+      let pic = this.$refs.pointPic
 
 
       if(!this.pointsOut)
