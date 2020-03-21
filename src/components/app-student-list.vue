@@ -12,10 +12,6 @@
 <script>
 import { sendChatMessage } from '../state'
 
-watch("state.chat", (newVal, oldVal) => {
-    console.log("DEBUG DEBUG DEBUG: " + newVal)
-})
-
 export default {
   name: 'app-student-list',
   data() {
@@ -28,6 +24,11 @@ export default {
     },
     pointOut() {
     },
+  },
+  watch : {
+    'state.chat' : function(val) {
+      console.log("DEBUG DEBUG DEBUG: " + val)
+    }
   },
   async mounted() {
   },
