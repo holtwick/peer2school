@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <canvas id="whiteboard" resize></canvas>
-    <mainPanel></mainPanel>
-    <historyPanel></historyPanel>
+  <div class="hstack">
+    <canvas class="-fit" id="whiteboard" resize></canvas>
+    <div class="">
+      <mainPanel></mainPanel>
+      <historyPanel></historyPanel>
+    </div>
   </div>
 </template>
 
@@ -27,15 +29,9 @@ export default {
 
 
 <style lang="scss">
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
 canvas {
-  height: 100vh;
-  width: 100%;
-  background: #133337;
+  /*height: 100vh;*/
+  /*width: 100%;*/
+  /*background: red;*/
 }
 </style>
