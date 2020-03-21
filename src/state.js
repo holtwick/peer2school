@@ -15,6 +15,7 @@ export let state = {
   peers: [],
   status: {},
   chat: [],
+  pointOuts: [],
   stream: null,
 }
 
@@ -32,8 +33,13 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
-webrtc.on('point_out', msg => {
-  state.chat.push(msg)
+webrtc.on('point_out', info => {
+  if(info.point_out){
+    state.pointOuts.push(info.sender)
+  }
+  else{
+    state.pointOuts.splice(state.pointOuts.indexOf(info.sender))
+  }
 })
 
 webrtc.on('connected', ({ peer }) => {
@@ -53,11 +59,11 @@ export function sendChatMessage(msg) {
   })
 }
 
-export function sendPointOutInfo(msg) {
+export function sendPointOutInfo(point_out) {
 
   webrtc.send('point_out', {
     sender: webrtc.io.id,
-    msg,
+    point_out: point_out,
   })
 }
 
