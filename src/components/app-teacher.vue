@@ -1,5 +1,6 @@
 <template>
   <div class="vstack">
+
     <div class="header hstack">
       <h1 class="-fit">peer.school</h1>
       <div class="link">
@@ -7,7 +8,9 @@
         Share <a :href="url">{{ url }}</a>
       </div>
     </div>
+
     <app-peers class="-fit"></app-peers>
+
   </div>
 </template>
 
