@@ -18,7 +18,7 @@ export class WebRTC extends Emitter {
 
   constructor({
                 wrtc, // wrtc is used for unit testing via node.js
-                room = 'wasabia',
+                room = 'sample',
               } = {}) {
     super()
     assert(room, 'room cannot be empty')
