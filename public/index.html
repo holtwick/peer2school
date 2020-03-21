@@ -1,17 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>Peer2School</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<html>
+
+<head>
+	<title>Peer School</title>
+	<meta charset="utf-8" />
+
+	<!--- JS References -!-->
+	<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="./js/fontawseome5.8.1.min.js"></script>
+	<!--- for dragabbles -!-->
+	<script type="text/javascript" src="./js/socketio2.0.4.min.js"></script>
+	<script type="text/javascript" src="./js/jqColorPicker.min.js"></script>
+
+	<script type="text/javascript" src="./js/whiteboard.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
+
+	<!--- CSS References -!-->
+	<link rel="stylesheet" href="./css/jquery-ui.min.css">
+  <link href="./css/main.css" rel="stylesheet">
+  <link href="./css/stream.css" rel="stylesheet">
+
+  <link href="../dist/css/app.cd1071ef.css" rel="stylesheet">
+
+  <link href="../dist/css/app.cd1071ef.css" rel=preload as=style>
+  <link href="../dist/js/app.9e8b356c.js" rel=preload as=script>
+  <link href="../dist/js/chunk-vendors.b3e9946a.js" rel=preload as=script>
+  <link href=/peer2school/dist/css/app.b3d18587.css rel=stylesheet>
+  <link rel=icon type=image/png sizes=32x32 href=/peer2school/dist/img/icons/favicon-32x32.png>
+  <link rel=icon type=image/png sizes=16x16 href=/peer2school/dist/img/icons/favicon-16x16.png>
+  <link rel=manifest href="../dist/manifest.json">
+
+	<!--- Set width for Mobile Devices -!-->
+	<script>
+		//Set correct width height on mobile browsers
+		var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+		if (isChrome) {
+			$('head').append('<meta name="viewport" content="width=device-width, initial-scale=0.52, maximum-scale=1" />');
+		} else {
+			$('head').append('<meta name="viewport" content="width=1400" />');
+		}
+	</script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="row">
+      <div class="column">
+        <div class="left-column">
+	    <!---Whiteboard container -!-->
+      <div id="whiteboardContainer" sytle="position: absolute; width: 75;"></div>
+      <!---Toolbar -!-->
+      <div id="toolbar" style="position: absolute; top: 10px; left: 50px; width: 75%;">
+        <div class="btn-group">
+          <button id="whiteboardTrashBtn" title="Clear the whiteboard" type="button" class="whiteboardBtn">
+            <i class="fa fa-trash"></i>
+          </button>
+          <button style="position:absolute; left:0px; top:0px; width: 46px; display:none;"
+            id="whiteboardTrashBtnConfirm" title="Confirm clear..." type="button" class="whiteboardBtn">
+            <i class="fa fa-check"></i>
+          </button>
+          <button id="whiteboardUndoBtn" title="Undo your last step" type="button" class="whiteboardBtn">
+            <i class="fa fa-undo"></i>
+          </button>
+        </div>
+
+        <div class="btn-group">
+          <button tool="mouse" title="Take the mouse" type="button" class="whiteboardTool">
+            <i class="fa fa-mouse-pointer"></i>
+          </button>
+          <button style="padding-bottom: 11px;" tool="recSelect" title="Select an area" type="button"
+            class="whiteboardTool">
+            <img src="./images/dottedRec.png">
+          </button>
+          <button tool="pen" title="Take the pen" type="button" class="whiteboardTool active">
+            <i class="fa fa-pencil-alt"></i>
+          </button>
+          <button style="padding-bottom: 8px; padding-top: 6px;" tool="line" title="draw a line" type="button"
+            class="whiteboardTool">
+            ╱
+          </button>
+          <button tool="rect" title="draw a rectangle" type="button" class="whiteboardTool">
+            <i class="far fa-square"></i>
+          </button>
+          <button tool="circle" title="draw a circle" type="button" class="whiteboardTool">
+            <i class="far fa-circle"></i>
+          </button>
+          <button tool="text" title="write text" type="button" class="whiteboardTool">
+            <i class="fas fa-font"></i>
+          </button>
+          <button tool="eraser" title="take the eraser" type="button" class="whiteboardTool">
+            <i class="fa fa-eraser"></i>
+          </button>
+        </div>
+
+        <div class="btn-group">
+          <button style="width: 190px; cursor:default;">
+            <div class="activeToolIcon" style="position:absolute; top:2px; left:2px; font-size: 0.6em;"><i
+                class="fa fa-pencil-alt"></i></div>
+            <img style="position: absolute; left: 11px; top: 16px; height:14px; width:130px;"
+              src="./images/slider-background.svg">
+            <input title="Thickness" id="whiteboardThicknessSlider"
+              style="position: absolute; left:9px; width: 130px; top: 15px;" type="range" min="1" max="50"
+              value="3">
+            <div title="Colorpicker"
+              style="position: absolute; left: 155px; top: 10px; width: 26px; height: 23px; border-radius: 3px; overflow: hidden; border: 1px solid darkgrey;">
+              <div id="whiteboardColorpicker" value="#000000"
+                style="width: 40px; height: 35px; border: 0px; padding: 0px; position: relative; top: 0px; left: -5px;">
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <div class="btn-group">
+          <button id="saveAsImageBtn" title="Save whiteboard as image" type="button" class="whiteboardBtn">
+            <i class="fas fa-image"></i>
+            <i style="position: absolute; top: 3px; left: 2px; color: #000000; font-size: 0.5em; "
+              class="fas fa-save"></i>
+          </button>
+          <button style="position: relative;" id="saveAsJSONBtn" title="Save whiteboard as JSON" type="button"
+            class="whiteboardBtn">
+            <i class="far fa-file-alt"></i>
+            <i style="position: absolute; top: 3px; left: 2px; color: #000000; font-size: 0.5em; "
+              class="fas fa-save"></i>
+          </button>
+          <button style="position: relative; display: none;" id="uploadWebDavBtn" title="Save whiteboard to webdav"
+            type="button" class="whiteboardBtn">
+
+            <i class="fas fa-globe"></i>
+            <i style="position: absolute; top: 3px; left: 2px; color: #000000; font-size: 0.5em; "
+              class="fas fa-save"></i>
+          </button>
+        </div>
+
+        <div class="btn-group">
+          <button id="addImgToCanvasBtn" title="Upload Image to whiteboard" type="button" class="whiteboardBtn">
+            <i class="fas fa-image"></i>
+            <i style="position: absolute; top: 3px; left: 2px; color: #000000; font-size: 0.5em; "
+              class="fas fa-upload"></i>
+          </button>
+
+          <button style="position: relative;" id="uploadJsonBtn" title="Load saved JSON to whiteboard" type="button"
+            class="whiteboardBtn">
+
+            <i class="far fa-file-alt"></i>
+            <i style="position: absolute; top: 3px; left: 2px; color: #000000; font-size: 0.5em; "
+              class="fas fa-upload"></i>
+          </button>
+          <input style="display:none;" id="myFile" type="file" />
+
+          <button id="shareWhiteboardBtn" title="share whiteboard" type="button">
+            <i class="fas fa-share-square"></i>
+          </button>
+        </div>
+
+        <div class="btn-group minGroup">
+          <button style="width: 25px;	padding: 11px 11px;" id="minMaxBtn" title="hide buttons" type="button">
+            <i id="minBtn" style="position:relative; left:-5px;" class="fas fa-angle-left"></i>
+            <i id="maxBtn" style="position:relative; left:-5px; display: none;" class="fas fa-angle-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="column">
+      <div class="right-column" style="padding-top: 20px;">
+      <p><b>Lehrer</b></p>
+      <p><b>Schüler</b></p>
+      <button class="button">Aufzeigen</button>
+
+    </div>
+    </div>
+  </div>
+
+	
+</body>
+
+<script>
+function setupRTC(targetId) {
+  var isSupported = false;
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+  window.PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+  window.IceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
+  window.SessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
+  isSupported = navigator.getUserMedia && window.PeerConnection && window.SessionDescription;
+  if (isSupported) {
+    var configuration = {
+      "iceServers": [{ url: 'stun server url' }, {
+        url: 'turn server url',
+        username: 'turn server username',
+        credential: 'turn server key'
+      }]
+    };
+    //save Peer connection object to angular $rootScope to global access.
+    $rootScope.pc = new PeerConnection(configuration);
+    //add events handlers
+    $rootScope.pc.onicecandidate = function(e) {
+      if (e.candidate) {
+        $rootScope.io.emit('rtc', {
+          targetId: targetId,
+          type: 'candidate',
+          label: e.candidate.sdpMLineIndex,
+          id: e.candidate.sdpMid,
+          candidate: e.candidate.candidate
+        });
+      }
+    };
+    $rootScope.pc.onaddstream = function(e) {
+      // here should be code for processing successful connection
+      // for example save stream url to variable and insert it to HTML5 video player
+      $rootScope.stream = e.stream
+    };
+    $rootScope.pc.oniceconnectionstatechange = function() {
+      //if interrupted connection
+      if ($rootScope.pc && $rootScope.pc.iceConnectionState == 'disconnected') {
+        console.log('peer connection interrupted');
+        // here should be code for handler of interrupted connection
+        // for example hide video player
+      }
+    };
+  }
+  return isSupported;
+}
+startCall = function(targetId) {
+  var isSupported = setupRTC(targetId);
+  if (isSupported) {
+    enableSelfVideo(function() {
+      $rootScope.io.emit('callRequest', {
+        type: 'video',
+        targetId: targetId
+      });
+    });
+  } else {
+    alert('UserMedia or WebRTC is not supported');
+  }
+};
+function enableSelfVideo(callback) {
+  navigator.getUserMedia({ audio: true, video: true }, function(stream) {
+    $rootScope.pc.addStream(stream);
+    callback();
+  }, function(err) {
+    alert(err)
+  });
+}
+function onRequest(io, socket) {
+  return function(data) {
+    data.userId = socket.user.id;
+    socket.to('User:' + data.targetId).emit('callRequest', data);
+  };
+}
+var callAccept = function(targetId) {
+  var isSupported = setupRTC(targetId);
+  if (isSupported) {
+    enableSelfVideo(function() {
+      $rootScope.io.emit('callRequest', {
+        type: 'video',
+        targetId: targetId
+      });
+    });
+  } else {
+    $rootScope.io.emit('callDecline', {
+      targetId: targetId,
+      reason: 'some reason'
+    });
+  }
+}
+function onCallAccept() {
+  $rootScope.pc.createOffer(function(description) {
+    $rootScope.pc.setLocalDescription(description, function() {
+      description.type = 'offer';
+      $rootScope.io.emit('rtc', description);
+    }, onError);
+  }, onError, mediaConstraints);
+}
+function onRtc(io, socket) {
+  return function(data) {
+    data.fromId = socket.user.id;
+    data.toId = socket.interlocutorId;
+    socket.to('User:' + socket.interlocutorId).emit('rtc', data);
+  };
+}
+function onRtc(data) {
+  switch (data.type) {
+    case 'offer':
+      onRtcOffer(data);
+      break;
+    case 'answer':
+      onRtcAnswer(data);
+      break;
+    case 'candidate':
+      onRtcCandidate(data);
+      break;
+  }
+}
+function onRtcOffer(data) {
+  $rootScope.pc.setRemoteDescription(new SessionDescription(data), function() {
+    $rootScope.pc.createAnswer(function(description) {
+      $rootScope.pc.setLocalDescription(new SessionDescription(description), function() {
+        description.type = 'answer';
+        description.toId = data.fromId;
+        console.log('sending answer');
+        $rootScope.io.emit('rtc', description);
+      }, onError);
+    }, onError, mediaConstraints);
+  }, onError);
+}
+function onRtcAnswer(data) {
+  console.log('received answer');
+  $rootScope.pc.setRemoteDescription(new SessionDescription(data), function() {}, onError);
+}
+function onRtcCandidate(data) {
+  console.log('received candidate');
+  var candidate = new RTCIceCandidate({
+    sdpMLineIndex: data.label,
+    candidate: data.candidate
+  });
+  $rootScope.pc.addIceCandidate(candidate);
+}
+</script>
+
 </html>

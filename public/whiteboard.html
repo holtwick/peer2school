@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Peer School</title>
+	<meta charset="utf-8" />
+
+	<!--- JS References -!-->
+	<script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="./js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="./js/fontawseome5.8.1.min.js"></script>
+	<!--- for dragabbles -!-->
+	<script type="text/javascript" src="./js/socketio2.0.4.min.js"></script>
+	<script type="text/javascript" src="./js/jqColorPicker.min.js"></script>
+
+	<script type="text/javascript" src="./js/whiteboard.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
+
+	<!--- CSS References -!-->
+	<link rel="stylesheet" href="./css/jquery-ui.min.css">
+  <link href="./css/main.css" rel="stylesheet">
+  <link href="./css/stream.css" rel="stylesheet">
+
+  <link href="../dist/css/app.cd1071ef.css" rel="stylesheet">
+
+  <link href="../dist/css/app.cd1071ef.css" rel=preload as=style>
+  <link href="../dist/js/app.9e8b356c.js" rel=preload as=script>
+  <link href="../dist/js/chunk-vendors.b3e9946a.js" rel=preload as=script>
+  <link href=/peer2school/dist/css/app.b3d18587.css rel=stylesheet>
+  <link rel=icon type=image/png sizes=32x32 href=/peer2school/dist/img/icons/favicon-32x32.png>
+  <link rel=icon type=image/png sizes=16x16 href=/peer2school/dist/img/icons/favicon-16x16.png>
+  <link rel=manifest href="../dist/manifest.json">
+
+	<!--- Set width for Mobile Devices -!-->
+	<script>
+		//Set correct width height on mobile browsers
+		var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+		if (isChrome) {
+			$('head').append('<meta name="viewport" content="width=device-width, initial-scale=0.52, maximum-scale=1" />');
+		} else {
+			$('head').append('<meta name="viewport" content="width=1400" />');
+		}
+	</script>
+</head>
+
+<body>
+
+      <div id="app"></div>
+      <script src="../dist/js/chunk-vendors.b3e9946a.js"></script>
+      <script src="../dist/js/app.c3b1db56.js"></script>
+      <button type="button">Aufzeigen</button>
+	
+</body>
+
+</html>
