@@ -26,8 +26,8 @@ export default {
     },
   },
   watch : {
-    'state.chat' : function(val) {
-      console.log("DEBUG DEBUG DEBUG: " + val)
+    'state.chat' : function(newV, oldV) {
+      console.log("DEBUG DEBUG DEBUG: " + newV + "|" + oldV)
     }
   },
   async mounted() {
