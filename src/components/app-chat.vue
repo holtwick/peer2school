@@ -1,7 +1,5 @@
 <template>
-  <div class="text">
-    <h3>Chat</h3>
-
+  <div class="chat">
     <input type="text" v-model="username" />
     <button @click="setUsername()">Save</button>
     <form @submit.prevent.stop="doSend">
@@ -14,13 +12,25 @@
         <!--        <button type="submit">Send message</button>-->
       </div>
     </form>
-    <form>
-      <button @click="pointOut" type ="submit"><img src="./img/aufzeigen.png" ref="pointPic" style=""></button>
-    </form>
+
+    <div class="point">
+      <button @click="pointOut" type="submit"><img src="../assets/img/aufzeigen.png" ref="pointPic"></button>
+    </div>
   </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.point {
+  margin-top: 1rem;
+}
+.chat {
+  input {
+    display: block;
+    width: 100%;
+    padding: 0.25rem;
+  }
+}
+</style>
 
 <script>
 import { sendChatMessage } from '../state'
@@ -56,16 +66,13 @@ export default {
       let pic = this.$refs.pointPic
 
 
-      if(!this.pointsOut)
-      {
-        pic.style.backgroundColor = "orange"
-        sendChatMessage("*Zeigt auf!*")
+      if (!this.pointsOut) {
+        pic.style.backgroundColor = 'orange'
+        sendChatMessage('*Zeigt auf!*')
         this.pointsOut = true
-      }
-      else
-      {
-        pic.style.backgroundColor = ""
-        sendChatMessage("*Zeigt nicht mehr auf!*")
+      } else {
+        pic.style.backgroundColor = ''
+        sendChatMessage('*Zeigt nicht mehr auf!*')
         this.pointsOut = false
       }
     },
