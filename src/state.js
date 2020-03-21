@@ -33,15 +33,17 @@ webrtc.on('chat', msg => {
   state.chat.push(msg)
 })
 
+//pointsOut.state -> true = activates point out
+//                   false = deactivates point out
 webrtc.on('point_out', pointsOut => {
   if(pointsOut.state){
     state.pointOuts.push(pointsOut.sender)
   }
   else{
-    index = state.pointOuts.indexOf(pointsOut.sender)
+    senderIndex = state.pointOuts.indexOf(pointsOut.sender)
 
-    if(index >= 0)
-      state.pointOuts.splice(index, 1)
+    if(senderIndex >= 0)
+      state.pointOuts.splice(senderIndex, 1)
   }
 
 })
@@ -78,10 +80,10 @@ export function sendPointOutInfo(pointsOutInfo) {
   }
   else
   {
-    index = state.pointOuts.indexOf(webrtc.io.id)
+    senderIndex = state.pointOuts.indexOf(webrtc.io.id)
 
-    if(index >= 0)
-      state.pointOuts.splice(index, 1)
+    if(senderIndex >= 0)
+      state.pointOuts.splice(senderIndex, 1)
   }
 
 }
