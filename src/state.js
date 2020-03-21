@@ -2,8 +2,12 @@ import { getUserMedia } from './lib/usermedia'
 import { UUID } from './lib/uuid'
 import { WebRTC } from './lib/webrtc'
 
+// Force a unique room ID
+let room = (location.hash || `#${UUID()}`).substr(1)
+location.hash = `#${room}`
+
 export let state = {
-  room: '',
+  room,
   peers: [],
   status: {},
   chat: [],
@@ -13,10 +17,6 @@ export let state = {
 getUserMedia(stream => {
   state.stream = stream
 })
-
-// Force a unique room ID
-let room = (location.hash || `#${UUID()}`).substr(1)
-location.hash = `#${room}`
 
 export let webrtc = new WebRTC({ room })
 

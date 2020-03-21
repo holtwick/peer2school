@@ -6,6 +6,7 @@ import { v4 } from 'uuid'
 // https://github.com/LinusU/base32-encode/blob/master/index.js
 export function base32Encode(buffer) {
   const alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
+  // const alphabet = '0123456789abcdefghjkmnpqrstvwxyz'
   let length = buffer.byteLength
   let view = new Uint8Array(buffer)
 
