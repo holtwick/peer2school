@@ -8,9 +8,10 @@
       <div>
         <input placeholder="Send message" v-model="message">
         <!--        <button type="submit">Send message</button>-->
-        <br>
-        <button>Melden</button>
       </div>
+    </form>
+    <form @submit.prevent.stop="pointOut">
+      <button type ="submit">Melden</button>
     </form>
   </div>
 </template>
@@ -28,6 +29,10 @@ export default {
   methods: {
     doSend() {
       sendChatMessage(this.message)
+      this.message = ''
+    },
+    pointOut() {
+      sendChatMessage("*Zeigt auf!*")
       this.message = ''
     },
   },
