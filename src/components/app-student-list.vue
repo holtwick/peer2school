@@ -26,14 +26,10 @@ export default {
   },
   watch: {
     "state.chat": function(val) {
-      const msg = val[val.length - 1];
-      console.log("DEBUG DEBUG DEBUG: " + msg);
-      if (msg.msg == "*Zeigt auf!*") this.pointingUp.push(msg.sender);
-      else if (msg.msg == "*Zeigt nicht mehr auf!*") {
-        this.pointingUp = this.pointingUp.filter(
-          student => student == msg.sender
-        );
-      }
+      const { msg, sender } = val[val.length - 1];
+      if (msg == "*Zeigt auf!*") this.pointingUp.push(sender);
+      else if (msg == "*Zeigt nicht mehr auf!*")
+        this.pointingUp = this.pointingUp.filter(elem => elem != sender);
     }
   },
   async mounted() {}
