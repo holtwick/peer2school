@@ -15,7 +15,9 @@
     "simple-peer": "^9.6.2",
     "socket.io-client": "^2.3.0",
     "uuid": "^7.0.2",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "paper": "0.12.4",
+    "vue-slider-component": "3.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.3",
