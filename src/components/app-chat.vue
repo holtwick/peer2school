@@ -32,7 +32,6 @@ export default {
       this.message = ''
     },
     pointOut() {
-<<<<<<< HEAD
       this.message = this.message //wtf, warning prevention...
 
       var pic = document.getElementById("pointPic")
@@ -41,26 +40,11 @@ export default {
       if(pic.style.backgroundColor != "orange")
       {
         pic.style.backgroundColor = "orange"
-=======
-
-      var pic = document.getElementById("pointPic")
-      var picBackground = document.getElementById("pointPic")
-
-      if(picBackground.style.backgroundColor != "orange")
-      {
-        picBackground.style.backgroundColor = "orange"
-        pic.src="./img/nicht_aufzeigen.png"
->>>>>>> develop
         sendChatMessage("*Zeigt auf!*")
       }
       else
       {
-<<<<<<< HEAD
         pic.style.backgroundColor = ""
-=======
-        picBackground.style.backgroundColor = ""
-        pic.src="./img/aufzeigen.png"
->>>>>>> develop
         sendChatMessage("*Zeigt nicht mehr auf!*")
       }
     },
