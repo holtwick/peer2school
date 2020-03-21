@@ -13,7 +13,7 @@
 
   if (isset($_GET["room"])) {
     $room = $_GET["room"];
-    $url = "https://holtwick.github.io/peer2school/dist/index.html#$room";
+    $url = "/dist/#$room";
   }
 
 ?>
