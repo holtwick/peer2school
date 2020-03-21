@@ -14,7 +14,7 @@ export let state = {
   room,
   teacher,
   peers: [],
-  teacher_stream: "",
+  teacher_stream: [],
   status: {},
   chat: [],
   stream: null,
@@ -31,8 +31,10 @@ export let webrtc = new WebRTC({ room })
 webrtc.on('status', info => {
   state.status = info.status
   // Set the teacher id
-  if(teacher) {
-    state.teacher_stream = webrtc.io.id
+  console.log("DEBUG DEBUG" + state.teacher_stream.find(webrtc.io.id) >= 0 )
+  if(state.teacher && 
+    !(state.teacher_stream.find(webrtc.io.id) >= 0) ) {
+    state.teacher_stream.push(webrtc.io.id)
   }
 })
 

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.visible == true">
+  <div v-if="this.visible">
     <video ref="video"/>
   </div>
 </template>
