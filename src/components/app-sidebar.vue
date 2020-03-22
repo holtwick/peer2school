@@ -21,6 +21,8 @@
       chat
       <app-chat/>
       <app-signal v-if="!state.teacher"/>
+
+      {{state}}
     </div>
 
   </div>
@@ -29,7 +31,7 @@
 <style lang="scss">
 .sidebar {
   max-width: 20%;
-  width: 12rem;
+  width: 16rem;
   background: #eee;
   padding: 1rem;
 }

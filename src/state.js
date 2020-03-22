@@ -19,7 +19,6 @@ location.hash = `#${hash}`
 let synched = {
   info: {},
   chat: [],
-  whiteboard: [],
   signals: {},
   profiles: {},
 }
@@ -47,6 +46,8 @@ sync.on('ready', () => {
   }
   updateState()
 })
+
+sync.whiteboard = sync.doc.getArray('whiteboard')
 
 for (const [name, dft] of Object.entries(synched)) {
   sync[name] = Array.isArray(dft) ? sync.doc.getArray(name) : sync.doc.getMap(name)
