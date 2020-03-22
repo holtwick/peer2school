@@ -10,8 +10,6 @@
         <!--        <button type="submit">Send message</button>-->
       </div>
     </form>
-
-
   </div>
 </template>
 

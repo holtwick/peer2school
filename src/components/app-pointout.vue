@@ -3,6 +3,9 @@
     <button v-if="!state.teacher" @click="pointOut" type="submit">
       <img src="../assets/img/aufzeigen.png" ref="pointPic">
     </button>
+    <div v-else>
+       
+    </div>
   </div>
 </template>
 
