@@ -24,12 +24,6 @@ export let state = {
   whiteboard: [],
 }
 
-// MEDIA
-
-ENABLE_VIDEO && getUserMedia(stream => {
-  state.stream = stream
-})
-
 // WEBRTC
 
 // export let webrtc = new WebRTC({ room })
@@ -64,6 +58,14 @@ sync.chat.observe(event => {
   let chat = sync.chat.toJSON()
   log('yarray was modified', JSON.stringify(chat))
   state.chat = chat
+})
+
+
+// MEDIA
+
+ENABLE_VIDEO && getUserMedia(stream => {
+  state.stream = stream
+  sync.setStream(stream)
 })
 
 // UTILS

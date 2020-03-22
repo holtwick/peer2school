@@ -1,3 +1,5 @@
+const log = require('debug')('app:usermedia')
+
 navigator.getUserMedia = (
   navigator['getUserMedia'] ||
   navigator['webkitGetUserMedia'] ||
