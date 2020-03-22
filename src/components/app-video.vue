@@ -1,40 +1,35 @@
 <template>
-  <div v-if="this.visible">
-    <video ref="video"/>
-  </div>
+  <video v-if="this.visible" ref="video" />
 </template>
 
 <style lang="scss">
-
 </style>
 
 <script>
-
-import { connectStreamToVideoElement } from '../lib/usermedia'
+import { connectStreamToVideoElement } from "../lib/usermedia";
 
 export default {
-  name: 'app-video',
+  name: "app-video",
   props: {
-    stream: {
-    },
-    visible: false,
+    stream: {},
+    visible: false
   },
   data() {
-    return {}
+    return {};
   },
   methods: {
     async doConnectStream(stream) {
-      connectStreamToVideoElement(stream, this.$refs.video)
-    },
+      connectStreamToVideoElement(stream, this.$refs.video);
+    }
   },
   async mounted() {
-    await this.doConnectStream(this.stream)
+    await this.doConnectStream(this.stream);
   },
   watch: {
     stream(value) {
-      this.doConnectStream(value)
-    },
-  },
-}
+      this.doConnectStream(value);
+    }
+  }
+};
 </script>
 
