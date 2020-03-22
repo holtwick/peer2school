@@ -88,3 +88,7 @@ export function addChatMessage(msg) {
 export function setSignal(active) {
   sync.signals.set(state.peerID, { active })
 }
+
+export function setProfileName(name) {
+  sync.profile.set(state.peerID, { name })
+}
