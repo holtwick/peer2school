@@ -1,6 +1,6 @@
 <template>
   <div class="vstack sidebar text">
-    <!--    <app-video v-for="peer in state.peers" :key="peer" :id="peer" class="peer"/>-->
+    <!--        <app-video v-for="peer in state.peers" :key="peer" :id="peer" class="peer"/>-->
 
     <!--    <form @submit.prevent.stop="setUsername" class="account-wrapper">-->
     <!--      <input type="text" v-model="username" placeholder="Name" />-->
@@ -9,14 +9,12 @@
     <!--    <br />-->
 
     <div v-if="!state.teacher">
-      Lehrer
       <app-video v-if="!state.teacher && state.teacherStream"
                  :stream="state.teacherStream"
                  class="peer peer-teacher"/>
     </div>
 
     <div>
-      Ich
       <app-video :stream="state.stream" class="peer peer-self"/>
     </div>
 
@@ -38,7 +36,7 @@
     <!--    </ul>-->
     <!--    <br />-->
     <!--    <app-peer-list/>-->
-    {{ state.peers }}
+    
     <slot></slot>
     <br/>
     <!--    <app-chat/>-->
