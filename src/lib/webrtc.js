@@ -5,6 +5,7 @@ import { SIGNAL_SERVER_URL } from '../config'
 import { assert } from './assert'
 import { Emitter } from './emitter'
 import { WebRTCPeer } from './webrtc-peer'
+import {state, webrtc} from '../state';
 
 const log = require('debug')('app:webrtc')
 

@@ -23,7 +23,8 @@
         </li>
       </div>
     </ul>
-
+    <br />
+    <app-peer-list/>
     <slot></slot>
     <br />
     <app-chat/>
@@ -73,10 +74,12 @@
 import AppChat from './app-chat'
 import AppVideo from './app-video'
 import {getPeerNameBySenderId, setPeerName} from '../state';
+import AppPeerList from './app-peer-list';
 
 export default {
   name: 'app-sidebar',
   components: {
+    AppPeerList,
     AppChat,
     AppVideo,
   },
