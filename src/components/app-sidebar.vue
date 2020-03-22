@@ -1,8 +1,6 @@
 <template>
   <div class="vstack sidebar text">
     <app-video :stream="state.stream" class="peer"/>
-
-    {{ state.peers }}
     <app-video v-for="peer in state.peers" :key="peer" :id="peer" class="peer"/>
     <slot></slot>
     <app-chat/>

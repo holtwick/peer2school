@@ -24,30 +24,6 @@ export let state = {
   whiteboard: [],
 }
 
-// WEBRTC
-
-// export let webrtc = new WebRTC({ room })
-//
-// webrtc.on('status', info => {
-//   state.status = info.status
-// })
-//
-// webrtc.on('chat', msg => {
-//   state.chat.push(msg)
-// })
-//
-// webrtc.on('whiteboard', ({ action }) => {
-//   this.whiteboard.push(action)
-// })
-//
-// webrtc.on('connected', ({ peer }) => {
-//   setTimeout(() => {
-//     if (state.stream) {
-//       peer.addStream(state.stream)
-//     }
-//   }, 1000)
-// })
-
 // SYNC
 
 export let sync = setupSync({
@@ -67,7 +43,6 @@ sync.on('peers', () => {
   state.peers = sync.getPeerList()
 })
 
-
 // MEDIA
 
 ENABLE_VIDEO && getUserMedia(stream => {
@@ -82,4 +57,9 @@ export function sendChatMessage(msg) {
     // sender: webrtc.io.id,
     msg,
   }])
+}
+
+export function sendWhiteboardAction(action) {
+  log('sendWhiteboardAction', action)
+  sync.chat.push([action])
 }

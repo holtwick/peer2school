@@ -2,6 +2,7 @@ import paper from 'paper'
 import { createLayer } from './shared'
 
 export class DrawAction {
+
   constructor(args) {
     this._args = args
   }
@@ -18,4 +19,9 @@ export class DrawAction {
   unexec() {
     this.removed = paper.project.layers[this._args.layer].removeChildren()
   }
+
+  toJSON() {
+    return this._args
+  }
+
 }

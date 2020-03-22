@@ -1,3 +1,5 @@
+import { sendWhiteboardAction } from '../../../state'
+
 const log = require('debug')('app:history')
 
 class History {
@@ -8,10 +10,11 @@ class History {
   }
 
   add(action) {
-    log('add', action)
+    log('add', action._args.layer, JSON.stringify(action.toJSON()))
     if (this.history.length >= this.limit || this.current === this.history.length - 1) {
       this.history.shift()
     }
+    sendWhiteboardAction(action.toJSON())
     this.history.push(action)
     this.current = this.history.length
   }

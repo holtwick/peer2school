@@ -64,6 +64,7 @@ class Sync extends Emitter {
     this.indexeddbPersistence = indexeddbPersistence
 
     this.chat = doc.getArray('chat')
+    this.whiteboard = doc.getArray('whiteboard')
   }
 
   getPeers() {
