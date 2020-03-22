@@ -1,35 +1,45 @@
 <template>
-  <video v-if="this.visible" ref="video" />
+  <video v-if="this.visible" ref="video"/>
 </template>
 
 <style lang="scss">
 </style>
 
 <script>
-import { connectStreamToVideoElement } from "../lib/usermedia";
+import { connectStreamToVideoElement } from '../lib/usermedia'
+import { sync } from '../state'
+
+const log = require('debug')('app:app-video')
 
 export default {
-  name: "app-video",
+  name: 'app-video',
   props: {
+    id: {},
     stream: {},
-    visible: false
+    visible: true,
   },
   data() {
-    return {};
+    return {}
   },
   methods: {
     async doConnectStream(stream) {
-      connectStreamToVideoElement(stream, this.$refs.video);
-    }
+      connectStreamToVideoElement(stream, this.$refs.video)
+    },
   },
   async mounted() {
-    await this.doConnectStream(this.stream);
+    if (this.id) {
+      let stream = sync.getStream(this.id)
+      log('stream', this.id, stream)
+      await this.doConnectStream(stream)
+    } else {
+      await this.doConnectStream(this.stream)
+    }
   },
   watch: {
     stream(value) {
-      this.doConnectStream(value);
-    }
-  }
-};
+      this.doConnectStream(value)
+    },
+  },
+}
 </script>
 

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import {getPeerNameBySenderId, state} from '../state';
+    // import {getPeerNameBySenderId, state} from '../state';
 
     export default {
         name: "app-peer-list",
@@ -22,7 +22,7 @@
         },
         methods: {
             getPeerNameById(id) {
-                return getPeerNameBySenderId(id);
+                // return getPeerNameBySenderId(id);
             },
             isPeerPointingOut(id) {
                if(this.state.pointOuts.includes(id)) { return true;}

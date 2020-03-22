@@ -31,7 +31,7 @@
 </style>
 
 <script>
-import {sendChatMessage, getPeerNameBySenderId, sendPointOutInfo} from '../state'
+import {sendChatMessage} from '../state'
 
 export default {
   name: 'app-chat',
