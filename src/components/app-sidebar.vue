@@ -17,15 +17,11 @@
       </div>
     </div>
 
-    <div class="-scrollable -fit">
+    <app-students v-if="state.teacher"/>
 
-      <app-students v-if="state.teacher"/>
+    <app-chat class="-fit"/>
 
-      <app-chat/>
-
-      <app-signal v-if="!state.teacher"/>
-
-    </div>
+    <app-signal v-if="!state.teacher"/>
 
   </div>
 </template>

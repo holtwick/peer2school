@@ -1,5 +1,5 @@
 <template>
-  <div class="chat -scrollable" ref="chat">
+  <div class="chat -scrollable">
     <form @submit.prevent.stop="doSend">
       <div v-for="msg in messages" class="item">
         <div class="name">
@@ -9,7 +9,7 @@
           {{msg.msg}}
         </div>
       </div>
-      <div>
+      <div ref="chat">
         <input placeholder="Send message" v-model="message">
       </div>
     </form>
