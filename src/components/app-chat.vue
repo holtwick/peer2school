@@ -7,7 +7,6 @@
       </div>
       <div>
         <input placeholder="Send message" v-model="message">
-        <!--        <button type="submit">Send message</button>-->
       </div>
     </form>
   </div>

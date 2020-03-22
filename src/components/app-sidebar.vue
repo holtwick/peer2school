@@ -1,18 +1,18 @@
 <template>
   <div class="vstack sidebar">
     <div>
-    <div v-if="!state.teacher">
-      <app-video v-if="!state.teacher && state.teacherStream"
-                 :stream="state.teacherStream"
-                 class="peer peer-teacher"/>
-    </div>
+      <div v-if="!state.teacher">
+        <app-video v-if="!state.teacher && state.teacherStream"
+                   :stream="state.teacherStream"
+                   class="peer peer-teacher"/>
+      </div>
 
-    <div @click="editProfile">
-      <app-video
-        :stream="state.stream"
-        class="peer peer-self"
-      />
-    </div>
+      <div @click="editProfile">
+        <app-video
+          :stream="state.stream"
+          class="peer peer-self"
+        />
+      </div>
     </div>
 
     <div class="-scrollable -fit">
@@ -71,7 +71,6 @@
 <script>
 import { setProfileName } from '../state'
 import AppChat from './app-chat'
-import AppPeerList from './app-peer-list'
 import AppSignal from './app-signal'
 import AppVideo from './app-video'
 
@@ -81,7 +80,6 @@ export default {
   name: 'app-sidebar',
   components: {
     AppSignal,
-    AppPeerList,
     AppChat,
     AppVideo,
   },
