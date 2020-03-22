@@ -9,7 +9,9 @@ const log = require('debug')('app:state')
 const teacherToken = '.teacher'
 let hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let teacher = hash.endsWith(teacherToken)
-let room = hash.substr(0, UUID_length)
+let room = hash
+if (teacher) room = room.replace(teacherToken, '')
+room = room.substr(0, UUID_length)
 location.hash = `#${hash}`
 
 // STATE
