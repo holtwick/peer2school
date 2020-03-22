@@ -7,14 +7,39 @@
     <br />
 
     <app-video :stream="state.stream" class="peer"/>
-    <app-video v-for="peer in state.status" :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
+    <hr />
+    <ul class="other-streams">
+      <li v-for="peer in state.status">
+        <div class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
+        <app-video :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
+      </li>
+    </ul>
 
     <slot></slot>
+    <br />
     <app-chat/>
   </div>
 </template>
 
 <style lang="scss">
+  .other-streams {
+    margin: 0 !important;
+    li {
+      list-style-type: none;
+      margin: 0;
+      div.peer-name {
+        background: #ffffff;
+        width: 100%;
+        text-align: center;
+      }
+
+      video.peer {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
   .account-wrapper {
     input {
       float: left;
@@ -38,7 +63,7 @@
 <script>
 import AppChat from './app-chat'
 import AppVideo from './app-video'
-import {setPeerName} from '../state';
+import {getPeerNameBySenderId, setPeerName} from '../state';
 
 export default {
   name: 'app-sidebar',
@@ -52,6 +77,9 @@ export default {
     }
   },
   methods: {
+    getPeerNameBySenderId(senderId) {
+      return getPeerNameBySenderId(senderId);
+    },
     setUsername() {
       setPeerName(this.username);
     }
