@@ -28,7 +28,9 @@
     <!--    </ul>-->
     <!--    <br />-->
     <!--    <app-peer-list/>-->
-    
+
+    {{ state.info }}
+
     <slot></slot>
     <br/>
     <app-chat/>

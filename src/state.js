@@ -23,12 +23,22 @@ export let state = {
   pointOuts: [],
   teacherStreams: [],
   stream: null,
+  info: {
+    teacherID: null,
+    pointOuts: {},
+  },
 }
 
 // SYNC
 
 export let sync = setupSync({
   room,
+})
+
+sync.on('ready', () => {
+  if (teacher) {
+    sync.info.set('teacherID', sync.peerID)
+  }
 })
 
 sync.chat.observe(event => {
@@ -62,7 +72,6 @@ export function sendChatMessage(msg) {
   }])
 }
 
-//   =======
 // export function sendPointOutInfo(pointsOutInfo) {
 //
 //   // remote
@@ -102,10 +111,6 @@ export function sendChatMessage(msg) {
 //         state.teacherStreams.push(msg.teacherStream)
 //       }
 //     })
-//
-//   webrtc.on('whiteboard', ({ action }) => {
-//     this.whiteboard.push(action)
-//   })
 //
 //   //pointsOut.state -> true = point out is activated
 //   //                   false = point out is deactivates
@@ -197,11 +202,3 @@ export function sendChatMessage(msg) {
 //       state.peers.push({id:webrtc.io.id,name:name})
 //     }
 //   }
-//
-//   export function sendChatMessage(msg) {
-//     webrtc.send('chat', {
-//       sender: webrtc.io.id,
-//       msg,
-//     })
-//     state.chat.push({
-//         sender: webrtc.io.id,

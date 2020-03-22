@@ -13,6 +13,7 @@ class Sync extends Emitter {
   stream
   indexeddbPersistence
   webrtcProvider
+  peerID
 
   constructor({ room }) {
     super()
@@ -51,6 +52,8 @@ class Sync extends Emitter {
     })
 
     webrtcProvider.on('synced', info => {
+      this.peerID = webrtcProvider.room.peerId
+      this.emit('ready', { peerID: this.peerID })
       // log('synched', info, webrtcProvider.room.peerId)
       // log('synched conns', webrtcProvider.room.webrtcConns.values())
     })
