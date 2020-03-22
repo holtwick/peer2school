@@ -20,6 +20,7 @@
 .point {
   margin-top: 1rem;
 }
+
 .chat {
   input {
     display: block;
@@ -35,7 +36,10 @@ import { sendChatMessage } from '../state'
 export default {
   name: 'app-chat',
   data() {
-    return { pointsOut: false }
+    return {
+      pointsOut: false,
+      message: '',
+    }
   },
   methods: {
     doSend() {
@@ -43,11 +47,7 @@ export default {
       this.message = ''
     },
     pointOut() {
-      this.message = this.message //wtf, warning prevention...
-
       let pic = this.$refs.pointPic
-
-
       if (!this.pointsOut) {
         pic.style.backgroundColor = 'orange'
         sendChatMessage('*Zeigt auf!*')

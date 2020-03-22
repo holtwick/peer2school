@@ -1,26 +1,25 @@
 <template>
   <div class="vstack">
+    <app-peers class="-fit"></app-peers>
     <div class="header hstack">
-      <h1 class="-fit">peer.school</h1>
+      <div class="title -fit">peer.school</div>
       <div class="link">
-        <span>TEACHER</span>
         Share <a :href="url">{{ url }}</a>
       </div>
     </div>
-    <app-peers class="-fit"></app-peers>
   </div>
 </template>
 
 <style lang="scss">
 .header {
   color: white;
-  background: #666;
-  height: 4rem;
+  background: #333;
+  height: 2rem;
   align-items: center;
 
-  h1 {
+  .title {
     margin-left: 1rem;
-    font-size: 2rem;
+    // font-size: 2rem;
   }
 
   .link {
