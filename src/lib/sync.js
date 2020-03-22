@@ -7,11 +7,13 @@ const log = require('debug')('app:sync')
 
 export function setupSync({ room, webrtc } = {}) {
   ydoc.on('update', update => {
-    log('on update', update)
+    let buf = Buffer.from(update).toJSON().data
+    log('webrtc sync send', buf, update)
     webrtc.send('sync', update)
   })
 
   webrtc.on('sync', update => {
+    log('webrtc sync receive', update)
     Y.applyUpdate(ydoc, update)
   })
 
