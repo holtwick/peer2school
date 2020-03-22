@@ -11,7 +11,7 @@ let teacher = hash.endsWith(teacherToken)
 let room = hash.substr(0, UUID_length)
 location.hash = `#${hash}`
 
-setupSync({
+export let sync = setupSync({
   room,
 })
 
@@ -50,6 +50,7 @@ webrtc.on('connected', ({ peer }) => {
 })
 
 export function sendChatMessage(msg) {
+  sync.chat.push(['me', msg])
   webrtc.send('chat', {
     sender: webrtc.io.id,
     msg,
