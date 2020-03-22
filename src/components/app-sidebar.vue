@@ -6,7 +6,7 @@
     </form>
     <br />
 
-    <app-video :stream="state.stream" class="peer"/>
+    <app-video :stream="state.stream" :visible="true" class="peer"/>
     <hr />
     <ul class="other-streams">
       <div v-if="!state.teacher">
