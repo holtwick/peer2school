@@ -1,5 +1,5 @@
 <template>
-  <video v-if="this.visible" ref="video"/>
+  <video ref="video"/>
 </template>
 
 <style lang="scss">
@@ -14,9 +14,8 @@ const log = require('debug')('app:app-video')
 export default {
   name: 'app-video',
   props: {
-    id: {},
-    stream: {},
-    visible: true,
+    id: null,
+    stream: null,
   },
   data() {
     return {}

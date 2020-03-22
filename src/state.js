@@ -17,10 +17,12 @@ location.hash = `#${hash}`
 export let state = {
   room,
   teacher,
+  peerID: null,
   peers: [],
   status: {},
   chat: [],
   pointOuts: [],
+  teacherStream: null,
   teacherStreams: [],
   stream: null,
   info: {
@@ -36,9 +38,11 @@ export let sync = setupSync({
 })
 
 sync.on('ready', () => {
+  state.peerID = sync.peerID
   if (teacher) {
     sync.info.set('teacherID', sync.peerID)
   }
+  updateState()
 })
 
 sync.chat.observe(event => {
@@ -49,12 +53,20 @@ sync.info.observe(event => {
   state.info = sync.info.toJSON()
 })
 
-state.peers = sync.getPeerList()
-
-sync.on('peers', () => {
-  log('new peers')
+function updateState() {
+  log('updateState')
   state.peers = sync.getPeerList()
-})
+  if (!teacher && state.info.teacherID) {
+    log('search teacher stream', state.info.teacherID)
+    // log('TTT', sync.getPeer(state.info.teacherID))
+    state.teacherStream = sync.getStream(state.info.teacherID)
+  }
+}
+
+updateState()
+
+sync.on('peers', updateState)
+sync.on('stream', updateState)
 
 // MEDIA
 
@@ -72,28 +84,12 @@ export function sendChatMessage(msg) {
   }])
 }
 
-// export function sendPointOutInfo(pointsOutInfo) {
-//
-//   // remote
-//   webrtc.send('point_out', {
-//     sender: webrtc.io.id,
-//     state: pointsOutInfo,
-//   })
-//
-//
-//   // local
-//   if(pointsOutInfo){
-//     state.pointOuts.push(webrtc.io.id)
-//   }
-//   else
-//   {
-//     const senderIndex = state.pointOuts.indexOf(webrtc.io.id)
-//
-//     if(senderIndex >= 0) //check if sender is in list
-//       state.pointOuts.splice(senderIndex, 1)
-//   }
-//
-// }
+export function sendPointOut(active) {
+  sync.info.get('pointOuts').set(state.peerID, {
+    active,
+  })
+}
+
 
 // /**
 //  * Along with syncTeacherStateWithPeers() this listener

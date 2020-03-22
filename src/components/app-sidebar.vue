@@ -1,6 +1,6 @@
 <template>
   <div class="vstack sidebar text">
-    <app-video v-for="peer in state.peers" :key="peer" :id="peer" class="peer"/>
+    <!--        <app-video v-for="peer in state.peers" :key="peer" :id="peer" class="peer"/>-->
 
     <!--    <form @submit.prevent.stop="setUsername" class="account-wrapper">-->
     <!--      <input type="text" v-model="username" placeholder="Name" />-->
@@ -8,7 +8,15 @@
     <!--    </form>-->
     <!--    <br />-->
 
-    <app-video :stream="state.stream" :visible="true" class="peer"/>
+    <div v-if="!state.teacher">
+      <app-video v-if="!state.teacher && state.teacherStream"
+                 :stream="state.teacherStream"
+                 class="peer peer-teacher"/>
+    </div>
+
+    <div>
+      <app-video :stream="state.stream" class="peer peer-self"/>
+    </div>
 
     <!--    <hr />-->
     <!--    <ul class="other-streams">-->
@@ -28,12 +36,10 @@
     <!--    </ul>-->
     <!--    <br />-->
     <!--    <app-peer-list/>-->
-
-    {{ state.info }}
-
+    
     <slot></slot>
     <br/>
-    <app-chat/>
+    <!--    <app-chat/>-->
   </div>
 </template>
 
@@ -83,16 +89,17 @@
 </style>
 
 <script>
-import AppChat from './app-chat'
-// import {getPeerNameBySenderId, setPeerName} from '../state';
+// import AppChat from './app-chat'
 import AppPeerList from './app-peer-list'
 import AppVideo from './app-video'
+
+const log = require('debug')('app:app-sidebar')
 
 export default {
   name: 'app-sidebar',
   components: {
     AppPeerList,
-    AppChat,
+    // AppChat,
     AppVideo,
   },
   data() {
@@ -100,13 +107,26 @@ export default {
       username: '',
     }
   },
+  computed: {
+    teacherStream() {
+      log('teacherstream')
+      try {
+        log('xxddd00', this.state.peers)
+        let peer = this.state.peers[this.state.info.teacherID]
+        log('teacher', peer)
+        return peer.stream
+      } catch (e) {
+
+      }
+    },
+  },
   methods: {
-    getPeerNameBySenderId(senderId) {
-      // return getPeerNameBySenderId(senderId);
-    },
-    setUsername() {
-      // setPeerName(this.username);
-    },
+    // getPeerNameBySenderId(senderId) {
+    //   // return getPeerNameBySenderId(senderId);
+    // },
+    // setUsername() {
+    //   // setPeerName(this.username);
+    // },
   },
   async mounted() {
   },
