@@ -1,34 +1,29 @@
 <template>
-  <div class="chat">
-    <form @submit.prevent.stop="doSend">
-      <div v-for="msg in state.chat">
-        {{ getPeerNameBySenderId(msg.sender) }}: <b>{{msg.msg}}</b>
-      </div>
-      <div>
-        <input placeholder="Send message" v-model="message">
-        <!--        <button type="submit">Send message</button>-->
-      </div>
-    </form>
+  <div class="chat rounded p-3 bg-white shadow">
+    <div class="flex flex-wrap">
+      <form class="flex-grow lg:mr-3" @submit.prevent.stop="doSend">
+        <input class="w-full border-gray-200 border p-2 bg-gray-200 border rounded shadow-inner"
+               placeholder="Nachricht senden"
+               v-model="message">
+      </form>
 
-    <div class="point">
-      <button @click="pointOut" type="submit"><img src="../assets/img/aufzeigen.png" ref="pointPic"></button>
+      <button class="no-shrink px-3 py-1 rounded shadow-lg hover:shadow text-white ml-auto mt-2 lg:mt-0"
+              @click="pointOut"
+              type="submit"
+              :class="[pointsOutState ? 'bg-orange-600 hover:bg-orange-700' : 'bg-blue-600 hover:bg-blue-700']"
+      >
+        <font-awesome-icon icon="hand-point-up" />
+      </button>
+    </div>
+
+    <div class="h-32 overflow-y-auto">
+      <div class="my-2 flex" v-for="msg in messages">
+        <div class="rounded bg-gray-200 shadow-xs px-1 mr-2 self-start">{{ getPeerNameBySenderId(msg.sender) }}:</div> <div class="w-full">{{msg.msg}}</div>
+      </div>
+      <div v-if="!this.state.chat.length">Noch keine Nachrichten</div>
     </div>
   </div>
 </template>
-
-<style lang="scss">
-.point {
-  margin-top: 1rem;
-}
-
-.chat {
-  input {
-    display: block;
-    width: 100%;
-    padding: 0.25rem;
-  }
-}
-</style>
 
 <script>
 import {sendChatMessage, getPeerNameBySenderId, sendPointOutInfo} from '../state'
@@ -37,8 +32,13 @@ export default {
   name: 'app-chat',
   data() {
     return {
-      pointsOut : false,
+      pointsOutState: false,
       message: ''
+    }
+  },
+  computed: {
+    messages (){
+      return [...this.state.chat].reverse();
     }
   },
   methods: {
@@ -50,18 +50,7 @@ export default {
       this.message = ''
     },
     pointOut() {
-      let pic = this.$refs.pointPic
-
-      if(!this.pointsOutState)
-      {
-        pic.style.backgroundColor = 'orange'
-        this.pointsOutState = true
-      }
-      else
-      {
-        pic.style.backgroundColor = ''
-        this.pointsOutState = false
-      }
+      this.pointsOutState = !this.pointsOutState;
 
       sendPointOutInfo(this.pointsOutState)
     },

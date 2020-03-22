@@ -1,31 +1,11 @@
 <template>
   <div class="vstack">
     <app-peers class="-fit"></app-peers>
+    <div class="header hstack bg-blue-600 shadow text-white p-3 border-t-4 border-blue-400">
+      <h1 class="-fit text-lg">peer.school</h1>
+    </div>
   </div>
 </template>
-
-<style lang="scss">
-.header {
-  color: white;
-  background: #666;
-  height: 4rem;
-  align-items: center;
-
-  h1 {
-    margin-left: 1rem;
-    font-size: 2rem;
-  }
-
-  .link {
-    margin-right: 1rem;
-
-    a {
-      color: #e3e3e3;
-      text-decoration: none;
-    }
-  }
-}
-</style>
 
 <script>
 import AppPeers from './app-peers'

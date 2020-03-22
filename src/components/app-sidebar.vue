@@ -1,32 +1,42 @@
 <template>
-  <div class="vstack sidebar text">
-    <form @submit.prevent.stop="setUsername" class="account-wrapper">
-      <input type="text" v-model="username" placeholder="Name" />
-      <input type="submit" value="Save"/>
+  <div class="bg-gray-200 shadow p-3 overflow auto h-screen">
+    <form class="flex rounded p-3 bg-white shadow mb-3" @submit.prevent.stop="setUsername">
+      <input class="flex-grow border-gray-200 border p-2 bg-gray-200 border rounded shadow-inner mr-3"
+             type="text"
+             v-model="username"
+             placeholder="Name" />
+      <button class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow text-white"
+              type="submit">
+        <font-awesome-icon icon="save" />
+      </button>
     </form>
-    <br />
-
-    <app-video :stream="state.stream" :visible="true" class="peer"/>
-    <hr />
-    <ul class="other-streams">
-      <div v-if="!state.teacher">
-        <li v-for="peer in state.status">
-          <div v-if="state.teacherStreams.find(s => s === peer.remote)" class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
-          <app-video v-if="state.teacherStreams.find(s => s === peer.remote)" :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
-          <app-video v-else :key="peer.remote" :stream="peer.peer.stream" :visible="false" class="peer"/>
-        </li>
-      </div>
-      <div v-else>
-        <li v-for="peer in state.status">
-          <div class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
-          <app-video :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
-        </li>
-      </div>
-    </ul>
-    <br />
+    <app-video :stream="state.stream" :visible="true" class="rounded my-2 shadow"/>
+    <div class="overflow-auto bg-white rounded px-4 my-3 shadow" v-if="state.status.length">
+      <ul class="list-reset">
+        <div class="flex flex-wrap -mx-2" v-if="!state.teacher">
+          <li class="my-2 w-1/2 px-1" v-for="peer in state.status">
+            <div class="rounded shadow relative overflow-hidden">
+              <div class="absolute pin-b border-t border-blue-600 bg-blue-500 text-white bottom-0 w-full truncate px-1 text-center" v-if="state.teacherStreams.find(s => s === peer.remote)">{{ getPeerNameBySenderId(peer.remote) }}</div>
+              <app-video v-if="state.teacherStreams.find(s => s === peer.remote)"
+                      :key="peer.remote"
+                      :stream="peer.peer.stream"
+                      :visible="true" class="rounded my-2 shadow"/>
+              <app-video v-else :key="peer.remote" :stream="peer.peer.stream" :visible="false" class="peer"/>
+            </div>
+          </li>
+        </div>
+        <div class="flex flex-wrap -mx-2" v-else>
+          <li class="my-2 w-1/2 px-1" v-for="peer in state.status">
+            <div class="rounded shadow relative overflow-hidden">
+              <div class="absolute pin-b border-t border-blue-600 bg-blue-500 text-white bottom-0 w-full truncate px-1 text-center">{{ getPeerNameBySenderId(peer.remote) }}</div>
+              <app-video :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div>
     <app-peer-list/>
     <slot></slot>
-    <br />
     <app-chat/>
   </div>
 </template>

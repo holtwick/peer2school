@@ -3,7 +3,7 @@
     <canvas class="-fit" id="whiteboard" resize></canvas>
     <div class="anchor">
       <mainPanel></mainPanel>
-      <historyPanel></historyPanel>
+      <historyPanel class="mt-4"></historyPanel>
     </div>
   </div>
 </template>

@@ -1,9 +1,11 @@
 <template>
-    <div>
-        <b>Teilnehmer</b>
-        <ul class="app-peer-list">
-            <li v-for="peer in peers">
-                <img v-if="isPeerPointingOut(peer.remote)" src="../assets/img/aufzeigen.png" height="15" width="15" />
+    <div class="rounded p-3 bg-white shadow mb-3 h-32 overflow-auto">
+        <h3 class="mb-1 text-base">Teilnehmer</h3>
+        <ul class="list-reset">
+            <li class="block w-full px-2 py-1"
+                v-for="peer in peers"
+                :class="{'bg-orange-200': isPeerPointingOut(peer.remote)}"
+            >
                 {{ getPeerNameById(peer.remote) }}
             </li>
         </ul>
