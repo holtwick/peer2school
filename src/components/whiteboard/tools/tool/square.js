@@ -1,7 +1,7 @@
 import paper from 'paper'
-import store from '../../store/store'
 import { DrawAction } from '../action'
 import history from '../history'
+import { store } from '../paperStore'
 import { createLayer } from '../shared'
 
 let local = {
@@ -21,15 +21,15 @@ function onMouseDrag(event) {
     local.path.remove()
   }
   local.path = new paper.Shape.Rectangle(local.center, event.point)
-  local.path.strokeColor = store.getters.shapeArgs.color
-  local.path.strokeWidth = store.getters.shapeArgs.size
+  local.path.strokeColor = store.shapeArgs.color
+  local.path.strokeWidth = store.shapeArgs.size
 }
 
 function onMouseUp(event) {
   local.layer.addChild(local.path)
   const action = new DrawAction({
     layer: local.path.layer.name,
-    tool: store.getters.tool,
+    tool: store.tool,
     from: { x: local.center.x, y: local.center.y },
     to: { x: event.point.x, y: event.point.y },
   })

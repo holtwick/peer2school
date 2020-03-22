@@ -1,7 +1,8 @@
 import paper from 'paper'
-import store from '../../store/store'
+
 import { DrawAction } from '../action'
 import history from '../history'
+import { store } from '../paperStore'
 import { createLayer } from '../shared'
 
 let local = {
@@ -13,8 +14,8 @@ function onMouseDown(event) {
   let layer = createLayer()
 
   local.path = new paper.Path()
-  local.path.strokeColor = store.getters.eraserArgs.color
-  local.path.strokeWidth = store.getters.eraserArgs.size
+  local.path.strokeColor = store.eraserArgs.color
+  local.path.strokeWidth = store.eraserArgs.size
 
   local.path.add(event.point)
 
@@ -25,8 +26,8 @@ function onMouseDown(event) {
   local.group.addChild(new paper.Shape.Ellipse({
     layer: layer,
     center: event.point,
-    fillColor: store.getters.eraserArgs.color,
-    radius: store.getters.eraserArgs.size / 2,
+    fillColor: store.eraserArgs.color,
+    radius: store.eraserArgs.size / 2,
   }))
   layer.addChild(local.group)
 }
@@ -42,8 +43,8 @@ function onMouseUp(event) {
   const action = new DrawAction({
     layer: local.path.layer.name,
     tool: {
-      color: store.getters.tool.color,
-      size: store.getters.tool.size,
+      color: store.tool.color,
+      size: store.tool.size,
     },
     points: local.path.segments.map(seg => {
       return {

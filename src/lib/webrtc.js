@@ -9,7 +9,6 @@ const log = require('debug')('app:webrtc')
 
 // const signalServerURL = 'ws://localhost:4445'
 const signalServerURL = 'wss://signal.peer.school'
-// const signalServerURL = `ws://192.168.0.111:4445`
 
 // Handles multiple connections, one to each peer
 export class WebRTC extends Emitter {
@@ -83,7 +82,8 @@ export class WebRTC extends Emitter {
         this.updateStatus()
       })
 
-      for (let remote of peers) {
+      for (let i = 0; i < peers.length; i++) {
+        const remote = peers[i]
         this.handlePeer({
           remote,
           local,
