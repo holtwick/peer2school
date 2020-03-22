@@ -24,45 +24,9 @@
 </template>
 
 <style lang="scss">
-.other-streams {
-  margin: 0 !important;
-
-  li {
-    list-style-type: none;
-    margin: 0;
-
-    div.peer-name {
-      background: #ffffff;
-      width: 100%;
-      text-align: center;
-    }
-
-    video.peer {
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-      margin-bottom: 0;
-    }
-  }
-}
-
-.account-wrapper {
-  input {
-    float: left;
-
-    &[type="text"] {
-      width: 70%;
-      margin-right: 3%;
-    }
-
-    &[type="submit"] {
-      width: 27%;
-    }
-  }
-}
-
 .sidebar {
-  width: 20%;
-  min-width: 8rem;
+  max-width: 20%;
+  width: 12rem;
   background: #eee;
   padding: 1rem;
 }

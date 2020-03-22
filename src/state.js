@@ -90,5 +90,5 @@ export function setSignal(active) {
 }
 
 export function setProfileName(name) {
-  sync.profile.set(state.peerID, { name })
+  sync.profiles.set(state.peerID, { name })
 }

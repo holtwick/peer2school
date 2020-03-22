@@ -5,8 +5,7 @@
     </button>
     <div v-else>
       Signals
-      {{state.signals}}
-      {{state.profiles}}
+      {{students}}
     </div>
   </div>
 </template>
@@ -30,6 +29,17 @@ export default {
     return {
       active: false,
     }
+  },
+  computed: {
+    students() {
+      return this.state.peers.map(id => {
+        return {
+          id,
+          name: this.state.profiles[id]?.name || 'Unnamed',
+          active: this.state.signals[id] === true,
+        }
+      })
+    },
   },
   methods: {
     toggleSignal() {
