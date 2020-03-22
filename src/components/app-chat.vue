@@ -1,9 +1,13 @@
 <template>
-  <div class="chat">
+  <div class="chat -scrollable" ref="chat">
     <form @submit.prevent.stop="doSend">
-      <div v-for="msg in state.chat">
-        <!-- {{ msg.sender }}: -->
-        {{msg.msg}}
+      <div v-for="msg in messages" class="item">
+        <div class="name">
+          {{msg.name}}
+        </div>
+        <div class="message">
+          {{msg.msg}}
+        </div>
       </div>
       <div>
         <input placeholder="Send message" v-model="message">
@@ -14,11 +18,22 @@
 
 <style lang="scss">
 .chat {
+
+  .item {
+    margin-bottom: 0.5rem;
+  }
+
+  .name {
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+
   input {
     display: block;
     width: 100%;
     padding: 0.25rem;
   }
+
 }
 </style>
 
@@ -32,10 +47,23 @@ export default {
       message: '',
     }
   },
+  computed: {
+    messages() {
+      return this.state.chat.map(({ sender, msg }) => {
+        return {
+          sender,
+          name: this.state.profiles[sender]?.name || 'Unnamed',
+          msg,
+        }
+      })
+    },
+  },
   methods: {
-    doSend() {
+    async doSend() {
       addChatMessage(this.message)
       this.message = ''
+      await this.$nextTick()
+      this.$refs.chat.scrollIntoView(false)
     },
   },
   async mounted() {

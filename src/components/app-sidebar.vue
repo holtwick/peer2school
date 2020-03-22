@@ -2,9 +2,11 @@
   <div class="vstack sidebar">
     <div>
       <div v-if="!state.teacher">
-        <app-video v-if="!state.teacher && state.teacherStream"
-                   :stream="state.teacherStream"
-                   class="peer peer-teacher"/>
+        <app-video
+          v-if="!state.teacher && state.teacherStream"
+          :stream="state.teacherStream"
+          class="peer peer-teacher"
+        />
       </div>
 
       <div @click="editProfile">
@@ -16,11 +18,13 @@
     </div>
 
     <div class="-scrollable -fit">
+
       <app-students v-if="state.teacher"/>
+
       <app-chat/>
+
       <app-signal v-if="!state.teacher"/>
 
-      {{state}}
     </div>
 
   </div>
@@ -59,11 +63,8 @@ export default {
   },
   computed: {
     teacherStream() {
-      log('teacherstream')
       try {
-        log('xxddd00', this.state.peers)
         let peer = this.state.peers[this.state.info.teacherID]
-        log('teacher', peer)
         return peer.stream
       } catch (e) {
 
