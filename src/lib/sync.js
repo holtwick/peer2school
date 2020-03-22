@@ -40,12 +40,14 @@ class Sync extends Emitter {
           // log('added', this.getPeer(peerID))
 
           peer.peer.on('stream', stream => {
+            log('streamx', stream)
             peer.peer.stream = stream
+            this.emit('peers') // hack
           })
         }
       }
 
-      this.emit('peers', [])
+      // this.emit('peers', [])
     })
 
     webrtcProvider.on('synced', info => {
