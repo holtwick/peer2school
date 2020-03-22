@@ -45,13 +45,17 @@ sync.on('ready', () => {
   updateState()
 })
 
-sync.chat.observe(event => {
-  state.chat = sync.chat.toJSON()
-})
-
-sync.info.observe(event => {
-  state.info = sync.info.toJSON()
-})
+for (const [name, mode] of Object.entries({
+  'chat': 'Array',
+  'info': 'Map',
+  'signal': 'Map',
+  'profiles': 'Map',
+})) {
+  sync[name] = sync.doc[`get${mode}`](name)
+  sync[name].observe(event => {
+    state[name] = sync[name].toJSON()
+  })
+}
 
 function updateState() {
   log('updateState')
@@ -79,17 +83,14 @@ ENABLE_VIDEO && getUserMedia(stream => {
 
 export function sendChatMessage(msg) {
   sync.chat.push([{
-    // sender: webrtc.io.id,
+    sender: sync.peerID,
     msg,
   }])
 }
 
 export function sendPointOut(active) {
-  sync.info.get('pointOuts').set(state.peerID, {
-    active,
-  })
+  sync.signal.set(state.peerID, { active })
 }
-
 
 // /**
 //  * Along with syncTeacherStateWithPeers() this listener
