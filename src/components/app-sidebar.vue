@@ -36,10 +36,10 @@
     <!--    </ul>-->
     <!--    <br />-->
     <!--    <app-peer-list/>-->
-    
+
     <slot></slot>
     <br/>
-    <!--    <app-chat/>-->
+    <app-chat/>
   </div>
 </template>
 
@@ -89,7 +89,7 @@
 </style>
 
 <script>
-// import AppChat from './app-chat'
+import AppChat from './app-chat'
 import AppPeerList from './app-peer-list'
 import AppVideo from './app-video'
 
@@ -99,7 +99,7 @@ export default {
   name: 'app-sidebar',
   components: {
     AppPeerList,
-    // AppChat,
+    AppChat,
     AppVideo,
   },
   data() {

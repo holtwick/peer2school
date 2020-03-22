@@ -2,7 +2,7 @@
   <div class="chat">
     <form @submit.prevent.stop="doSend">
       <div v-for="msg in state.chat">
-        {{ getPeerNameBySenderId(msg.sender) }}: <b>{{msg.msg}}</b>
+        {{ msg.sender }}: <b>{{msg.msg}}</b>
       </div>
       <div>
         <input placeholder="Send message" v-model="message">
@@ -37,33 +37,24 @@ export default {
   name: 'app-chat',
   data() {
     return {
-      pointsOut : false,
-      message: ''
+      pointsOut: false,
+      message: '',
     }
   },
   methods: {
-    getPeerNameBySenderId(senderId) {
-      return getPeerNameBySenderId(senderId);
-    },
     doSend() {
       sendChatMessage(this.message)
       this.message = ''
     },
     pointOut() {
       let pic = this.$refs.pointPic
-
-
-      if(!this.pointsOutState)
-      {
+      if (!this.pointsOutState) {
         pic.style.backgroundColor = 'orange'
         this.pointsOutState = true
-      }
-      else
-      {
+      } else {
         pic.style.backgroundColor = ''
         this.pointsOutState = false
       }
-
       sendPointOut(this.pointsOutState)
     },
   },
