@@ -3,6 +3,7 @@
         <b>Teilnehmer</b>
         <ul class="app-peer-list">
             <li v-for="peer in peers">
+                <img v-if="isPeerPointingOut(peer.remote)" src="../assets/img/aufzeigen.png" height="15" width="15" />
                 {{ getPeerNameById(peer.remote) }}
             </li>
         </ul>
@@ -10,7 +11,7 @@
 </template>
 
 <script>
-    import {getPeerNameBySenderId} from '../state';
+    import {getPeerNameBySenderId, state} from '../state';
 
     export default {
         name: "app-peer-list",
@@ -22,6 +23,10 @@
         methods: {
             getPeerNameById(id) {
                 return getPeerNameBySenderId(id);
+            },
+            isPeerPointingOut(id) {
+               if(this.state.pointOuts.includes(id)) { return true;}
+                return false;
             },
             async mounted() {
             },
