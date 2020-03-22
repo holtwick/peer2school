@@ -16,8 +16,11 @@
     </div>
 
     <div class="-scrollable -fit">
+      students
+      <app-students v-if="state.teacher"/>
+      chat
       <app-chat/>
-      <app-signal/>
+      <app-signal v-if="!state.teacher"/>
     </div>
 
   </div>
@@ -36,6 +39,7 @@
 import { setProfileName } from '../state'
 import AppChat from './app-chat'
 import AppSignal from './app-signal'
+import AppStudents from './app-students'
 import AppVideo from './app-video'
 
 const log = require('debug')('app:app-sidebar')
@@ -43,6 +47,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppStudents,
     AppSignal,
     AppChat,
     AppVideo,

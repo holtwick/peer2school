@@ -1,17 +1,8 @@
 <template>
   <div class="signal" :class="{ '-active': active }">
-    <button v-if="!state.teacher" @click="toggleSignal" type="submit">
+    <button @click="toggleSignal" type="submit">
       <img src="../assets/img/aufzeigen.png">
     </button>
-    <div v-else>
-      <div class="student"
-           v-for="student of students"
-           :key="student.key"
-           :class="{ '-active': student.active }"
-      >
-        {{ student.name }}
-      </div>
-    </div>
   </div>
 </template>
 
@@ -21,18 +12,6 @@
 
   &.-active {
     background: orange;
-  }
-}
-
-.student {
-  font-size: 0.8rem;
-
-  &:before {
-    content: '-'
-  }
-
-  &.-active:before {
-    content: '+'
   }
 }
 </style>
@@ -47,17 +26,7 @@ export default {
       active: false,
     }
   },
-  computed: {
-    students() {
-      return this.state.peers.map(id => {
-        return {
-          id,
-          name: this.state.profiles[id]?.name || 'Unnamed',
-          active: this.state.signals[id] === true,
-        }
-      })
-    },
-  },
+
   methods: {
     toggleSignal() {
       this.active = !this.active
