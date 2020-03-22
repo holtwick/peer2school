@@ -41,6 +41,7 @@ export default {
   data() {
     return {
       pointsOut : false,
+      message: "",
       username: ""
     }
   },
@@ -50,10 +51,9 @@ export default {
       console.log(this.state);
     },
     getPeerNameBySenderId(senderId) {
-      for (let i = 0; i < this.state.status.length; i++) {
-        if (this.state.status[i].remote === senderId)
-          return this.state.status[i].peer.name;
-          break;
+      const peer = this.state.peers.find( s => s.id === senderId)
+      if(peer){
+        return peer.name;
       }
     },
     doSend() {
