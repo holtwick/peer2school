@@ -1,3 +1,4 @@
+import { setupSync } from './lib/sync'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { WebRTC } from './lib/webrtc'
@@ -9,6 +10,10 @@ let teacher = hash.endsWith(teacherToken)
 let room = hash.substr(0, UUID_length)
 location.hash = `#${hash}`
 
+setupSync({
+  room,
+})
+
 export let state = {
   room,
   teacher,
@@ -16,6 +21,7 @@ export let state = {
   status: {},
   chat: [],
   stream: null,
+  whiteboard: [],
 }
 
 getUserMedia(stream => {
@@ -30,6 +36,10 @@ webrtc.on('status', info => {
 
 webrtc.on('chat', msg => {
   state.chat.push(msg)
+})
+
+webrtc.on('whiteboard', ({ action }) => {
+  this.whiteboard.push(action)
 })
 
 webrtc.on('connected', ({ peer }) => {
