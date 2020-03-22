@@ -1,7 +1,7 @@
 <template>
     <div>
         <b>Teilnehmer</b>
-        <ul>
+        <ul class="app-peer-list">
             <li v-for="peer in peers">
                 {{ getPeerNameById(peer.remote) }}
             </li>
@@ -15,7 +15,7 @@
     export default {
         name: "app-peer-list",
         computed: {
-            peers: function() {
+            peers: function () {
                 return this.state.status;
             }
         },
@@ -29,6 +29,18 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    ul.app-peer-list {
+        list-style-type: none;
+        margin: 0;
+        li {
+            hyphens: auto;
+            margin: 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #ddd;
+            &:last-of-type {
+                border-bottom: 0;
+            }
+        }
+    }
 </style>
