@@ -2,12 +2,27 @@
 
 <template>
   <div class="hstack">
-    <app-sidebar></app-sidebar>
+
+    <div class="vstack sidebar text">
+      <app-video :stream="state.stream" class="peer"/>
+
+      <app-video v-for="peer in state.status" :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
+
+      <app-chat/>
+    </div>
+
     <app-whiteboard class="-fit"></app-whiteboard>
+
   </div>
 </template>
 
 <style lang="scss">
+
+.sidebar {
+  width: 20%;
+  background: #eee;
+  padding: 1rem;
+}
 
 .peer {
   background: #333;
@@ -21,20 +36,34 @@
 </style>
 
 <script>
-import AppSidebar from './app-sidebar'
+
+import { sendChatMessage } from '../state'
+import AppChat from './app-chat'
+import AppVideo from './app-video'
 import AppWhiteboard from './app-whiteboard'
+
+const log = require('debug')('sandbox:webrtc')
 
 export default {
   name: 'app-peers',
-  components: {
-    AppSidebar,
-    AppWhiteboard,
-  },
+  components: { AppWhiteboard, AppChat, AppVideo },
   data() {
-    return {}
+    return {
+      items: [],
+      status: [],
+      message: '',
+      messages: [],
+      webrtc: null,
+    }
   },
-  methods: {},
+  methods: {
+    doSend() {
+      sendChatMessage(this.message)
+      this.message = ''
+    },
+  },
   async mounted() {
+
   },
 }
 </script>

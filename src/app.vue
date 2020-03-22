@@ -1,25 +1,28 @@
 <template>
-  <app-teacher v-if="state.teacher" class="app"/>
-  <app-student v-else class="app"/>
+  <span v-if="state.teacher">
+    <app-teacher id="app" class="app"/>
+  </span>
+  <span v-else>
+    <app-main id="app" class="app"/>
+  </span>
 </template>
 
 <script>
-import AppStudent from './components/app-student'
+
+import AppMain from './components/app-main'
 import AppTeacher from './components/app-teacher'
+
 
 export default {
   name: 'App',
-  components: {
-    AppStudent,
-    AppTeacher,
-  },
+  components: { AppMain, AppTeacher },
 }
 </script>
 
 <style lang="scss">
 @import "css/index";
 
-.app {
+#app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

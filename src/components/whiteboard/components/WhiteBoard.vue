@@ -31,7 +31,8 @@ export default {
 <style lang="scss">
 .anchor {
   position: relative;
-  width: 0;
+  width: 10px;
+  background: red;
 }
 
 canvas {
