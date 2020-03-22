@@ -22,6 +22,7 @@ export let state = {
   status: {},
   chat: [],
   pointOuts: [],
+  teacherStream: null,
   teacherStreams: [],
   stream: null,
   info: {
@@ -51,11 +52,19 @@ sync.info.observe(event => {
   state.info = sync.info.toJSON()
 })
 
-state.peers = sync.getPeerList()
+function updateState() {
+  log('updateState')
+  state.peers = sync.getPeerList()
+  // if (!teacher && state.info.teacherID) {
+  //   log('TTT', sync.getPeer(state.info.teacherID))
+  //   state.teacherStream = sync.getPeer(state.info.teacherID).peer.stream
+  // }
+}
 
+updateState()
 sync.on('peers', () => {
   log('new peers')
-  state.peers = sync.getPeerList()
+  updateState()
 })
 
 // MEDIA

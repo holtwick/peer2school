@@ -14,8 +14,8 @@ const log = require('debug')('app:app-video')
 export default {
   name: 'app-video',
   props: {
-    id: {},
-    stream: {},
+    id: null,
+    stream: null,
   },
   data() {
     return {}
