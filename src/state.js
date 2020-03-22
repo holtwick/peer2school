@@ -49,7 +49,9 @@ webrtc.on('whiteboard', ({ action }) => {
 
 webrtc.on('connected', ({ peer }) => {
   setTimeout(() => {
-    peer.addStream(state.stream)
+    if (state.stream) {
+      peer.addStream(state.stream)
+    }
   }, 1000)
 })
 

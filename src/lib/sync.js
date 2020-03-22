@@ -5,19 +5,30 @@ const ydoc = new Y.Doc()
 
 const log = require('debug')('app:sync')
 
+function encode(v) {
+  return JSON.stringify(Array.from(v))
+}
+
+function decode(v) {
+  return Uint8Array.from(JSON.parse(v))
+}
+
 export function setupSync({ room, webrtc } = {}) {
   ydoc.on('update', update => {
-    let buf = Buffer.from(update).toJSON().data
-    log('webrtc sync send', buf, update)
-    webrtc.send('sync', update)
+    update = encode(update)
+    log('webrtc sync send', JSON.stringify(update, null, 2))
+    webrtc.send('sync', {update})
   })
 
-  webrtc.on('sync', update => {
+  webrtc.on('sync', info => {
+    let {update} = info
+    log('xxx', JSON.stringify(info, null, 2))
+    update = decode(update)
     log('webrtc sync receive', update)
     Y.applyUpdate(ydoc, update)
   })
 
-  const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, ydoc)
+  // const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, ydoc)
 
   return {
     chat: ydoc.getArray('chat'),
