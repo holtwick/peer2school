@@ -2,7 +2,6 @@ import { ENABLE_VIDEO } from './config'
 import { setupSync } from './lib/sync'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
-import { WebRTC } from './lib/webrtc'
 
 const log = require('debug')('app:state')
 
@@ -33,33 +32,32 @@ ENABLE_VIDEO && getUserMedia(stream => {
 
 // WEBRTC
 
-export let webrtc = new WebRTC({ room })
-
-webrtc.on('status', info => {
-  state.status = info.status
-})
-
-webrtc.on('chat', msg => {
-  state.chat.push(msg)
-})
-
-webrtc.on('whiteboard', ({ action }) => {
-  this.whiteboard.push(action)
-})
-
-webrtc.on('connected', ({ peer }) => {
-  setTimeout(() => {
-    if (state.stream) {
-      peer.addStream(state.stream)
-    }
-  }, 1000)
-})
+// export let webrtc = new WebRTC({ room })
+//
+// webrtc.on('status', info => {
+//   state.status = info.status
+// })
+//
+// webrtc.on('chat', msg => {
+//   state.chat.push(msg)
+// })
+//
+// webrtc.on('whiteboard', ({ action }) => {
+//   this.whiteboard.push(action)
+// })
+//
+// webrtc.on('connected', ({ peer }) => {
+//   setTimeout(() => {
+//     if (state.stream) {
+//       peer.addStream(state.stream)
+//     }
+//   }, 1000)
+// })
 
 // SYNC
 
 export let sync = setupSync({
   room,
-  webrtc,
 })
 
 sync.chat.observe(event => {
@@ -71,23 +69,8 @@ sync.chat.observe(event => {
 // UTILS
 
 export function sendChatMessage(msg) {
-  // const entry = new Y.Map()
-  // entry.set('sender', webrtc.io.id)
-  // entry.set('msg', msg)
   sync.chat.push([{
-    sender: webrtc.io.id,
+    // sender: webrtc.io.id,
     msg,
   }])
-  // webrtc.send('chat', {
-  //   sender: webrtc.io.id,
-  //   msg,
-  // })
-  // state.chat.push({
-  //   sender: 'me',
-  //   msg,
-  // })
 }
-
-// export function getPeer(id) {
-//   return webrtc.peerConnections[id]
-// }
