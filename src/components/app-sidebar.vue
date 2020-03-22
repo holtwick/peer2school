@@ -1,5 +1,6 @@
 <template>
-  <div class="vstack sidebar text">
+  <div class="vstack sidebar">
+    <div>
     <div v-if="!state.teacher">
       <app-video v-if="!state.teacher && state.teacherStream"
                  :stream="state.teacherStream"
@@ -12,11 +13,13 @@
         class="peer peer-self"
       />
     </div>
+    </div>
 
-    <slot></slot>
-    <br/>
-    <app-chat/>
-    <app-signal/>
+    <div class="-scrollable -fit">
+      <app-chat/>
+      <app-signal/>
+    </div>
+
   </div>
 </template>
 
