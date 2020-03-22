@@ -65,6 +65,7 @@ class Sync extends Emitter {
 
     this.chat = doc.getArray('chat')
     this.whiteboard = doc.getArray('whiteboard')
+    this.info = doc.getMap('info')
   }
 
   getPeers() {

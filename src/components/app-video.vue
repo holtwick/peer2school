@@ -1,9 +1,8 @@
 <template>
-  <video ref="video"/>
+  <video v-if="this.visible" ref="video"/>
 </template>
 
 <style lang="scss">
-
 </style>
 
 <script>
@@ -17,6 +16,7 @@ export default {
   props: {
     id: {},
     stream: {},
+    visible: false,
   },
   data() {
     return {}
