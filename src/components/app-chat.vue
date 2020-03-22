@@ -18,17 +18,15 @@
 
     <div class="h-32 overflow-y-auto">
       <div class="my-2 flex" v-for="msg in messages">
-        <div class="rounded bg-gray-200 shadow-xs px-1 mr-2 self-start">{{msg.sender}}:</div> <div class="w-full">{{msg.msg}}</div>
+        <div class="rounded bg-gray-200 shadow-xs px-1 mr-2 self-start">{{ getPeerNameBySenderId(msg.sender) }}:</div> <div class="w-full">{{msg.msg}}</div>
       </div>
       <div v-if="!this.state.chat.length">Noch keine Nachrichten</div>
     </div>
-
-
   </div>
 </template>
 
 <script>
-import { sendChatMessage } from '../state'
+import {sendChatMessage, getPeerNameBySenderId, sendPointOutInfo} from '../state'
 
 export default {
   name: 'app-chat',
@@ -44,23 +42,18 @@ export default {
     }
   },
   methods: {
+    getPeerNameBySenderId(senderId) {
+      return getPeerNameBySenderId(senderId);
+    },
     doSend() {
       sendChatMessage(this.message)
       this.message = ''
     },
     pointOut() {
-      this.message = this.message //wtf, warning prevention...
-
       let pic = this.$refs.pointPic
+      this.pointsOut = !this.pointsOut;
 
-
-      if (!this.pointsOut) {
-        sendChatMessage('*Zeigt auf!*')
-        this.pointsOut = true
-      } else {
-        sendChatMessage('*Zeigt nicht mehr auf!*')
-        this.pointsOut = false
-      }
+      sendPointOutInfo(this.pointsOutState)
     },
   },
   async mounted() {

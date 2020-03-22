@@ -20,7 +20,9 @@
     "socket.io-client": "^2.3.0",
     "uuid": "^7.0.2",
     "vue": "^2.6.11",
-    "vue-slider-component": "3.1.1"
+    "vue-slider-component": "3.1.1",
+    "y-indexeddb": "^9.0.3",
+    "yjs": "^13.0.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.3",

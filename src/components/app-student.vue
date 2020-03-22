@@ -1,9 +1,9 @@
 <template>
   <div class="vstack">
-    <div class="header hstack bg-blue-600 shadow text-white p-3 border-b-4 border-blue-400">
+    <app-peers class="-fit"></app-peers>
+    <div class="header hstack bg-blue-600 shadow text-white p-3 border-t-4 border-blue-400">
       <h1 class="-fit text-lg">peer.school</h1>
     </div>
-    <app-peers class="-fit"></app-peers>
   </div>
 </template>
 
@@ -11,7 +11,7 @@
 import AppPeers from './app-peers'
 
 export default {
-  name: 'app-main',
+  name: 'app-student',
   components: {
     AppPeers,
   },
