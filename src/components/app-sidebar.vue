@@ -1,46 +1,25 @@
 <template>
-  <div class="vstack sidebar text">
-    <!--        <app-video v-for="peer in state.peers" :key="peer" :id="peer" class="peer"/>-->
-
-    <!--    <form @submit.prevent.stop="setUsername" class="account-wrapper">-->
-    <!--      <input type="text" v-model="username" placeholder="Name" />-->
-    <!--      <input type="submit" value="Save"/>-->
-    <!--    </form>-->
-    <!--    <br />-->
-
-    <div v-if="!state.teacher">
-      <app-video v-if="!state.teacher && state.teacherStream"
-                 :stream="state.teacherStream"
-                 class="peer peer-teacher"/>
-    </div>
-
+  <div class="vstack sidebar">
     <div>
-      <app-video :stream="state.stream" class="peer peer-self"/>
+      <div v-if="!state.teacher">
+        <app-video v-if="!state.teacher && state.teacherStream"
+                   :stream="state.teacherStream"
+                   class="peer peer-teacher"/>
+      </div>
+
+      <div @click="editProfile">
+        <app-video
+          :stream="state.stream"
+          class="peer peer-self"
+        />
+      </div>
     </div>
 
-    <!--    <hr />-->
-    <!--    <ul class="other-streams">-->
-    <!--      <div v-if="!state.teacher">-->
-    <!--        <li v-for="peer in state.status">-->
-    <!--          <div v-if="state.teacherStreams.find(s => s === peer.remote)" class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>-->
-    <!--          <app-video v-if="state.teacherStreams.find(s => s === peer.remote)" :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>-->
-    <!--          <app-video v-else :key="peer.remote" :stream="peer.peer.stream" :visible="false" class="peer"/>-->
-    <!--        </li>-->
-    <!--      </div>-->
-    <!--      <div v-else>-->
-    <!--        <li v-for="peer in state.status">-->
-    <!--          <div class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>-->
-    <!--          <app-video :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>-->
-    <!--        </li>-->
-    <!--      </div>-->
-    <!--    </ul>-->
-    <!--    <br />-->
-    <!--    <app-peer-list/>-->
+    <div class="-scrollable -fit">
+      <app-chat/>
+      <app-signal/>
+    </div>
 
-    <slot></slot>
-    <br/>
-    <app-chat/>
-    <app-pointout/>
   </div>
 </template>
 
@@ -90,9 +69,9 @@
 </style>
 
 <script>
+import { setProfileName } from '../state'
 import AppChat from './app-chat'
-import AppPeerList from './app-peer-list'
-import AppPointout from './app-pointout'
+import AppSignal from './app-signal'
 import AppVideo from './app-video'
 
 const log = require('debug')('app:app-sidebar')
@@ -100,8 +79,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
-    AppPointout,
-    AppPeerList,
+    AppSignal,
     AppChat,
     AppVideo,
   },
@@ -124,12 +102,12 @@ export default {
     },
   },
   methods: {
-    // getPeerNameBySenderId(senderId) {
-    //   // return getPeerNameBySenderId(senderId);
-    // },
-    // setUsername() {
-    //   // setPeerName(this.username);
-    // },
+    editProfile() {
+      let name = prompt('Wie heißt du?')
+      if (name) {
+        setProfileName(name)
+      }
+    },
   },
   async mounted() {
   },

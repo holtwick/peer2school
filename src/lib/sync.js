@@ -14,6 +14,7 @@ class Sync extends Emitter {
   indexeddbPersistence
   webrtcProvider
   peerID
+  doc
 
   constructor({ room }) {
     super()
@@ -25,25 +26,18 @@ class Sync extends Emitter {
     })
 
     webrtcProvider.on('peers', info => {
-      log('peers', info)
-
       if (this.stream) {
         let added = Array.from(info.added)
         for (let peerID of added) {
           let peer = this.getPeer(peerID)
-
           peer.peer.addStream(this.stream)
-          // log('added', this.getPeer(peerID))
-
           peer.peer.on('stream', stream => {
-            log('streamx', stream)
             peer.peer.stream = stream
-            this.emit('stream') // hack
+            this.emit('stream')
           })
         }
       }
-
-      this.emit('peers') // hack
+      this.emit('peers')
     })
 
     webrtcProvider.on('synced', info => {
@@ -61,9 +55,7 @@ class Sync extends Emitter {
     this.webrtcProvider = webrtcProvider
     this.indexeddbPersistence = indexeddbPersistence
 
-    this.chat = doc.getArray('chat')
-    this.whiteboard = doc.getArray('whiteboard')
-    this.info = doc.getMap('info')
+    this.doc = doc
   }
 
   getPeers() {
@@ -71,7 +63,7 @@ class Sync extends Emitter {
   }
 
   getPeer(peerID) {
-    const peer =  this.webrtcProvider.room.webrtcConns.get(peerID) || null
+    const peer = this.webrtcProvider.room.webrtcConns.get(peerID) || null
     log('found peer', peer)
     return peer
   }
