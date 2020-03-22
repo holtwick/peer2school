@@ -40,7 +40,7 @@
     <slot></slot>
     <br/>
     <app-chat/>
-    <app-pointout/>
+    <app-signal/>
   </div>
 </template>
 
@@ -92,7 +92,7 @@
 <script>
 import AppChat from './app-chat'
 import AppPeerList from './app-peer-list'
-import AppPointout from './app-pointout'
+import AppSignal from './app-signal'
 import AppVideo from './app-video'
 
 const log = require('debug')('app:app-sidebar')
@@ -100,7 +100,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
-    AppPointout,
+    AppSignal,
     AppPeerList,
     AppChat,
     AppVideo,
@@ -124,12 +124,6 @@ export default {
     },
   },
   methods: {
-    // getPeerNameBySenderId(senderId) {
-    //   // return getPeerNameBySenderId(senderId);
-    // },
-    // setUsername() {
-    //   // setPeerName(this.username);
-    // },
   },
   async mounted() {
   },

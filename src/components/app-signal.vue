@@ -1,10 +1,11 @@
 <template>
   <div class="point" :class="{ '-active': active }">
     <button v-if="!state.teacher" @click="pointOut" type="submit">
-      <img src="../assets/img/aufzeigen.png" ref="pointPic">
+      <img src="../assets/img/aufzeigen.png">
     </button>
     <div v-else>
-       
+      Signals
+      {{state.signals}}
     </div>
   </div>
 </template>
@@ -23,7 +24,7 @@
 import { sendPointOut } from '../state'
 
 export default {
-  name: 'app-pointout',
+  name: 'app-signal',
   data() {
     return {
       active: false,
@@ -31,14 +32,7 @@ export default {
   },
   methods: {
     pointOut() {
-      let pic = this.$refs.pointPic
-      if (!this.active) {
-        pic.style.backgroundColor = 'orange'
-        this.active = true
-      } else {
-        pic.style.backgroundColor = ''
-        this.active = false
-      }
+      this.active = !this.active
       sendPointOut(this.active)
     },
   },

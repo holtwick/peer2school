@@ -19,16 +19,10 @@ export let state = {
   teacher,
   peerID: null,
   peers: [],
-  status: {},
-  chat: [],
-  pointOuts: [],
-  teacherStream: null,
-  teacherStreams: [],
   stream: null,
-  info: {
-    teacherID: null,
-    pointOuts: {},
-  },
+  teacherStream: null,
+  info: {},
+  whiteboard: [],
 }
 
 // SYNC
@@ -47,6 +41,7 @@ sync.on('ready', () => {
 
 for (const [name, mode] of Object.entries({
   'chat': 'Array',
+  'whiteboard': 'Array',
   'info': 'Map',
   'signal': 'Map',
   'profiles': 'Map',
