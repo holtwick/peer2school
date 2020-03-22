@@ -31,18 +31,19 @@ class Sync extends Emitter {
         let added = Array.from(info.added)
         for (let peerID of added) {
           let peer = this.getPeer(peerID)
+
           peer.peer.addStream(this.stream)
           // log('added', this.getPeer(peerID))
 
           peer.peer.on('stream', stream => {
             log('streamx', stream)
             peer.peer.stream = stream
-            this.emit('peers') // hack
+            this.emit('stream') // hack
           })
         }
       }
 
-      // this.emit('peers', [])
+      this.emit('peers') // hack
     })
 
     webrtcProvider.on('synced', info => {
@@ -70,7 +71,9 @@ class Sync extends Emitter {
   }
 
   getPeer(peerID) {
-    return this.webrtcProvider.room.webrtcConns.get(peerID) || null
+    const peer =  this.webrtcProvider.room.webrtcConns.get(peerID) || null
+    log('found peer', peer)
+    return peer
   }
 
   getPeerList() {
@@ -83,7 +86,11 @@ class Sync extends Emitter {
   }
 
   getStream(peerID) {
-    return this.getPeer(peerID).peer.stream
+    try {
+      return this.getPeer(peerID).peer.stream
+    } catch (err) {
+      // console.error('Exception:', err)
+    }
   }
 
   setStream(stream) {

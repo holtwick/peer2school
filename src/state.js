@@ -42,6 +42,7 @@ sync.on('ready', () => {
   if (teacher) {
     sync.info.set('teacherID', sync.peerID)
   }
+  updateState()
 })
 
 sync.chat.observe(event => {
@@ -55,17 +56,17 @@ sync.info.observe(event => {
 function updateState() {
   log('updateState')
   state.peers = sync.getPeerList()
-  // if (!teacher && state.info.teacherID) {
-  //   log('TTT', sync.getPeer(state.info.teacherID))
-  //   state.teacherStream = sync.getPeer(state.info.teacherID).peer.stream
-  // }
+  if (!teacher && state.info.teacherID) {
+    log('search teacher stream', state.info.teacherID)
+    // log('TTT', sync.getPeer(state.info.teacherID))
+    state.teacherStream = sync.getStream(state.info.teacherID)
+  }
 }
 
 updateState()
-sync.on('peers', () => {
-  log('new peers')
-  updateState()
-})
+
+sync.on('peers', updateState)
+sync.on('stream', updateState)
 
 // MEDIA
 

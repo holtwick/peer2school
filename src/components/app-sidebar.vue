@@ -10,8 +10,8 @@
 
     <div v-if="!state.teacher">
       Lehrer
-      <app-video v-if="!state.teacher && state.info.teacherID"
-                 :id="state.info.teacherID"
+      <app-video v-if="!state.teacher && state.teacherStream"
+                 :stream="state.teacherStream"
                  class="peer peer-teacher"/>
     </div>
 
