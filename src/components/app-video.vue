@@ -16,7 +16,7 @@ export default {
   props: {
     id: {},
     stream: {},
-    visible: false,
+    visible: true,
   },
   data() {
     return {}

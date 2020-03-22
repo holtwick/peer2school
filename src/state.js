@@ -49,7 +49,7 @@ sync.on('peers', () => {
 // MEDIA
 
 ENABLE_VIDEO && getUserMedia(stream => {
-  state.stream = stream
+  state.stream = new MediaStream(stream.getVideoTracks())
   sync.setStream(stream)
 })
 
