@@ -60,6 +60,13 @@ sync.chat.observe(event => {
   state.chat = chat
 })
 
+state.peers = sync.getPeerList()
+
+sync.on('peers', () => {
+  log('new peers')
+  state.peers = sync.getPeerList()
+})
+
 
 // MEDIA
 
