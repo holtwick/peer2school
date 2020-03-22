@@ -74,10 +74,24 @@ webrtc.on('point_out', pointsOut => {
 })
 
 webrtc.on('connected', ({ peer }) => {
+  syncTeacherStateWithPeers();
+
   setTimeout(() => {
     peer.addStream(state.stream)
   }, 1000)
 })
+
+
+/**
+ * Sending the teachers state to (newly) connected
+ * peers in the network allows to sync important informationn
+ * like peer names and point outs. See the listener for sync_teacher_state event.
+ */
+export function syncTeacherStateWithPeers() {
+  if(state.teacher) {
+    webrtc.send('sync_teacher_state', state);
+  }
+}
 
 /**
  * On fired event "set_peer_name" update/create
@@ -170,6 +184,17 @@ export function sendPointOutInfo(pointsOutInfo) {
   }
 
 }
+
+/**
+ * Along with syncTeacherStateWithPeers() this listener
+ * will manage to sync the teachers state (list of peers, list of pointouts, ..)
+ * with all connected peers. This is a solution für #42
+ */
+webrtc.on('sync_teacher_state', newState => {
+  state.peers = newState.peers;
+  state.pointOuts = newState.pointOuts;
+})
+
 
 export function getPeer(id) {
   return webrtc.peerConnections[id]
