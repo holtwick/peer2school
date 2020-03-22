@@ -86,8 +86,11 @@ export function addChatMessage(msg) {
   }])
 }
 
-export function setSignal(active) {
-  sync.signals.set(state.peerID, { active })
+export function toggleSignal() {
+  log('toggle', sync.peerID)
+  let active = sync.signals.get(sync.peerID)
+  log('toggle', active)
+  sync.signals.set(sync.peerID, !active)
 }
 
 export function setProfileName(name) {

@@ -1,6 +1,6 @@
 <template>
   <div class="signal" :class="{ '-active': active }">
-    <button @click="toggleSignal" type="submit">
+    <button @click="toggleSignal">
       <img src="../assets/img/aufzeigen.png">
     </button>
   </div>
@@ -17,20 +17,18 @@
 </style>
 
 <script>
-import { setSignal } from '../state'
+import { toggleSignal } from '../state'
 
 export default {
   name: 'app-signal',
-  data() {
-    return {
-      active: false,
-    }
+  computed: {
+    active() {
+      return this.state.signals[this.state.peerID] === true
+    },
   },
-
   methods: {
     toggleSignal() {
-      this.active = !this.active
-      setSignal(this.active)
+      toggleSignal()
     },
   },
   async mounted() {
