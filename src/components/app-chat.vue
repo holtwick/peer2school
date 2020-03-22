@@ -2,7 +2,7 @@
   <div class="chat">
     <form @submit.prevent.stop="doSend">
       <div v-for="msg in state.chat">
-        {{msg.sender}}: <b>{{msg.msg}}</b>
+        {{ getPeerNameBySenderId(msg.sender) }}: <b>{{msg.msg}}</b>
       </div>
       <div>
         <input placeholder="Send message" v-model="message">
@@ -31,17 +31,20 @@
 </style>
 
 <script>
-import { sendChatMessage } from '../state'
+  import {sendChatMessage, getPeerNameBySenderId} from '../state'
 
 export default {
   name: 'app-chat',
   data() {
     return {
-      pointsOut: false,
-      message: '',
+      pointsOut : false,
+      message: ''
     }
   },
   methods: {
+    getPeerNameBySenderId(senderId) {
+      return getPeerNameBySenderId(senderId);
+    },
     doSend() {
       sendChatMessage(this.message)
       this.message = ''
