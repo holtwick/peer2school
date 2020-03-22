@@ -35,8 +35,10 @@ export let webrtc = new WebRTC({ room })
 webrtc.on('status', info => {
   state.status = info.status
   if(state.teacher) {
-    if(!state.teacherStreams.find(s => s === webrtc.io.id))
+    if(!state.teacherStreams.find(s => s === webrtc.io.id)){
       state.teacherStreams.push(webrtc.io.id)
+    }
+
     webrtc.send('teacherStream', {      
       teacherStream: webrtc.io.id
     })
@@ -48,8 +50,9 @@ webrtc.on('chat', msg => {
 })
 
 webrtc.on('teacherStream', msg => {
-  if(!state.teacherStreams.find(s => s === msg.teacherStream))
+  if(!state.teacherStreams.find(s => s === msg.teacherStream)){
     state.teacherStreams.push(msg.teacherStream)
+  }
 })
 
 webrtc.on('whiteboard', ({ action }) => {
