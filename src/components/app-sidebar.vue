@@ -9,10 +9,19 @@
     <app-video :stream="state.stream" class="peer"/>
     <hr />
     <ul class="other-streams">
-      <li v-for="peer in state.status">
-        <div class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
-        <app-video :key="peer.remote" :stream="peer.peer.stream" class="peer"/>
-      </li>
+      <div v-if="!state.teacher">
+        <li v-for="peer in state.status">
+          <div v-if="state.teacherStreams.find(s => s === peer.remote)" class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
+          <app-video v-if="state.teacherStreams.find(s => s === peer.remote)" :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
+          <app-video v-else :key="peer.remote" :stream="peer.peer.stream" :visible="false" class="peer"/>
+        </li>
+      </div>
+      <div v-else>
+        <li v-for="peer in state.status">
+          <div class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
+          <app-video :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
+        </li>
+      </div>
     </ul>
 
     <slot></slot>
