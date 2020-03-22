@@ -16,9 +16,7 @@
     </div>
 
     <div class="-scrollable -fit">
-      students
       <app-students v-if="state.teacher"/>
-      chat
       <app-chat/>
       <app-signal v-if="!state.teacher"/>
 

@@ -1,24 +1,30 @@
 <template>
-  <div
-    class="student"
-    v-for="student of students"
-    :key="student.id"
-    :class="{ '-active': student.active }"
-  >
-    {{ student.name }}
+  <div class="students">
+    <div
+      class="student"
+      v-for="student of students"
+      :key="student.id"
+      :class="{ '-active': student.active }"
+    >
+      {{ student.name }}
+    </div>
   </div>
 </template>
 
 <style lang="scss">
-.student {
-  font-size: 0.8rem;
+.students {
+  margin-bottom: 1rem;
 
-  &:before {
-    content: '-'
-  }
+  .student {
+    font-size: 0.8rem;
 
-  &.-active:before {
-    content: '+'
+    &:before {
+      content: '-'
+    }
+
+    &.-active:before {
+      content: '+'
+    }
   }
 }
 </style>
