@@ -40,6 +40,7 @@
     <slot></slot>
     <br/>
     <app-chat/>
+    <app-pointout/>
   </div>
 </template>
 
@@ -91,6 +92,7 @@
 <script>
 import AppChat from './app-chat'
 import AppPeerList from './app-peer-list'
+import AppPointout from './app-pointout'
 import AppVideo from './app-video'
 
 const log = require('debug')('app:app-sidebar')
@@ -98,6 +100,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppPointout,
     AppPeerList,
     AppChat,
     AppVideo,

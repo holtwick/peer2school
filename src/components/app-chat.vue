@@ -11,17 +11,11 @@
       </div>
     </form>
 
-    <div class="point">
-      <button @click="pointOut" type="submit"><img src="../assets/img/aufzeigen.png" ref="pointPic"></button>
-    </div>
+
   </div>
 </template>
 
 <style lang="scss">
-.point {
-  margin-top: 1rem;
-}
-
 .chat {
   input {
     display: block;
@@ -32,13 +26,12 @@
 </style>
 
 <script>
-import { sendChatMessage, sendPointOut } from '../state'
+import { sendChatMessage } from '../state'
 
 export default {
   name: 'app-chat',
   data() {
     return {
-      pointsOut: false,
       message: '',
     }
   },
@@ -47,20 +40,8 @@ export default {
       sendChatMessage(this.message)
       this.message = ''
     },
-    pointOut() {
-      let pic = this.$refs.pointPic
-      if (!this.pointsOutState) {
-        pic.style.backgroundColor = 'orange'
-        this.pointsOutState = true
-      } else {
-        pic.style.backgroundColor = ''
-        this.pointsOutState = false
-      }
-      sendPointOut(this.pointsOutState)
-    },
   },
   async mounted() {
-
   },
 }
 </script>
