@@ -9,14 +9,17 @@
     "test": "jest"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.27",
+    "@fortawesome/free-solid-svg-icons": "^5.12.1",
+    "@fortawesome/vue-fontawesome": "^0.1.9",
     "core-js": "^3.6.4",
     "debug": "^4.1.1",
+    "paper": "0.12.4",
     "register-service-worker": "^1.7.1",
     "simple-peer": "^9.6.2",
     "socket.io-client": "^2.3.0",
     "uuid": "^7.0.2",
     "vue": "^2.6.11",
-    "paper": "0.12.4",
     "vue-slider-component": "3.1.1"
   },
   "devDependencies": {
@@ -26,6 +29,7 @@
     "jest": "^25.1.0",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "tailwindcss": "^1.2.0"
   }
 }
