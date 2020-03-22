@@ -20,6 +20,7 @@ export let state = {
   peers: [],
   status: {},
   chat: [],
+  pointOuts: [],
   stream: null,
   whiteboard: [],
 }
@@ -40,6 +41,20 @@ webrtc.on('chat', msg => {
 
 webrtc.on('whiteboard', ({ action }) => {
   this.whiteboard.push(action)
+})
+
+//pointsOut.state -> true = point out is activated 
+//                   false = point out is deactivates 
+webrtc.on('point_out', pointsOut => {
+  if(pointsOut.state){
+    state.pointOuts.push(pointsOut.sender)
+  }
+  else{
+    const senderIndex = state.pointOuts.indexOf(pointsOut.sender)
+
+    if(senderIndex >= 0) //check if sender is in list
+      state.pointOuts.splice(senderIndex, 1)
+  }
 })
 
 webrtc.on('connected', ({ peer }) => {
@@ -115,6 +130,29 @@ export function sendChatMessage(msg) {
     sender: webrtc.io.id,
     msg,
   })
+}
+
+export function sendPointOutInfo(pointsOutInfo) {
+
+  // remote
+  webrtc.send('point_out', {
+    sender: webrtc.io.id,
+    state: pointsOutInfo,
+  })
+
+  
+  // local
+  if(pointsOutInfo){
+    state.pointOuts.push(webrtc.io.id)
+  }
+  else
+  {
+    const senderIndex = state.pointOuts.indexOf(webrtc.io.id)
+
+    if(senderIndex >= 0) //check if sender is in list
+      state.pointOuts.splice(senderIndex, 1)
+  }
+
 }
 
 export function getPeer(id) {

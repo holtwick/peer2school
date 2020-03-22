@@ -31,7 +31,7 @@
 </style>
 
 <script>
-  import {sendChatMessage, getPeerNameBySenderId} from '../state'
+import {sendChatMessage, getPeerNameBySenderId, sendPointOutInfo} from '../state'
 
 export default {
   name: 'app-chat',
@@ -51,15 +51,19 @@ export default {
     },
     pointOut() {
       let pic = this.$refs.pointPic
-      if (!this.pointsOut) {
+
+      if(!this.pointsOutState)
+      {
         pic.style.backgroundColor = 'orange'
-        sendChatMessage('*Zeigt auf!*')
-        this.pointsOut = true
-      } else {
-        pic.style.backgroundColor = ''
-        sendChatMessage('*Zeigt nicht mehr auf!*')
-        this.pointsOut = false
+        this.pointsOutState = true
       }
+      else
+      {
+        pic.style.backgroundColor = ''
+        this.pointsOutState = false
+      }
+
+      sendPointOutInfo(this.pointsOutState)
     },
   },
   async mounted() {
