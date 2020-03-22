@@ -1,7 +1,9 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
+import { WebrtcProvider } from 'y-webrtc'
+
 import * as Y from 'yjs'
 
-const ydoc = new Y.Doc()
+const doc = new Y.Doc()
 
 const log = require('debug')('app:sync')
 
@@ -14,25 +16,30 @@ function decode(v) {
 }
 
 export function setupSync({ room, webrtc } = {}) {
-  ydoc.on('update', update => {
-    update = encode(update)
-    log('webrtc sync send', JSON.stringify(update, null, 2))
-    webrtc.send('sync', {update})
+  // doc.on('update', update => {
+  //   update = encode(update)
+  //   log('webrtc sync send', JSON.stringify(update, null, 2))
+  //   webrtc.send('sync', { update })
+  // })
+  //
+  // webrtc.on('sync', info => {
+  //   let { update } = info
+  //   log('xxx', JSON.stringify(info, null, 2))
+  //   update = decode(update)
+  //   log('webrtc sync receive', update)
+  //   Y.applyUpdate(doc, update)
+  // })
+
+  const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
+    signaling: ['ws://localhost:4448'],
   })
 
-  webrtc.on('sync', info => {
-    let {update} = info
-    log('xxx', JSON.stringify(info, null, 2))
-    update = decode(update)
-    log('webrtc sync receive', update)
-    Y.applyUpdate(ydoc, update)
-  })
-
-  // const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, ydoc)
+  //  const awareness = webrtcProvider.awareness // websocketProvider.awareness
+  const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
+  // const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
 
   return {
-    chat: ydoc.getArray('chat'),
+    chat: doc.getArray('chat'),
   }
 
 }
-
