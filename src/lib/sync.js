@@ -26,12 +26,6 @@ class Sync extends Emitter {
 
     webrtcProvider.on('peers', info => {
       log('peers', info)
-      // let peers = Array.from(info.webrtcPeers)
-      // log('peers', peers)
-      // for (let peerId of peers) {
-      //   let peer = webrtcProvider.room.webrtcConns.get(peerId)
-      //   log('peer', peer.peer)
-      // }
 
       if (this.stream) {
         let added = Array.from(info.added)

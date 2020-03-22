@@ -17,6 +17,7 @@ location.hash = `#${hash}`
 export let state = {
   room,
   teacher,
+  peerID: null,
   peers: [],
   status: {},
   chat: [],
@@ -36,6 +37,7 @@ export let sync = setupSync({
 })
 
 sync.on('ready', () => {
+  state.peerID = sync.peerID
   if (teacher) {
     sync.info.set('teacherID', sync.peerID)
   }
@@ -72,28 +74,12 @@ export function sendChatMessage(msg) {
   }])
 }
 
-// export function sendPointOutInfo(pointsOutInfo) {
-//
-//   // remote
-//   webrtc.send('point_out', {
-//     sender: webrtc.io.id,
-//     state: pointsOutInfo,
-//   })
-//
-//
-//   // local
-//   if(pointsOutInfo){
-//     state.pointOuts.push(webrtc.io.id)
-//   }
-//   else
-//   {
-//     const senderIndex = state.pointOuts.indexOf(webrtc.io.id)
-//
-//     if(senderIndex >= 0) //check if sender is in list
-//       state.pointOuts.splice(senderIndex, 1)
-//   }
-//
-// }
+export function sendPointOut(active) {
+  sync.info.get('pointOuts').set(state.peerID, {
+    active,
+  })
+}
+
 
 // /**
 //  * Along with syncTeacherStateWithPeers() this listener

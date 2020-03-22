@@ -31,7 +31,7 @@
 </style>
 
 <script>
-import {sendChatMessage} from '../state'
+import { sendChatMessage, sendPointOut } from '../state'
 
 export default {
   name: 'app-chat',
@@ -52,6 +52,7 @@ export default {
     pointOut() {
       let pic = this.$refs.pointPic
 
+
       if(!this.pointsOutState)
       {
         pic.style.backgroundColor = 'orange'
@@ -63,7 +64,7 @@ export default {
         this.pointsOutState = false
       }
 
-      sendPointOutInfo(this.pointsOutState)
+      sendPointOut(this.pointsOutState)
     },
   },
   async mounted() {
