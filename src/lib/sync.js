@@ -21,7 +21,7 @@ class Sync extends Emitter {
     log('setupSync')
 
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
-      // signaling: ['ws://localhost:4448'],
+      filterBcConns: true,
     })
 
     webrtcProvider.on('peers', info => {
