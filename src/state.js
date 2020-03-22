@@ -21,7 +21,6 @@ export let state = {
   status: {},
   chat: [],
   stream: null,
-  whiteboard: [],
 }
 
 // SYNC
@@ -31,9 +30,7 @@ export let sync = setupSync({
 })
 
 sync.chat.observe(event => {
-  let chat = sync.chat.toJSON()
-  log('yarray was modified', JSON.stringify(chat))
-  state.chat = chat
+  state.chat = sync.chat.toJSON()
 })
 
 state.peers = sync.getPeerList()
@@ -61,5 +58,5 @@ export function sendChatMessage(msg) {
 
 export function sendWhiteboardAction(action) {
   log('sendWhiteboardAction', action)
-  sync.chat.push([action])
+  sync.whiteboard.push([action])
 }
