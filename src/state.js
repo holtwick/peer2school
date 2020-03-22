@@ -39,13 +39,24 @@ webrtc.on('connected', ({ peer }) => {
 })
 
 webrtc.on('set_peer_name', peer => {
-  let peerData = this.state.peers.find( s => s.id === peer.sender)
+  let peerData = state.peers.find( s => s.id === peer.sender)
   if(peerData){
     peerData.name = peer.name;
   } else {
-    this.state.peers.push({id:peer.sender,name:peer.name})
+    state.peers.push({id:peer.sender,name:peer.name})
   }
 })
+
+export function getPeerNameBySenderId(senderId) {
+  let name = senderId;
+  const peer = state.peers.find( s => s.id === senderId)
+  if(peer) {
+    name = peer.name;
+  }
+
+  name += (senderId === webrtc.io.id) ? ' (me)':'';
+  return name;
+}
 
 export function setPeerName(name) {
   // send remote
@@ -54,13 +65,12 @@ export function setPeerName(name) {
     name: name
   })
   // set local
-  const peer = this.state.peers.find( s => s.id === webrtc.io.id)
+  let peer = state.peers.find( s => s.id === webrtc.io.id)
   if(peer){
      peer.name = name;
   } else {
-    this.state.peers.push({id:webrtc.io.id,name:name})
+    state.peers.push({id:webrtc.io.id,name:name})
   }
-
 }
 
 export function sendChatMessage(msg) {
@@ -69,7 +79,7 @@ export function sendChatMessage(msg) {
     msg,
   })
   state.chat.push({
-    sender: 'me',
+    sender: webrtc.io.id,
     msg,
   })
 }
