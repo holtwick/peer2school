@@ -19,11 +19,17 @@
     font-size: 0.8rem;
 
     &:before {
-      content: '-'
+      display: inline-block;
+      content: ' ';
+      height: 0.5rem;
+      width: 0.5rem;
+      background: gray;
+      border-radius: 1rem;
+      margin-right: 0.25rem;
     }
 
     &.-active:before {
-      content: '+'
+      background: #32b643;
     }
   }
 }
