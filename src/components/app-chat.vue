@@ -2,7 +2,8 @@
   <div class="chat">
     <form @submit.prevent.stop="doSend">
       <div v-for="msg in state.chat">
-        {{ msg.sender }}: <b>{{msg.msg}}</b>
+        <!-- {{ msg.sender }}: -->
+        {{msg.msg}}
       </div>
       <div>
         <input placeholder="Send message" v-model="message">
