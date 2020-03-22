@@ -1,97 +1,79 @@
 <template>
-  <div class="vstack sidebar text">
-    <form @submit.prevent.stop="setUsername" class="account-wrapper">
-      <input type="text" v-model="username" placeholder="Name" />
-      <input type="submit" value="Save"/>
-    </form>
-    <br />
-
-    <app-video :stream="state.stream" :visible="true" class="peer"/>
-    <hr />
-    <ul class="other-streams">
+  <div class="vstack sidebar">
+    <div>
       <div v-if="!state.teacher">
-        <li v-for="peer in state.status">
-          <div v-if="state.teacherStreams.find(s => s === peer.remote)" class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
-          <app-video v-if="state.teacherStreams.find(s => s === peer.remote)" :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
-          <app-video v-else :key="peer.remote" :stream="peer.peer.stream" :visible="false" class="peer"/>
-        </li>
+        <app-video
+          v-if="!state.teacher && state.teacherStream"
+          :stream="state.teacherStream"
+          class="peer peer-teacher"
+        />
       </div>
-      <div v-else>
-        <li v-for="peer in state.status">
-          <div class="peer-name">{{ getPeerNameBySenderId(peer.remote) }}</div>
-          <app-video :key="peer.remote" :stream="peer.peer.stream" :visible="true" class="peer"/>
-        </li>
-      </div>
-    </ul>
 
-    <slot></slot>
-    <br />
-    <app-chat/>
+      <div @click="editProfile">
+        <app-video
+          :stream="state.stream"
+          class="peer peer-self"
+        />
+      </div>
+    </div>
+
+    <app-students v-if="state.teacher"/>
+
+    <app-chat class="-fit"/>
+
+    <app-signal v-if="!state.teacher"/>
+
   </div>
 </template>
 
 <style lang="scss">
-  .other-streams {
-    margin: 0 !important;
-    li {
-      list-style-type: none;
-      margin: 0;
-      div.peer-name {
-        background: #ffffff;
-        width: 100%;
-        text-align: center;
-      }
-
-      video.peer {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        margin-bottom: 0;
-      }
-    }
-  }
-  .account-wrapper {
-    input {
-      float: left;
-      &[type="text"] {
-        width: 70%;
-        margin-right: 3%;
-      }
-      &[type="submit"] {
-        width: 27%;
-      }
-    }
-  }
 .sidebar {
-  width: 20%;
-  min-width: 8rem;
+  max-width: 20%;
+  width: 16rem;
   background: #eee;
   padding: 1rem;
 }
 </style>
 
 <script>
+import { setProfileName } from '../state'
 import AppChat from './app-chat'
+import AppSignal from './app-signal'
+import AppStudents from './app-students'
 import AppVideo from './app-video'
-import {getPeerNameBySenderId, setPeerName} from '../state';
+
+const log = require('debug')('app:app-sidebar')
 
 export default {
   name: 'app-sidebar',
   components: {
+    AppStudents,
+    AppSignal,
     AppChat,
     AppVideo,
   },
   data() {
     return {
-      username: ''
+      username: '',
     }
   },
-  methods: {
-    getPeerNameBySenderId(senderId) {
-      return getPeerNameBySenderId(senderId);
+  computed: {
+    teacherStream() {
+      try {
+        let peer = this.state.peers[this.state.info.teacherID]
+        return peer.stream
+      } catch (e) {
+
+      }
     },
-    setUsername() {
-      setPeerName(this.username);
-    }
+  },
+  methods: {
+    editProfile() {
+      let name = prompt('Wie heißt du?')
+      if (name) {
+        setProfileName(name)
+      }
+    },
   },
   async mounted() {
   },
