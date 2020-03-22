@@ -5,16 +5,20 @@ const ydoc = new Y.Doc()
 
 const log = require('debug')('app:sync')
 
-export function setupSync({ room } = {}) {
+export function setupSync({ room, webrtc } = {}) {
   ydoc.on('update', update => {
     log('on update', update)
-    // Y.applyUpdate(doc2, update)
+    webrtc.send('sync', update)
+  })
+
+  webrtc.on('sync', update => {
+    Y.applyUpdate(ydoc, update)
   })
 
   const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, ydoc)
 
   return {
-    chat: ydoc.getArray('chat')
+    chat: ydoc.getArray('chat'),
   }
 
 }

@@ -13,13 +13,7 @@ let teacher = hash.endsWith(teacherToken)
 let room = hash.substr(0, UUID_length)
 location.hash = `#${hash}`
 
-export let sync = setupSync({
-  room,
-})
-
-sync.chat.observe(event => {
-  log('yarray was modified', JSON.stringify(sync.chat.toJSON(), null, 2))
-})
+// STATE
 
 export let state = {
   room,
@@ -31,9 +25,13 @@ export let state = {
   whiteboard: [],
 }
 
+// MEDIA
+
 ENABLE_VIDEO && getUserMedia(stream => {
   state.stream = stream
 })
+
+// WEBRTC
 
 export let webrtc = new WebRTC({ room })
 
@@ -55,6 +53,21 @@ webrtc.on('connected', ({ peer }) => {
   }, 1000)
 })
 
+// SYNC
+
+export let sync = setupSync({
+  room,
+  webrtc,
+})
+
+sync.chat.observe(event => {
+  let chat = sync.chat.toJSON()
+  log('yarray was modified', JSON.stringify(chat))
+  state.chat = chat
+})
+
+// UTILS
+
 export function sendChatMessage(msg) {
   // const entry = new Y.Map()
   // entry.set('sender', webrtc.io.id)
@@ -63,17 +76,16 @@ export function sendChatMessage(msg) {
     sender: webrtc.io.id,
     msg,
   }])
-
-  webrtc.send('chat', {
-    sender: webrtc.io.id,
-    msg,
-  })
-  state.chat.push({
-    sender: 'me',
-    msg,
-  })
+  // webrtc.send('chat', {
+  //   sender: webrtc.io.id,
+  //   msg,
+  // })
+  // state.chat.push({
+  //   sender: 'me',
+  //   msg,
+  // })
 }
 
-export function getPeer(id) {
-  return webrtc.peerConnections[id]
-}
+// export function getPeer(id) {
+//   return webrtc.peerConnections[id]
+// }
