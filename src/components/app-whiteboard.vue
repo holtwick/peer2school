@@ -1,12 +1,14 @@
 <template>
-  <div class="hstack">
-    <canvas ref="canvas" class="-fit" id="whiteboard" resize></canvas>
-  </div>
+  <y-whiteboard ref="whiteboard"></y-whiteboard>
 </template>
 
 <style lang="scss"></style>
 
 <script>
+import { defineWhiteboard } from 'y-webcomponents'
+import { sync } from '../state'
+
+defineWhiteboard()
 
 export default {
   name: 'app-whiteboard',
@@ -16,6 +18,7 @@ export default {
   },
   methods: {},
   async mounted() {
+    this.$refs.whiteboard.setState({ type: sync.whiteboard })
     //   let drawingCanvas = this.$refs.canvas
     //   const ctx = /** @type {CanvasRenderingContext2D} */ (drawingCanvas.getContext('2d'))
     //   const yDrawingContent = sync.whiteboard
