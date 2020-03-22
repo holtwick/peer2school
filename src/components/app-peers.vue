@@ -9,7 +9,6 @@
 
 <style lang="scss">
 
-
 .peer {
   background: #333;
   width: 100%;
