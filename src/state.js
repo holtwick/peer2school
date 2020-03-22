@@ -4,6 +4,8 @@ import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { WebRTC } from './lib/webrtc'
 
+const log = require('debug')('app:state')
+
 // Force a unique room ID
 const teacherToken = '.teacher'
 let hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
@@ -13,6 +15,10 @@ location.hash = `#${hash}`
 
 export let sync = setupSync({
   room,
+})
+
+sync.chat.observe(event => {
+  log('yarray was modified', JSON.stringify(sync.chat.toJSON(), null, 2))
 })
 
 export let state = {
@@ -50,7 +56,14 @@ webrtc.on('connected', ({ peer }) => {
 })
 
 export function sendChatMessage(msg) {
-  sync.chat.push(['me', msg])
+  // const entry = new Y.Map()
+  // entry.set('sender', webrtc.io.id)
+  // entry.set('msg', msg)
+  sync.chat.push([{
+    sender: webrtc.io.id,
+    msg,
+  }])
+
   webrtc.send('chat', {
     sender: webrtc.io.id,
     msg,
