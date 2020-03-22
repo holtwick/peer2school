@@ -23,6 +23,7 @@
 .point {
   margin-top: 1rem;
 }
+
 .chat {
   input {
     display: block;
@@ -41,8 +42,8 @@ export default {
   data() {
     return {
       pointsOut : false,
-      message: "",
-      username: ""
+      message: '',
+      username: ''
     }
   },
   methods: {
@@ -61,11 +62,7 @@ export default {
       this.message = ''
     },
     pointOut() {
-      this.message = this.message //wtf, warning prevention...
-
       let pic = this.$refs.pointPic
-
-
       if (!this.pointsOut) {
         pic.style.backgroundColor = 'orange'
         sendChatMessage('*Zeigt auf!*')
