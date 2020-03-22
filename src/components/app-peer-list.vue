@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded p-3 bg-white shadow mb-3 h-32 overflow-auto">
+    <div class="rounded p-3 bg-white shadow mb-3 max-h-300">
         <h3 class="mb-1 text-base">Teilnehmer</h3>
         <ul class="list-reset">
             <li class="block w-full px-2 py-1"

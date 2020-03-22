@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-200 shadow p-3 overflow auto h-screen">
+  <div class="bg-gray-200 shadow p-3 overflow auto h-screen overflow-scroll pb-16">
     <form class="flex rounded p-3 bg-white shadow mb-3" @submit.prevent.stop="setUsername">
       <input class="flex-grow border-gray-200 border p-2 bg-gray-200 border rounded shadow-inner mr-3"
              type="text"
@@ -10,7 +10,7 @@
         <font-awesome-icon icon="save" />
       </button>
     </form>
-    <app-video :stream="state.stream" :visible="true" class="rounded my-2 shadow"/>
+    <app-video :stream="state.stream" :visible="true" class="rounded my-3 shadow"/>
     <div class="overflow-auto bg-white rounded px-4 my-3 shadow" v-if="state.status.length">
       <ul class="list-reset">
         <div class="flex flex-wrap -mx-2" v-if="!state.teacher">

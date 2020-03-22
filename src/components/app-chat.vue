@@ -1,6 +1,6 @@
 <template>
   <div class="chat rounded p-3 bg-white shadow">
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap mb-2">
       <form class="flex-grow lg:mr-3" @submit.prevent.stop="doSend">
         <input class="w-full border-gray-200 border p-2 bg-gray-200 border rounded shadow-inner"
                placeholder="Nachricht senden"
@@ -18,7 +18,7 @@
 
     <div class="h-32 overflow-y-auto">
       <div class="my-2 flex" v-for="msg in messages">
-        <div class="rounded bg-gray-200 shadow-xs px-1 mr-2 self-start">{{ getPeerNameBySenderId(msg.sender) }}:</div> <div class="w-full">{{msg.msg}}</div>
+        <div class="rounded bg-gray-200 shadow-xs px-1 mr-2 self-start max-w-1/2 truncate">{{ getPeerNameBySenderId(msg.sender) }}:</div> <div class="w-full">{{msg.msg}}</div>
       </div>
       <div v-if="!this.state.chat.length">Noch keine Nachrichten</div>
     </div>
