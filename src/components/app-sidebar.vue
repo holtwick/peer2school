@@ -16,53 +16,20 @@
     </div>
 
     <div class="-scrollable -fit">
+      <app-students v-if="state.teacher"/>
       <app-chat/>
-      <app-signal/>
+      <app-signal v-if="!state.teacher"/>
+
+      {{state}}
     </div>
 
   </div>
 </template>
 
 <style lang="scss">
-.other-streams {
-  margin: 0 !important;
-
-  li {
-    list-style-type: none;
-    margin: 0;
-
-    div.peer-name {
-      background: #ffffff;
-      width: 100%;
-      text-align: center;
-    }
-
-    video.peer {
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-      margin-bottom: 0;
-    }
-  }
-}
-
-.account-wrapper {
-  input {
-    float: left;
-
-    &[type="text"] {
-      width: 70%;
-      margin-right: 3%;
-    }
-
-    &[type="submit"] {
-      width: 27%;
-    }
-  }
-}
-
 .sidebar {
-  width: 20%;
-  min-width: 8rem;
+  max-width: 20%;
+  width: 16rem;
   background: #eee;
   padding: 1rem;
 }
@@ -72,6 +39,7 @@
 import { setProfileName } from '../state'
 import AppChat from './app-chat'
 import AppSignal from './app-signal'
+import AppStudents from './app-students'
 import AppVideo from './app-video'
 
 const log = require('debug')('app:app-sidebar')
@@ -79,6 +47,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppStudents,
     AppSignal,
     AppChat,
     AppVideo,
