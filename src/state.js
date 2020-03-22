@@ -1,3 +1,4 @@
+import { ENABLE_VIDEO } from './config'
 import { setupSync } from './lib/sync'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
@@ -24,7 +25,7 @@ export let state = {
   whiteboard: [],
 }
 
-getUserMedia(stream => {
+ENABLE_VIDEO && getUserMedia(stream => {
   state.stream = stream
 })
 

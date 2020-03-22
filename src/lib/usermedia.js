@@ -5,23 +5,6 @@ navigator.getUserMedia = (
   navigator['msGetUserMedia']
 )
 
-// peer2.on('stream', stream => {
-//   log('stream')
-//
-//   // got remote video stream, now let's show it in a video tag
-//   if ('srcObject' in video) {
-//     video.srcObject = stream
-//   } else {
-//     video.src = window.URL.createObjectURL(stream) // for older browsers
-//   }
-//   video.play()
-// })
-
-// function addMedia(stream) {
-//   log('addMedia')
-//   peer1.addStream(stream) // <- add streams to peer dynamically
-// }
-
 export function connectStreamToVideoElement(stream, video) {
   if ('srcObject' in video) {
     video.srcObject = stream
