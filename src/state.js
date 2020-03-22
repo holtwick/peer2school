@@ -14,6 +14,14 @@ location.hash = `#${hash}`
 
 // STATE
 
+let synched = {
+  info: {},
+  chat: [],
+  whiteboard: [],
+  signals: {},
+  profiles: {},
+}
+
 export let state = {
   room,
   teacher,
@@ -21,8 +29,7 @@ export let state = {
   peers: [],
   stream: null,
   teacherStream: null,
-  info: {},
-  whiteboard: [],
+  ...synched,
 }
 
 // SYNC
@@ -39,14 +46,8 @@ sync.on('ready', () => {
   updateState()
 })
 
-for (const [name, mode] of Object.entries({
-  'chat': 'Array',
-  'whiteboard': 'Array',
-  'info': 'Map',
-  'signal': 'Map',
-  'profiles': 'Map',
-})) {
-  sync[name] = sync.doc[`get${mode}`](name)
+for (const [name, dft] of Object.entries(synched)) {
+  sync[name] = Array.isArray(dft) ? sync.doc.getArray(name) : sync.doc.getMap(name)
   sync[name].observe(event => {
     state[name] = sync[name].toJSON()
   })
@@ -84,7 +85,7 @@ export function sendChatMessage(msg) {
 }
 
 export function sendPointOut(active) {
-  sync.signal.set(state.peerID, { active })
+  sync.signals.set(state.peerID, { active })
 }
 
 // /**
