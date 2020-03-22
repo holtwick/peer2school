@@ -31,7 +31,7 @@ export function setupSync({ room, webrtc } = {}) {
   // })
 
   const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
-    signaling: ['ws://localhost:4448'],
+    // signaling: ['ws://localhost:4448'],
   })
 
   //  const awareness = webrtcProvider.awareness // websocketProvider.awareness
