@@ -75,7 +75,6 @@ webrtc.on('point_out', pointsOut => {
 
 webrtc.on('connected', ({ peer }) => {
   syncTeacherStateWithPeers();
-
   setTimeout(() => {
     peer.addStream(state.stream)
   }, 1000)
