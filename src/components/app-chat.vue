@@ -24,7 +24,7 @@
 </style>
 
 <script>
-import { sendChatMessage } from '../state'
+import { addChatMessage } from '../state'
 
 export default {
   name: 'app-chat',
@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     doSend() {
-      sendChatMessage(this.message)
+      addChatMessage(this.message)
       this.message = ''
     },
   },

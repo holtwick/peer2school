@@ -21,7 +21,7 @@
 </style>
 
 <script>
-import { sendPointOut } from '../state'
+import { setSignal } from '../state'
 
 export default {
   name: 'app-signal',
@@ -33,7 +33,7 @@ export default {
   methods: {
     pointOut() {
       this.active = !this.active
-      sendPointOut(this.active)
+      setSignal(this.active)
     },
   },
   async mounted() {
