@@ -4,8 +4,13 @@
       <img src="../assets/img/aufzeigen.png">
     </button>
     <div v-else>
-      Signals
-      {{students}}
+      <div class="student"
+           v-for="student of students"
+           :key="student.key"
+           :class="{ '-active': student.active }"
+      >
+        {{ student.name }}
+      </div>
     </div>
   </div>
 </template>
@@ -16,6 +21,18 @@
 
   &.-active {
     background: orange;
+  }
+}
+
+.student {
+  font-size: 0.8rem;
+
+  &:before {
+    content: '-'
+  }
+
+  &.-active:before {
+    content: '+'
   }
 }
 </style>
