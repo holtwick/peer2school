@@ -1,7 +1,7 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { WebrtcProvider } from 'y-webrtc'
 import * as Y from 'yjs'
-import { Emitter } from './emitter'
+import { Emitter } from './lib/emitter'
 
 const log = require('debug')('app:sync')
 

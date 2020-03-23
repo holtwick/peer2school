@@ -1,5 +1,5 @@
 import { ENABLE_VIDEO } from './config'
-import { setupSync } from './lib/sync'
+import { setupSync } from './sync'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 
