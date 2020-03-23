@@ -4,7 +4,7 @@
     <!--    <div>peer.school</div>-->
 
     <div>
-      <div v-if="!state.teacher">
+      <div v-if="!state.teacher" title="Teacher">
         <app-video
           v-if="!state.teacher && state.teacherStream"
           :stream="state.teacherStream"
@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <div @click="editProfile">
+      <div @click="editProfile" title="This is you :)">
         <app-video
           :stream="state.stream"
           class="peer peer-self"

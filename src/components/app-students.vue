@@ -28,8 +28,25 @@
       margin-right: 0.25rem;
     }
 
-    &.-active:before {
-      background: #32b643;
+    @keyframes blink {
+      from {
+        opacity: 1.0;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      to {
+        opacity: 1.0;
+      }
+    }
+
+    &.-active {
+      font-weight: bold;
+
+      &:before {
+        background: red;
+        animation: blink 1000ms infinite;
+      }
     }
   }
 }
