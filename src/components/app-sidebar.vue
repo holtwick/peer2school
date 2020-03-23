@@ -60,16 +60,6 @@ export default {
       username: '',
     }
   },
-  computed: {
-    teacherStream() {
-      try {
-        let peer = this.state.peers[this.state.info.teacherID]
-        return peer.stream
-      } catch (e) {
-
-      }
-    },
-  },
   methods: {
     editProfile() {
       let name = prompt('Wie heißt du?')
