@@ -11,7 +11,7 @@
           class="peer peer-teacher"
         />
         <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">
-          <i data-f7-icon="person"></i>
+          <i data-f7-icon="rectangle_stack_person_crop"></i>
         </div>
       </div>
 
