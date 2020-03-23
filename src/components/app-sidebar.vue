@@ -10,6 +10,9 @@
           :stream="state.teacherStream"
           class="peer peer-teacher"
         />
+        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">
+          <i data-f7-icon="person"></i>
+        </div>
       </div>
 
       <div @click="editProfile">
@@ -35,6 +38,38 @@
   width: 16rem;
   background: #eee;
   padding: 1rem;
+
+  .peer {
+    background: #333;
+    width: 100%;
+    max-height: 20rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+  }
+
+  @keyframes blink {
+    from {
+      opacity: 1.0;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    to {
+      opacity: 1.0;
+    }
+  }
+
+  .peer-placeholder {
+    min-height: 6rem;
+
+    i {
+      font-size: 4rem;
+      color: white;
+      animation: blink 1000ms infinite;
+    }
+
+  }
 }
 </style>
 
