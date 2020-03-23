@@ -1,14 +1,24 @@
 <template>
-  <y-whiteboard ref="whiteboard"></y-whiteboard>
+  <div class="whiteboard" ref="whiteboard"
+       @mousedown="drawStart"
+       @touchstart="touchStart"
+       @mouseleave="clearCurrPath"
+       @mouseup="clearCurrPath"
+       @touchcancel="clearCurrPath"
+       @touchend="clearCurrPath"
+       @mousemove="moveDraw"
+       @touchmove="touchMove"
+  >
+    <canvas width="2000" height="2000" ref="canvas"></canvas>
+  </div>
 </template>
 
-<style lang="scss"></style>
 
 <script>
-import { defineWhiteboard } from 'y-webcomponents'
+import * as Y from 'yjs'
 import { sync } from '../state'
 
-defineWhiteboard()
+let currPath = null
 
 export default {
   name: 'app-whiteboard',
@@ -16,10 +26,126 @@ export default {
   data() {
     return {}
   },
-  methods: {},
-  async mounted() {
-    this.$refs.whiteboard.setState({ type: sync.whiteboard })
+  methods: {
+    calculateCoordinateFromEvent(event) {
+      const canvasRect = this.$refs.canvas.getBoundingClientRect()
+      return {
+        x: (event.clientX - canvasRect.left) / canvasRect.width,
+        y: (event.clientY - canvasRect.top) / canvasRect.height,
+      }
+    },
+    drawStart(coord) {
+      if (sync.whiteboard && (coord.target == null || coord.target.nodeName === 'CANVAS')) {
+        const drawElement = new Y.Map()
+        drawElement.set('color', '#333')
+        drawElement.set('type', 'path')
+        drawElement.set('coordinate', this.calculateCoordinateFromEvent(coord))
+        currPath = new Y.Array()
+        drawElement.set('path', currPath)
+        sync.whiteboard.push([drawElement])
+      }
+      return false
+    },
+    clearCurrPath(event) {
+      currPath = null
+      return false
+    },
+    moveDraw(coord) {
+      if (coord.target == null || coord.target.nodeName === 'CANVAS') {
+        if (currPath !== null) {
+          currPath.push([this.calculateCoordinateFromEvent(coord)])
+        }
+      }
+      return false
+    },
+    touchStart(event) {
+      if (event.touches.length === 1) {
+        this.drawStart(event.touches[0], this.$el)
+      }
+      return false
+    },
+    touchMove(event, el) {
+      if (event.touches.length === 1) {
+        this.moveDraw(event.touches[0], el)
+      }
+      return false
+    },
+    onStateChange() {
+      const drawingCanvas = this.$refs.canvas
+
+      const ctx = drawingCanvas.getContext('2d')
+      const yDrawingContent = sync.whiteboard
+
+      const requestAnimationFrame = window.requestAnimationFrame || setTimeout
+
+      let needToRedraw = true
+
+      const draw = () => {
+        if (needToRedraw) {
+          needToRedraw = false
+          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+          const width = ctx.canvas.width
+          const height = ctx.canvas.height
+          yDrawingContent.forEach(drawElement => {
+            if (drawElement.get('type') === 'path') {
+              const coordinate = (drawElement.get('coordinate'))
+              const color = (drawElement.get('color'))
+              const path = (drawElement.get('path'))
+              if (path) {
+                ctx.beginPath()
+                ctx.lineWidth = 5
+                ctx.lineJoin = ctx.lineCap = 'round'
+                ctx.shadowBlur = 2
+                ctx.shadowColor = color
+                ctx.beginPath()
+                ctx.moveTo(coordinate.x * width, coordinate.y * height)
+                ctx.strokeStyle = color
+                let lastPoint = coordinate
+                path.forEach(c => {
+                  // @todo this can be optimized by considering the previous coordinates too
+                  const pointBetween = {
+                    x: (c.x + lastPoint.x) / 2,
+                    y: (c.y + lastPoint.y) / 2,
+                  }
+                  ctx.quadraticCurveTo(lastPoint.x * width, lastPoint.y * height, pointBetween.x * width, pointBetween.y * height)
+                  lastPoint = c
+                })
+                ctx.lineTo(lastPoint.x * width, lastPoint.y * height)
+                ctx.stroke()
+              }
+            }
+          })
+        }
+      }
+      const requestDrawAnimationFrame = () => {
+        needToRedraw = true
+        requestAnimationFrame(draw)
+      }
+      yDrawingContent.observeDeep(requestDrawAnimationFrame)
+      // internal.unregisterYDraw = () => yDrawingContent.unobserveDeep(requestDrawAnimationFrame)
+      requestDrawAnimationFrame()
+    },
+    async mounted() {
+      this.onStateChange()
+      sync.whiteboard.observeDeep(event => {
+        this.onStateChange()
+      })
+    },
   },
 }
 </script>
 
+<style lang="scss">
+:host, .whiteboard {
+  position: relative;
+  display: block;
+  touch-action: none;
+}
+
+canvas {
+  width: 100%;
+  background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+  background-size: 1rem 1rem;
+}
+
+</style>
