@@ -15,18 +15,41 @@
   border-radius: 0.25rem;
   background: #dedede;
   padding: 0.5rem;
+  padding-top: 1.5rem;
 
   img {
     display: inline-block;
     background: transparent;
+    transition: transform 250ms;
   }
 
   &:hover {
     background: #ccc;
+
+    img {
+      transform: translateY(-0.5rem);
+    }
   }
 
+  @keyframes signal {
+    from {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-1rem);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+
   &.-active {
-    background: rgba(255, 165, 0, 0.4);
+    background: rgba(54, 202, 76, 0.4);
+
+    img {
+      animation: signal 1000ms infinite;
+    }
   }
 }
 </style>
