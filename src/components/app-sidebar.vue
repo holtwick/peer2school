@@ -1,5 +1,8 @@
 <template>
   <div class="vstack sidebar">
+
+    <!--    <div>peer.school</div>-->
+
     <div>
       <div v-if="!state.teacher">
         <app-video
@@ -56,16 +59,6 @@ export default {
     return {
       username: '',
     }
-  },
-  computed: {
-    teacherStream() {
-      try {
-        let peer = this.state.peers[this.state.info.teacherID]
-        return peer.stream
-      } catch (e) {
-
-      }
-    },
   },
   methods: {
     editProfile() {

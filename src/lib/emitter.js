@@ -26,4 +26,8 @@ export class Emitter {
     this.subscribers[key] = subscribers
   }
 
+  off(key, fn) {
+    this.subscribers = (this.subscribers[key] || []).filter(f => fn && f !== fn)
+  }
+
 }

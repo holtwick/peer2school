@@ -46,6 +46,10 @@ export default {
   },
   computed: {
     url() {
+      const DEBUG = location.port.toString() === '8080'
+      if (DEBUG) {
+        return `https://${location.host}/#${this.state.room}`
+      }
       return `https://peer.school/class/${this.state.room}`
     },
   },
