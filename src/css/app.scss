@@ -1,12 +1,5 @@
 @import "variables";
 
-.app,
-.app *:not(input,textarea,[contenteditable]) {
-  // Be careful with * because WebKit is sensitive for input fields
-  user-select: none;
-  -webkit-touch-callout: none;
-}
-
 .app {
   padding-top: $safe-top;
   padding-bottom: $safe-bottom;
