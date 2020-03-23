@@ -1,5 +1,8 @@
 <template>
   <div class="vstack sidebar">
+
+    <div>peer.school</div>
+
     <div>
       <div v-if="!state.teacher">
         <app-video
