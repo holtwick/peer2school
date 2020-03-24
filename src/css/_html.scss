@@ -3,24 +3,19 @@
 @import "variables";
 @import "reset";
 
-//*,
-//*::before,
-//*::after {
-//  box-sizing: inherit;
-//}
-
 html {
-  // box-sizing: border-box;
-  // font-size: 16px;
-  // line-height: $html-line-height;
   -webkit-tap-highlight-color: transparent;
 }
 
-html body * { // Reeder
-  box-sizing: border-box; //  !important;
-  -webkit-text-size-adjust: none; //  !important;
-  text-size-adjust: none; //  !important;
-  /*    -webkit-touch-callout: none !important;*/
+html body * {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: none;
+}
+
+html *:not(input,textarea,[contenteditable]) {
+  // Be careful with * because WebKit is sensitive for input fields
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 html, body {
@@ -42,10 +37,7 @@ body, .theme-element {
 }
 
 body {
-  //display: flex;
-  //align-items: stretch;
   overflow-x: hidden;
-
   font-variant-ligatures: common-ligatures; // https://twitter.com/rsms/status/1094379965452185600
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
