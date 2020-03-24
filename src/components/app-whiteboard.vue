@@ -28,6 +28,16 @@ let currPath = null
 export default {
   name: 'app-whiteboard',
   components: {},
+  props: {
+    editable: {
+      type: Boolean,
+      default: true,
+    },
+    color: {
+      type: String,
+      default: '#333',
+    },
+  },
   data() {
     return {}
   },
@@ -41,13 +51,14 @@ export default {
       // log('calculateCoordinateFromEvent', point)
       return point
     },
-    drawStart(coord) {
+    drawStart(event) {
+      if (!this.editable) return false
       // log('drawStart')
-      if (sync.whiteboard && (coord.target == null || coord.target.nodeName === 'CANVAS')) {
+      if (sync.whiteboard && (event.target == null || event.target.nodeName === 'CANVAS')) {
         const drawElement = new Y.Map()
-        drawElement.set('color', '#333')
+        drawElement.set('color', this.color)
         drawElement.set('type', 'path')
-        drawElement.set('coordinate', this.calculateCoordinateFromEvent(coord))
+        drawElement.set('coordinate', this.calculateCoordinateFromEvent(event))
         currPath = new Y.Array()
         drawElement.set('path', currPath)
         log('push', drawElement)
@@ -60,11 +71,12 @@ export default {
       currPath = null
       return false
     },
-    moveDraw(coord) {
-      if (coord.target == null || coord.target.nodeName === 'CANVAS') {
+    moveDraw(event) {
+      if (!this.editable) return false
+      if (event.target == null || event.target.nodeName === 'CANVAS') {
         if (currPath !== null) {
           // log('moveDraw')
-          currPath.push([this.calculateCoordinateFromEvent(coord)])
+          currPath.push([this.calculateCoordinateFromEvent(event)])
         }
       }
       return false
