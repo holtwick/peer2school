@@ -98,6 +98,7 @@ class Sync extends Emitter {
     } catch (err) {
       console.warn('getStream err', err, peerID)
     }
+    return null
   }
 
   setStream(stream) {

@@ -95,13 +95,10 @@ export default {
       type: Boolean,
       default: true,
     },
-    color: {
-      type: String,
-      default: 'black',
-    },
   },
   data() {
     return {
+      color: 'black',
       colorPresets: [
         'black',
         'red',
