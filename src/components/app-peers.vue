@@ -8,16 +8,6 @@
 </template>
 
 <style lang="scss">
-
-.peer {
-  background: #333;
-  width: 100%;
-  max-height: 20rem;
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 0.25rem;
-}
-
 </style>
 
 <script>

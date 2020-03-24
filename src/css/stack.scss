@@ -12,7 +12,7 @@ html, body {
   flex: none;
 }
 
-.sea-app, .app {
+.app {
   // If a first level child of body is a stack it has to consume the
   // full height, otherwise content will grow outside of view
   height: 100%;
@@ -165,27 +165,3 @@ html, body {
   padding: px(16);
 }
 
-// https://developer.apple.com/documentation/uikit/uistackview
-//&.-alignment-fill {
-//  // is default
-//}
-//
-//&.-alignment-normal {
-//  align-items: normal;
-//}
-//
-//&.-alignment-top {
-//  align-items: flex-start;
-//}
-//
-//&.-alignment-bottom {
-//  align-items: flex-end;
-//}
-//
-//&.-alignment-left {
-//  align-items: flex-start;
-//}
-//
-//&.-alignment-right {
-//  align-items: flex-end;
-//}

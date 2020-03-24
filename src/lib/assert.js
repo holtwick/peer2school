@@ -22,5 +22,3 @@ export function assert(cond, ...args) {
   }
   // log(`Assert: ${cond}`, ...args)
 }
-
-// export default assert

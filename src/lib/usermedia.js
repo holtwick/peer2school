@@ -31,6 +31,10 @@ export function getUserMedia(fn) {
       audio: true,
       video: {
         facingMode: 'user',
+        video: {
+          width: { ideal: 224 },
+          height: { ideal: 168 },
+        },
         frameRate: {
           ideal: 10,
         },

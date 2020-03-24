@@ -1,7 +1,7 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { WebrtcProvider } from 'y-webrtc'
 import * as Y from 'yjs'
-import { Emitter } from './emitter'
+import { Emitter } from './lib/emitter'
 
 const log = require('debug')('app:sync')
 
@@ -26,15 +26,16 @@ class Sync extends Emitter {
     })
 
     webrtcProvider.on('peers', info => {
+      log('peers', info)
       if (this.stream) {
         let added = Array.from(info.added)
         for (let peerID of added) {
           let peer = this.getPeer(peerID)
-          peer.peer.addStream(this.stream)
           peer.peer.on('stream', stream => {
             peer.peer.stream = stream
-            this.emit('stream')
+            this.emit('stream', { peer, stream })
           })
+          peer.peer.addStream(this.stream)
         }
       }
       this.emit('peers')
@@ -43,8 +44,6 @@ class Sync extends Emitter {
     webrtcProvider.on('synced', info => {
       this.peerID = webrtcProvider.room.peerId
       this.emit('ready', { peerID: this.peerID })
-      // log('synched', info, webrtcProvider.room.peerId)
-      // log('synched conns', webrtcProvider.room.webrtcConns.values())
     })
 
     //  const awareness = webrtcProvider.awareness
@@ -86,28 +85,12 @@ class Sync extends Emitter {
   }
 
   setStream(stream) {
-    log('setstream', stream)
+    log('setStream', stream)
     this.stream = stream
     let currentPeers = this.getPeers()
-    log('currentperrs', currentPeers)
     for (let peer of currentPeers) {
-      log('ppp', peer)
       peer.peer.addStream(stream)
     }
-    // this.webrtcProvider.on('peers', info => {
-    //   log('xpeers', info)
-    //   let added = Array.from(info.added)
-    //   for (let peerID of added) {
-    //     log('added', this.getPeer(peerID))
-    //   }
-    //
-    //   // let peers = Array.from(info.webrtcPeers)
-    //   // log('peers', peers)
-    //   // for (let peerId of peers) {
-    //   //   let peer = webrtcProvider.room.webrtcConns.get(peerId)
-    //   //   log('peer', peer.peer)
-    //   // }
-    // })
   }
 
 }

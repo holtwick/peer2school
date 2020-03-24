@@ -1,5 +1,5 @@
 import { ENABLE_VIDEO } from './config'
-import { setupSync } from './lib/sync'
+import { setupSync } from './sync'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 
@@ -39,6 +39,10 @@ export let sync = setupSync({
   room,
 })
 
+function getTeacherID() {
+  return sync.info.get('teacherID')
+}
+
 sync.on('ready', () => {
   state.peerID = sync.peerID
   if (teacher) {
@@ -53,15 +57,19 @@ for (const [name, dft] of Object.entries(synched)) {
   sync[name] = Array.isArray(dft) ? sync.doc.getArray(name) : sync.doc.getMap(name)
   sync[name].observe(event => {
     state[name] = sync[name].toJSON()
+    if (name === 'info') updateState()
   })
 }
 
 function updateState() {
   log('updateState')
   state.peers = sync.getPeerList()
-  if (!teacher && state.info.teacherID) {
-    log('search teacher stream', state.info.teacherID)
-    state.teacherStream = sync.getStream(state.info.teacherID)
+  if (!teacher) {
+    let teacherID = getTeacherID()
+    if (teacherID) {
+      log('search teacher stream', teacherID)
+      state.teacherStream = sync.getStream(teacherID)
+    }
   }
 }
 
