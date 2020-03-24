@@ -27,15 +27,21 @@ class Sync extends Emitter {
 
     webrtcProvider.on('peers', info => {
       log('peers', info)
-      if (this.stream) {
-        let added = Array.from(info.added)
-        for (let peerID of added) {
-          let peer = this.getPeer(peerID)
+      let added = Array.from(info.added)
+      for (let peerID of added) {
+        log('start listening for stream', peerID)
+        let peer = this.getPeer(peerID)
+        if (peer) {
+          if (this.stream) {
+            peer.peer.addStream(this.stream)
+          }
           peer.peer.on('stream', stream => {
+            log('stream received', stream)
             peer.peer.stream = stream
             this.emit('stream', { peer, stream })
           })
-          peer.peer.addStream(this.stream)
+        } else {
+          console.warn('added peer but cannot find', peerID, info)
         }
       }
       this.emit('peers')
@@ -63,7 +69,7 @@ class Sync extends Emitter {
 
   getPeer(peerID) {
     const peer = this.webrtcProvider.room.webrtcConns.get(peerID) || null
-    log('found peer', peer)
+    log('getPeer', peer)
     return peer
   }
 
@@ -71,6 +77,7 @@ class Sync extends Emitter {
     try {
       return Array.from(this.webrtcProvider.room.webrtcConns.keys() || [])
     } catch (err) {
+      console.warn('getPeerList err', err)
       // console.error('Exception:', err)
     }
     return []
@@ -78,8 +85,10 @@ class Sync extends Emitter {
 
   getStream(peerID) {
     try {
-      return this.getPeer(peerID).peer.stream
+      let stream = this.getPeer(peerID).peer.stream
+      log('getStream', peerID, stream)
     } catch (err) {
+      console.warn('getStream err', err, peerID)
       // console.error('Exception:', err)
     }
   }

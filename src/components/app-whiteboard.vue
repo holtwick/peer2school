@@ -61,7 +61,7 @@ export default {
         drawElement.set('coordinate', this.calculateCoordinateFromEvent(event))
         currPath = new Y.Array()
         drawElement.set('path', currPath)
-        log('push', drawElement)
+        // log('push', drawElement)
         sync.whiteboard.push([drawElement])
       }
       return false
@@ -94,7 +94,7 @@ export default {
       return false
     },
     onStateChange() {
-      log('onStateChange')
+      // log('onStateChange')
       const drawingCanvas = this.$refs.canvas
       const ctx = drawingCanvas.getContext('2d')
       const yDrawingContent = sync.whiteboard
@@ -106,7 +106,7 @@ export default {
       let needToRedraw = true
 
       const draw = () => {
-        log('draw', needToRedraw)
+        // log('draw', needToRedraw)
         if (needToRedraw) {
           needToRedraw = false
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -144,7 +144,7 @@ export default {
         }
       }
       const requestDrawAnimationFrame = () => {
-        log('requestDrawAnimationFrame')
+        // log('requestDrawAnimationFrame')
         needToRedraw = true
         requestAnimationFrame(draw)
       }
@@ -154,7 +154,7 @@ export default {
     },
   },
   async mounted() {
-    log('mounted')
+    // log('mounted')
     this.onStateChange()
     // sync.whiteboard.observeDeep(event => {
     //   log('change in whiteboard')

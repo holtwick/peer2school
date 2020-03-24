@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     url() {
-      const DEBUG = location.port.toString() === '8080'
+      const DEBUG = location.port.toString() === '8080' || !location.pathname.startsWith('/dist')
       if (DEBUG) {
         return `https://${location.host}/#${this.state.room}`
       }

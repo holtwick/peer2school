@@ -6,6 +6,7 @@
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "demo": "ssh -R 80:localhost:8080 ssh.localhost.run",
     "test": "jest"
   },
   "dependencies": {
