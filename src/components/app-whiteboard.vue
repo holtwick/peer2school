@@ -19,6 +19,7 @@
 
 <script>
 import * as Y from 'yjs'
+import { assert } from '../lib/assert'
 import { sync } from '../state'
 
 const log = require('debug')('app:app-whiteboard')
@@ -42,7 +43,7 @@ export default {
       return point
     },
     drawStart(coord) {
-      log('drawStart')
+      // log('drawStart')
       if (sync.whiteboard && (coord.target == null || coord.target.nodeName === 'CANVAS')) {
         const drawElement = new Y.Map()
         drawElement.set('color', '#333')
@@ -56,13 +57,14 @@ export default {
       return false
     },
     clearCurrPath() {
+      // log('clearCurrPath')
       currPath = null
       return false
     },
     moveDraw(coord) {
       if (coord.target == null || coord.target.nodeName === 'CANVAS') {
         if (currPath !== null) {
-          log('moveDraw')
+          // log('moveDraw')
           currPath.push([this.calculateCoordinateFromEvent(coord)])
         }
       }
@@ -86,11 +88,14 @@ export default {
       const ctx = drawingCanvas.getContext('2d')
       const yDrawingContent = sync.whiteboard
 
+      assert('syncobj', yDrawingContent)
+
       const requestAnimationFrame = window.requestAnimationFrame || setTimeout
 
       let needToRedraw = true
 
       const draw = () => {
+        log('draw', needToRedraw)
         if (needToRedraw) {
           needToRedraw = false
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -128,6 +133,7 @@ export default {
         }
       }
       const requestDrawAnimationFrame = () => {
+        log('requestDrawAnimationFrame')
         needToRedraw = true
         requestAnimationFrame(draw)
       }
@@ -135,13 +141,14 @@ export default {
       // internal.unregisterYDraw = () => yDrawingContent.unobserveDeep(requestDrawAnimationFrame)
       requestDrawAnimationFrame()
     },
-    async mounted() {
-      this.onStateChange()
-      sync.whiteboard.observeDeep(event => {
-        log('change in whiteboard')
-        this.onStateChange()
-      })
-    },
+  },
+  async mounted() {
+    log('mounted')
+    this.onStateChange()
+    // sync.whiteboard.observeDeep(event => {
+    //   log('change in whiteboard')
+    //   this.onStateChange()
+    // })
   },
 }
 </script>
