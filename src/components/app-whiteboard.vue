@@ -1,8 +1,8 @@
 <template>
   <div class="whiteboard" ref="whiteboard">
     <canvas
-      width="2000"
-      height="2000"
+      width="4000"
+      height="3000"
       ref="canvas"
       @mousedown="drawStart"
       @touchstart="touchStart"
