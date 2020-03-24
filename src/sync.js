@@ -16,6 +16,8 @@ class Sync extends Emitter {
   peerID
   doc
 
+  streams = {}
+
   constructor({ room }) {
     super()
 
@@ -36,8 +38,9 @@ class Sync extends Emitter {
             peer.peer.addStream(this.stream)
           }
           peer.peer.on('stream', stream => {
-            log('stream received', stream)
-            peer.peer.stream = stream
+            log('stream received', peerID, stream)
+            this.streams[peerID] = stream
+            log('streams', this.streams)
             this.emit('stream', { peer, stream })
           })
         } else {
@@ -63,33 +66,37 @@ class Sync extends Emitter {
     this.doc = doc
   }
 
+  getWebRTCConns() {
+    return this.webrtcProvider?.room?.webrtcConns || null
+  }
+
   getPeers() {
-    return Array.from(this.webrtcProvider.room.webrtcConns.values() || [])
+    return Array.from(this.getWebRTCConns()?.values() || [])
   }
 
   getPeer(peerID) {
-    const peer = this.webrtcProvider.room.webrtcConns.get(peerID) || null
+    const peer = this.getWebRTCConns()?.get(peerID) || null
     log('getPeer', peer)
     return peer
   }
 
   getPeerList() {
     try {
-      return Array.from(this.webrtcProvider.room.webrtcConns.keys() || [])
+      // log('getPeerList', this.webrtcProvider?.room)
+      return Array.from(Object.keys(this.getWebRTCConns()?.keys) || [])
     } catch (err) {
       console.warn('getPeerList err', err)
-      // console.error('Exception:', err)
     }
     return []
   }
 
   getStream(peerID) {
     try {
-      let stream = this.getPeer(peerID).peer.stream
+      let stream = this.streams[peerID] // this.getPeer(peerID)?.peer?.stream
       log('getStream', peerID, stream)
+      return stream
     } catch (err) {
       console.warn('getStream err', err, peerID)
-      // console.error('Exception:', err)
     }
   }
 
