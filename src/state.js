@@ -1,7 +1,7 @@
 import { ENABLE_VIDEO } from './config'
-import { setupSync } from './sync'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
+import { setupSync } from './sync'
 
 const log = require('debug')('app:state')
 
@@ -69,11 +69,10 @@ function updateState() {
     if (teacherID) {
       log('search teacher stream', teacherID)
       state.teacherStream = sync.getStream(teacherID)
+      log('XXXXXX teacherstream!!!!', state.teacherStream)
     }
   }
 }
-
-updateState()
 
 sync.on('peers', updateState)
 sync.on('stream', updateState)
