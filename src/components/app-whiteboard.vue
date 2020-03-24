@@ -16,7 +16,6 @@
   </div>
 </template>
 
-
 <script>
 import * as Y from 'yjs'
 import { assert } from '../lib/assert'
@@ -110,8 +109,8 @@ export default {
                 ctx.beginPath()
                 ctx.lineWidth = 5
                 ctx.lineJoin = ctx.lineCap = 'round'
-                ctx.shadowBlur = 2
-                ctx.shadowColor = color
+                // ctx.shadowBlur = 2
+                // ctx.shadowColor = color
                 ctx.beginPath()
                 ctx.moveTo(coordinate.x * width, coordinate.y * height)
                 ctx.strokeStyle = color
@@ -162,8 +161,10 @@ export default {
 
 canvas {
   width: 100%;
-  background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
-  background-size: 1rem 1rem;
+
+  // Grid
+  // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+  // background-size: 1rem 1rem;
 }
 
 </style>
