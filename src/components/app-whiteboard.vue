@@ -21,6 +21,11 @@
         :style="`background: ${c}`"
         @click="color = c"
       />
+      <button
+        class="tool"
+        @click="doTrash">
+        <i data-f7-icon="trash"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -46,7 +51,7 @@ canvas {
   top: 1rem;
   right: 1rem;
 
-  .color {
+  .color, .tool {
     display: block;
     border-radius: 2rem;
     height: 2rem;
@@ -62,6 +67,11 @@ canvas {
     &.-active {
       opacity: 1;
     }
+  }
+
+  .tool {
+    background: #666;
+    color: white;
   }
 }
 
@@ -210,6 +220,9 @@ export default {
       yDrawingContent.observeDeep(requestDrawAnimationFrame)
       // internal.unregisterYDraw = () => yDrawingContent.unobserveDeep(requestDrawAnimationFrame)
       requestDrawAnimationFrame()
+    },
+    doTrash() {
+      sync.whiteboard.delete(0, sync.whiteboard.length)
     },
   },
   async mounted() {
