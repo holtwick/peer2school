@@ -1,12 +1,11 @@
-# peer2school
+# peer.school
 
 Simple P2P teaching platform starting from the 1st class
 
-<https://wirvsvirushackathon.org/>
+- [Website and online demo](https://peer.school)
+- [#WirVsWirusHack](https://wirvsvirushackathon.org)
 
-- [Website](https://peer.school)
-- [Online Demo](https://peer.school)
-- [Signaling Server to establish WebRTC connections](https://github.com/holtwick/peer2school-server)
+Follow [@apperdeck](https://twitter.com/apperdeck) and [@holtwick](https://twitter.com/holtwick) for updates.
 
 ---
 
@@ -16,7 +15,4 @@ Simple P2P teaching platform starting from the 1st class
 - Erste [Konzeption](docs-de/konzept.md)
 - [Setup](docs-de/setup.md) um mit der Entwicklung loszulegen
 
----
-
-Follow [@apperdeck](https://twitter.com/apperdeck) and [@holtwick](https://twitter.com/holtwick) for updates.
 

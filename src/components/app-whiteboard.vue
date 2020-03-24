@@ -13,8 +13,60 @@
       @mousemove="moveDraw"
       @touchmove="touchMove"
     />
+    <div class="tools">
+      <button
+        v-for="c in colorPresets"
+        class="color"
+        :class="{'-active': c === color}"
+        :style="`background: ${c}`"
+        @click="color = c"
+      />
+    </div>
   </div>
 </template>
+
+
+<style lang="scss">
+:host, .whiteboard {
+  position: relative;
+  display: block;
+  touch-action: none;
+}
+
+canvas {
+  width: 100%;
+
+  // Grid
+  // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+  // background-size: 1rem 1rem;
+}
+
+.tools {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  .color {
+    display: block;
+    border-radius: 2rem;
+    height: 2rem;
+    width: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.25;
+    transition: opacity 100ms;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &.-active {
+      opacity: 1;
+    }
+  }
+}
+
+</style>
+
 
 <script>
 import * as Y from 'yjs'
@@ -35,11 +87,18 @@ export default {
     },
     color: {
       type: String,
-      default: '#333',
+      default: 'black',
     },
   },
   data() {
-    return {}
+    return {
+      colorPresets: [
+        'black',
+        'red',
+        'green',
+        'blue',
+      ],
+    }
   },
   methods: {
     calculateCoordinateFromEvent(event) {
@@ -163,20 +222,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-:host, .whiteboard {
-  position: relative;
-  display: block;
-  touch-action: none;
-}
-
-canvas {
-  width: 100%;
-
-  // Grid
-  // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
-  // background-size: 1rem 1rem;
-}
-
-</style>
