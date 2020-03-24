@@ -1,15 +1,18 @@
 <template>
-  <div class="whiteboard" ref="whiteboard"
-       @mousedown="drawStart"
-       @touchstart="touchStart"
-       @mouseleave="clearCurrPath"
-       @mouseup="clearCurrPath"
-       @touchcancel="clearCurrPath"
-       @touchend="clearCurrPath"
-       @mousemove="moveDraw"
-       @touchmove="touchMove"
-  >
-    <canvas width="2000" height="2000" ref="canvas"></canvas>
+  <div class="whiteboard" ref="whiteboard">
+    <canvas
+      width="2000"
+      height="2000"
+      ref="canvas"
+      @mousedown="drawStart"
+      @touchstart="touchStart"
+      @mouseleave="clearCurrPath"
+      @mouseup="clearCurrPath"
+      @touchcancel="clearCurrPath"
+      @touchend="clearCurrPath"
+      @mousemove="moveDraw"
+      @touchmove="touchMove"
+    />
   </div>
 </template>
 
@@ -17,6 +20,8 @@
 <script>
 import * as Y from 'yjs'
 import { sync } from '../state'
+
+const log = require('debug')('app:app-whiteboard')
 
 let currPath = null
 
@@ -29,12 +34,15 @@ export default {
   methods: {
     calculateCoordinateFromEvent(event) {
       const canvasRect = this.$refs.canvas.getBoundingClientRect()
-      return {
+      const point = {
         x: (event.clientX - canvasRect.left) / canvasRect.width,
         y: (event.clientY - canvasRect.top) / canvasRect.height,
       }
+      // log('calculateCoordinateFromEvent', point)
+      return point
     },
     drawStart(coord) {
+      log('drawStart')
       if (sync.whiteboard && (coord.target == null || coord.target.nodeName === 'CANVAS')) {
         const drawElement = new Y.Map()
         drawElement.set('color', '#333')
@@ -42,17 +50,19 @@ export default {
         drawElement.set('coordinate', this.calculateCoordinateFromEvent(coord))
         currPath = new Y.Array()
         drawElement.set('path', currPath)
+        log('push', drawElement)
         sync.whiteboard.push([drawElement])
       }
       return false
     },
-    clearCurrPath(event) {
+    clearCurrPath() {
       currPath = null
       return false
     },
     moveDraw(coord) {
       if (coord.target == null || coord.target.nodeName === 'CANVAS') {
         if (currPath !== null) {
+          log('moveDraw')
           currPath.push([this.calculateCoordinateFromEvent(coord)])
         }
       }
@@ -71,8 +81,8 @@ export default {
       return false
     },
     onStateChange() {
+      log('onStateChange')
       const drawingCanvas = this.$refs.canvas
-
       const ctx = drawingCanvas.getContext('2d')
       const yDrawingContent = sync.whiteboard
 
@@ -128,6 +138,7 @@ export default {
     async mounted() {
       this.onStateChange()
       sync.whiteboard.observeDeep(event => {
+        log('change in whiteboard')
         this.onStateChange()
       })
     },
