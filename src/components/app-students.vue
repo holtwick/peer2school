@@ -7,6 +7,8 @@
       :class="{ '-active': student.active }"
     >
       {{ student.name }}
+      <button @click="doShowStudent(student.id, false)">show</button>
+      <button @click="doShowStudent(student.id, true)">wb</button>
     </div>
   </div>
 </template>
@@ -53,6 +55,8 @@
 </style>
 
 <script>
+import { setStudent } from '../state'
+
 export default {
   name: 'app-students',
   data() {
@@ -69,7 +73,11 @@ export default {
       })
     },
   },
-  methods: {},
+  methods: {
+    doShowStudent(peerID, allowWhiteboard) {
+      setStudent(peerID, allowWhiteboard)
+    }
+  },
   async mounted() {
   },
 }

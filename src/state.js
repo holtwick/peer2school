@@ -17,19 +17,51 @@ location.hash = `#${hash}`
 // STATE
 
 let synched = {
-  info: {},
+
+  // Flags
+  info: {
+
+    // Teacher's peer ID that is used for video stream
+    teacherID: null,
+
+    // Student's peer ID that is used for video stream
+    studentID: null,
+
+    // Allow active student (studentID) to use single whiteboard tool
+    allowWhiteboard: false,
+  },
+
+  // Simple chat
   chat: [],
+
+  // Peer IDs of students raising their hands
   signals: {},
+
+  // Details of participants, like name
   profiles: {},
 }
 
 export let state = {
+
+  // ID of this room
   room,
+
+  // Boolean
   teacher,
+
+  // Local users peer ID
   peerID: null,
+
+  // IDs of all currently active WebRTC peers
   peers: [],
+
+  // Video stream of the local user without sound
   stream: null,
+
+  // The teachers stream
   teacherStream: null,
+
+  // By Yjs synched objects
   ...synched,
 }
 
@@ -98,4 +130,9 @@ export function toggleSignal() {
 
 export function setProfileName(name) {
   sync.profiles.set(state.peerID, { name })
+}
+
+export function setStudent(peerID = null, allowWhiteboard = false) {
+  sync.info.set('studentID', peerID)
+  sync.info.set('allowWhiteboard', allowWhiteboard)
 }
