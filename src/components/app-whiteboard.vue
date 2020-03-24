@@ -13,7 +13,7 @@
       @mousemove="moveDraw"
       @touchmove="touchMove"
     />
-    <div class="tools">
+    <div class="tools" v-if="editable">
       <button
         v-for="c in colorPresets"
         class="color"
