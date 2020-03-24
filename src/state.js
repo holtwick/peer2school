@@ -62,14 +62,12 @@ for (const [name, dft] of Object.entries(synched)) {
 }
 
 function updateState() {
-  log('updateState')
   state.peers = sync.getPeerList()
+  log('peers', state.peers)
   if (!teacher) {
     let teacherID = getTeacherID()
     if (teacherID) {
-      log('search teacher stream', teacherID)
       state.teacherStream = sync.getStream(teacherID)
-      log('XXXXXX teacherstream!!!!', state.teacherStream)
     }
   }
 }
@@ -94,9 +92,7 @@ export function addChatMessage(msg) {
 }
 
 export function toggleSignal() {
-  log('toggle', sync.peerID)
   let active = sync.signals.get(sync.peerID)
-  log('toggle', active)
   sync.signals.set(sync.peerID, !active)
 }
 
