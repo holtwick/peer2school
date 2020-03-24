@@ -16,26 +16,29 @@ class Sync extends Emitter {
   peerID
   doc
 
+  streams = {}
+
   constructor({ room }) {
     super()
-
-    log('setupSync')
 
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
       filterBcConns: true,
     })
 
     webrtcProvider.on('peers', info => {
-      log('peers', info)
-      if (this.stream) {
-        let added = Array.from(info.added)
-        for (let peerID of added) {
-          let peer = this.getPeer(peerID)
+      let added = Array.from(info.added)
+      for (let peerID of added) {
+        let peer = this.getPeer(peerID)
+        if (peer) {
+          if (this.stream) {
+            peer.peer.addStream(this.stream)
+          }
           peer.peer.on('stream', stream => {
-            peer.peer.stream = stream
+            this.streams[peerID] = stream
             this.emit('stream', { peer, stream })
           })
-          peer.peer.addStream(this.stream)
+        } else {
+          console.warn('added peer but cannot find', peerID, info)
         }
       }
       this.emit('peers')
@@ -49,7 +52,6 @@ class Sync extends Emitter {
     //  const awareness = webrtcProvider.awareness
 
     const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
-    log('setupSync done', webrtcProvider)
 
     this.webrtcProvider = webrtcProvider
     this.indexeddbPersistence = indexeddbPersistence
@@ -57,35 +59,38 @@ class Sync extends Emitter {
     this.doc = doc
   }
 
+  getWebRTCConns() {
+    log('getWebRTCConns', this.webrtcProvider?.room?.webrtcConns)
+    return this.webrtcProvider?.room?.webrtcConns
+  }
+
   getPeers() {
-    return Array.from(this.webrtcProvider.room.webrtcConns.values() || [])
+    return Array.from(this.getWebRTCConns()?.values() || [])
   }
 
   getPeer(peerID) {
-    const peer = this.webrtcProvider.room.webrtcConns.get(peerID) || null
-    log('found peer', peer)
-    return peer
+    return this.getWebRTCConns()?.get(peerID) || null
   }
 
   getPeerList() {
     try {
-      return Array.from(this.webrtcProvider.room.webrtcConns.keys() || [])
+      return Array.from(this.getWebRTCConns()?.keys() || [])
     } catch (err) {
-      // console.error('Exception:', err)
+      console.warn('getPeerList err', err)
     }
     return []
   }
 
   getStream(peerID) {
     try {
-      return this.getPeer(peerID).peer.stream
+      return this.streams[peerID]
     } catch (err) {
-      // console.error('Exception:', err)
+      console.warn('getStream err', err, peerID)
     }
+    return null
   }
 
   setStream(stream) {
-    log('setStream', stream)
     this.stream = stream
     let currentPeers = this.getPeers()
     for (let peer of currentPeers) {

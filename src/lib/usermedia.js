@@ -46,6 +46,6 @@ export function getUserMedia(fn) {
       navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
     }
   } catch (err) {
-    console.error('Exception:', err)
+    console.warn('getUserMedia err', err)
   }
 }

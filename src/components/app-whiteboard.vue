@@ -1,8 +1,8 @@
 <template>
   <div class="whiteboard" ref="whiteboard">
     <canvas
-      width="2000"
-      height="2000"
+      width="4000"
+      height="3000"
       ref="canvas"
       @mousedown="drawStart"
       @touchstart="touchStart"
@@ -13,8 +13,70 @@
       @mousemove="moveDraw"
       @touchmove="touchMove"
     />
+    <div class="tools" v-if="editable">
+      <button
+        v-for="c in colorPresets"
+        class="color"
+        :class="{'-active': c === color}"
+        :style="`background: ${c}`"
+        @click="color = c"
+      />
+      <button
+        class="tool"
+        @click="doTrash">
+        <i data-f7-icon="trash"></i>
+      </button>
+    </div>
   </div>
 </template>
+
+
+<style lang="scss">
+:host, .whiteboard {
+  position: relative;
+  display: block;
+  touch-action: none;
+}
+
+canvas {
+  width: 100%;
+
+  // Grid
+  // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+  // background-size: 1rem 1rem;
+}
+
+.tools {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  .color, .tool {
+    display: block;
+    border-radius: 2rem;
+    height: 2rem;
+    width: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.25;
+    transition: opacity 100ms;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &.-active {
+      opacity: 1;
+    }
+  }
+
+  .tool {
+    background: #666;
+    color: white;
+  }
+}
+
+</style>
+
 
 <script>
 import * as Y from 'yjs'
@@ -33,13 +95,17 @@ export default {
       type: Boolean,
       default: true,
     },
-    color: {
-      type: String,
-      default: '#333',
-    },
   },
   data() {
-    return {}
+    return {
+      color: 'black',
+      colorPresets: [
+        'black',
+        'red',
+        'green',
+        'blue',
+      ],
+    }
   },
   methods: {
     calculateCoordinateFromEvent(event) {
@@ -61,7 +127,7 @@ export default {
         drawElement.set('coordinate', this.calculateCoordinateFromEvent(event))
         currPath = new Y.Array()
         drawElement.set('path', currPath)
-        log('push', drawElement)
+        // log('push', drawElement)
         sync.whiteboard.push([drawElement])
       }
       return false
@@ -94,7 +160,7 @@ export default {
       return false
     },
     onStateChange() {
-      log('onStateChange')
+      // log('onStateChange')
       const drawingCanvas = this.$refs.canvas
       const ctx = drawingCanvas.getContext('2d')
       const yDrawingContent = sync.whiteboard
@@ -106,7 +172,7 @@ export default {
       let needToRedraw = true
 
       const draw = () => {
-        log('draw', needToRedraw)
+        // log('draw', needToRedraw)
         if (needToRedraw) {
           needToRedraw = false
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -144,7 +210,7 @@ export default {
         }
       }
       const requestDrawAnimationFrame = () => {
-        log('requestDrawAnimationFrame')
+        // log('requestDrawAnimationFrame')
         needToRedraw = true
         requestAnimationFrame(draw)
       }
@@ -152,9 +218,12 @@ export default {
       // internal.unregisterYDraw = () => yDrawingContent.unobserveDeep(requestDrawAnimationFrame)
       requestDrawAnimationFrame()
     },
+    doTrash() {
+      sync.whiteboard.delete(0, sync.whiteboard.length)
+    },
   },
   async mounted() {
-    log('mounted')
+    // log('mounted')
     this.onStateChange()
     // sync.whiteboard.observeDeep(event => {
     //   log('change in whiteboard')
@@ -163,20 +232,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-:host, .whiteboard {
-  position: relative;
-  display: block;
-  touch-action: none;
-}
-
-canvas {
-  width: 100%;
-
-  // Grid
-  // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
-  // background-size: 1rem 1rem;
-}
-
-</style>

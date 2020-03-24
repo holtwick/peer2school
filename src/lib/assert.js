@@ -17,6 +17,7 @@ export function assert(cond, ...args) {
         expect(cond).toBeTruthy(cond)
       }
     } catch (err) {
+      console.warn('assert err', err)
       // console.error('Exception:', err)
     }
   }
