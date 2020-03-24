@@ -2,8 +2,8 @@
 
 <template>
   <div class="hstack">
-    <app-sidebar></app-sidebar>
-    <app-whiteboard class="-fit"></app-whiteboard>
+    <app-sidebar/>
+    <app-whiteboard class="-fit" :editable="state.teacher"/>
   </div>
 </template>
 

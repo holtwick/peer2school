@@ -13,7 +13,7 @@
       @mousemove="moveDraw"
       @touchmove="touchMove"
     />
-    <div class="tools">
+    <div class="tools" v-if="editable">
       <button
         v-for="c in colorPresets"
         class="color"
@@ -95,13 +95,10 @@ export default {
       type: Boolean,
       default: true,
     },
-    color: {
-      type: String,
-      default: 'black',
-    },
   },
   data() {
     return {
+      color: 'black',
       colorPresets: [
         'black',
         'red',

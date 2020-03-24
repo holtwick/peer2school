@@ -21,26 +21,20 @@ class Sync extends Emitter {
   constructor({ room }) {
     super()
 
-    log('setupSync')
-
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
       filterBcConns: true,
     })
 
     webrtcProvider.on('peers', info => {
-      log('peers', info)
       let added = Array.from(info.added)
       for (let peerID of added) {
-        log('start listening for stream', peerID)
         let peer = this.getPeer(peerID)
         if (peer) {
           if (this.stream) {
             peer.peer.addStream(this.stream)
           }
           peer.peer.on('stream', stream => {
-            log('stream received', peerID, stream)
             this.streams[peerID] = stream
-            log('streams', this.streams)
             this.emit('stream', { peer, stream })
           })
         } else {
@@ -58,7 +52,6 @@ class Sync extends Emitter {
     //  const awareness = webrtcProvider.awareness
 
     const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
-    log('setupSync done', webrtcProvider)
 
     this.webrtcProvider = webrtcProvider
     this.indexeddbPersistence = indexeddbPersistence
@@ -67,7 +60,8 @@ class Sync extends Emitter {
   }
 
   getWebRTCConns() {
-    return this.webrtcProvider?.room?.webrtcConns || null
+    log('getWebRTCConns', this.webrtcProvider?.room?.webrtcConns)
+    return this.webrtcProvider?.room?.webrtcConns
   }
 
   getPeers() {
@@ -75,15 +69,12 @@ class Sync extends Emitter {
   }
 
   getPeer(peerID) {
-    const peer = this.getWebRTCConns()?.get(peerID) || null
-    log('getPeer', peer)
-    return peer
+    return this.getWebRTCConns()?.get(peerID) || null
   }
 
   getPeerList() {
     try {
-      // log('getPeerList', this.webrtcProvider?.room)
-      return Array.from(Object.keys(this.getWebRTCConns()?.keys) || [])
+      return Array.from(this.getWebRTCConns()?.keys() || [])
     } catch (err) {
       console.warn('getPeerList err', err)
     }
@@ -92,16 +83,14 @@ class Sync extends Emitter {
 
   getStream(peerID) {
     try {
-      let stream = this.streams[peerID] // this.getPeer(peerID)?.peer?.stream
-      log('getStream', peerID, stream)
-      return stream
+      return this.streams[peerID]
     } catch (err) {
       console.warn('getStream err', err, peerID)
     }
+    return null
   }
 
   setStream(stream) {
-    log('setStream', stream)
     this.stream = stream
     let currentPeers = this.getPeers()
     for (let peer of currentPeers) {
