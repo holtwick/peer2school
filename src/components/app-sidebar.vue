@@ -13,13 +13,13 @@
         </div>
       </div>
 
-      {{ state.info.studentID }}
-      <div v-if="state.info.studentID">
-        <app-video
-          :id="state.info.studentID"
-          class="peer peer-student"
-        />
-      </div>
+<!--      {{ state.info.studentID }}-->
+<!--      <div v-if="state.info.studentID">-->
+<!--        <app-video-->
+<!--          :id="state.info.studentID"-->
+<!--          class="peer peer-student"-->
+<!--        />-->
+<!--      </div>-->
 
       <div @click="editProfile" title="This is you :)">
         <app-video
