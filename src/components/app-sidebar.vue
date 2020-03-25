@@ -7,36 +7,15 @@
         {{ teacherName }}
       </app-peer>
 
-      <app-peer :stream="state.stream" @click="editProfile">
+      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID">
+        {{ studentName }}
+      </app-peer>
+
+      <app-peer :stream="state.stream" @click="editProfile" :active="state.info.studentID === state.peerID">
         {{ name }}
         <i v-if="!hasName" data-f7-icon="pencil"></i>
       </app-peer>
-
-      <!--      <div v-if="!state.teacher" title="Teacher">-->
-      <!--        <app-video-->
-      <!--          v-if="!state.teacher && state.teacherStream"-->
-      <!--          :stream="state.teacherStream"-->
-      <!--          class="peer peer-teacher"-->
-      <!--        />-->
-      <!--        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">-->
-      <!--          <i data-f7-icon="rectangle_stack_person_crop"></i>-->
-      <!--        </div>-->
-      <!--      </div>-->
-
-      <!--      {{ state.info.studentID }}-->
-      <!--      <div v-for="p in state.peers">-->
-      <!--        <app-video-->
-      <!--          :stream="state.streams[p]"-->
-      <!--          class="peer peer-student"-->
-      <!--        />-->
-      <!--      </div>-->
-
-      <!--      <div @click="editProfile" title="This is you :)">-->
-      <!--        <app-video-->
-      <!--          :stream="state.stream"-->
-      <!--          class="peer peer-self"-->
-      <!--        />-->
-      <!--      </div>-->
+      
     </div>
 
     <app-students v-if="state.teacher"/>
@@ -107,6 +86,9 @@ export default {
     },
     teacherName() {
       return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'
+    },
+    studentName() {
+      return this.state.profiles[this.state.info.studentID]?.name || 'Student'
     },
   },
   methods: {

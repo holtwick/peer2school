@@ -7,8 +7,8 @@
       :class="{ '-active': student.active }"
     >
       {{ student.name }}
-      <!--      <button @click="doShowStudent(student.id, false)">show</button>-->
-      <!--      <button @click="doShowStudent(student.id, true)">wb</button>-->
+      <button @click="doShowStudent(student.id, false)">show</button>
+      <button @click="doShowStudent(student.id, true)">wb</button>
     </div>
   </div>
 </template>
