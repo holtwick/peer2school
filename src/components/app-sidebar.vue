@@ -7,8 +7,9 @@
         {{ teacherName }}
       </app-peer>
 
-      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID">
+      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">
         {{ studentName }}
+        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
       </app-peer>
 
       <app-peer :stream="state.stream" @click="editProfile" :active="state.info.studentID === state.peerID">
@@ -56,7 +57,7 @@
 
 <script>
 import { createLinkForRoom, shareLink } from '../lib/share'
-import { setProfileName } from '../state'
+import { setProfileName, setStudent } from '../state'
 import AppChat from './app-chat'
 import AppPeer from './app-peer'
 import AppSignal from './app-signal'
@@ -101,6 +102,11 @@ export default {
     doShare() {
       shareLink(createLinkForRoom(this.state.room))
     },
+    stopVideo() {
+      if (this.state.teacher) {
+        setStudent()
+      }
+    }
   },
   async mounted() {
   },

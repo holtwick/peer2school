@@ -9,7 +9,7 @@
       title="Click to show student to the class"
     >
       {{ student.name }}
-      <i data-f7-icon="videocam_circle_fill"></i>
+      <i data-f7-icon="videocam_circle_fill" class="video-info"></i>
       <!--      <button @click="doShowStudent(student.id, true)">wb</button>-->
     </div>
   </div>
@@ -23,8 +23,16 @@
     font-size: 0.8rem;
     cursor: pointer;
 
+    .video-info {
+      opacity: 0;
+    }
+
     &:hover {
       color: blue;
+
+      .video-info {
+        opacity: 1;
+      }
     }
 
     &:before {
