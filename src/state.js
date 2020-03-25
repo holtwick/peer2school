@@ -75,18 +75,6 @@ export let sync = setupSync({
   room,
 })
 
-function getTeacherID() {
-  return sync.info.get('teacherID')
-}
-
-sync.on('ready', () => {
-  state.peerID = sync.peerID
-  if (teacher) {
-    sync.info.set('teacherID', sync.peerID)
-  }
-  updateState()
-})
-
 sync.whiteboard = sync.doc.getArray('whiteboard')
 
 for (const [name, dft] of Object.entries(synched)) {
@@ -96,6 +84,26 @@ for (const [name, dft] of Object.entries(synched)) {
     if (name === 'info') updateState()
   })
 }
+
+function getTeacherID() {
+  return sync.info.get('teacherID')
+}
+
+sync.on('ready', () => {
+  state.peerID = sync.peerID
+  if (state.peerID) {
+    let name = localStorage.getItem('name')
+    if (name) {
+      setProfileName(name)
+    }
+  }
+  log('peerID', state.peerID)
+  if (teacher) {
+    sync.info.set('teacherID', sync.peerID)
+  }
+  updateState()
+})
+
 
 function updateState() {
   state.peers = sync.getPeerList()
@@ -137,6 +145,7 @@ export function toggleSignal() {
 }
 
 export function setProfileName(name) {
+  localStorage.setItem('name', name)
   sync.profiles.set(state.peerID, { name })
 }
 
