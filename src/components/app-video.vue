@@ -2,8 +2,7 @@
   <video ref="video"/>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>
 
 <script>
 import { connectStreamToVideoElement } from '../lib/usermedia'

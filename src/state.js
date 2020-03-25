@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { ENABLE_VIDEO } from './config'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
@@ -109,8 +110,9 @@ function updateState() {
 
 sync.on('peers', updateState)
 
-sync.on('stream', ({peerID, stream}) => {
-  state.streams[peerID] = stream
+sync.on('stream', ({ peerID, stream }) => {
+  Vue.set(state.streams, peerID, stream)
+  // state.streams[peerID] = stream
   updateState() // todo
 })
 

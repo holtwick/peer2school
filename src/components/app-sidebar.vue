@@ -2,6 +2,13 @@
   <div class="vstack sidebar">
 
     <div>
+
+      <app-peer
+        v-if="!state.teacher"
+        :id="state.info.teacherID"
+        title="Teacher"
+      />
+
       <div v-if="!state.teacher" title="Teacher">
         <app-video
           v-if="!state.teacher && state.teacherStream"
@@ -20,6 +27,7 @@
           class="peer peer-student"
         />
       </div>
+
 
       <div @click="editProfile" title="This is you :)">
         <app-video
@@ -42,7 +50,6 @@
       </button>
     </div>
 
-
   </div>
 </template>
 
@@ -52,6 +59,8 @@
   width: 16rem;
   background: #eee;
   padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(15, 15, 15, 0.2) 0 9px 24px;;
 
   .btn {
     border-radius: 0.25rem;
@@ -100,6 +109,7 @@
 import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName } from '../state'
 import AppChat from './app-chat'
+import AppPeer from './app-peer'
 import AppSignal from './app-signal'
 import AppStudents from './app-students'
 import AppVideo from './app-video'
@@ -109,6 +119,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppPeer,
     AppStudents,
     AppSignal,
     AppChat,
