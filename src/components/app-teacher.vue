@@ -1,7 +1,7 @@
 <template>
   <div class="vstack">
     <app-peers class="-fit"></app-peers>
-    <div class="header hstack">
+    <div class="header hstack" v-if="false">
       <div class="title -fit">peer.school</div>
       <div class="link">
         Share <a :href="url">{{ url }}</a>
@@ -34,6 +34,7 @@
 </style>
 
 <script>
+import { createLinkForRoom } from '../lib/share'
 import AppPeers from './app-peers'
 
 export default {
@@ -46,11 +47,7 @@ export default {
   },
   computed: {
     url() {
-      const DEBUG = location.port.toString() === '8080' || !location.pathname.startsWith('/dist')
-      if (DEBUG) {
-        return `https://${location.host}/#${this.state.room}`
-      }
-      return `https://peer.school/class/${this.state.room}`
+      return createLinkForRoom(this.state.room)
     },
   },
   methods: {},

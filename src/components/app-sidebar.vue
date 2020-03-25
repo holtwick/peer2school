@@ -1,8 +1,6 @@
 <template>
   <div class="vstack sidebar">
 
-    <!--    <div>peer.school</div>-->
-
     <div>
       <div v-if="!state.teacher" title="Teacher">
         <app-video
@@ -37,6 +35,14 @@
 
     <app-signal v-if="!state.teacher"/>
 
+    <div v-if="state.teacher" class="share">
+      <button @click="doShare" class="btn">
+        <i data-f7-icon="square_arrow_up"></i>
+        Share with students
+      </button>
+    </div>
+
+
   </div>
 </template>
 
@@ -46,6 +52,15 @@
   width: 16rem;
   background: #eee;
   padding: 1rem;
+
+  .btn {
+    border-radius: 0.25rem;
+    background: green;
+    color: white;
+    padding: 0.5rem;
+    display: block;
+    width: 100%;
+  }
 
   .peer {
     background: #333;
@@ -82,6 +97,7 @@
 </style>
 
 <script>
+import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName } from '../state'
 import AppChat from './app-chat'
 import AppSignal from './app-signal'
@@ -110,6 +126,9 @@ export default {
         setProfileName(name)
       }
     },
+    doShare() {
+      shareLink(createLinkForRoom(this.state.room))
+    }
   },
   async mounted() {
   },
