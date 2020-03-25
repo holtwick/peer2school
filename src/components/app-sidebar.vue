@@ -12,7 +12,7 @@
         <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
       </app-peer>
 
-      <app-peer :stream="state.stream" @click="editProfile" :active="state.info.studentID === state.peerID">
+      <app-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">
         {{ name }}
         <i v-if="!hasName" data-f7-icon="pencil"></i>
       </app-peer>
@@ -80,10 +80,10 @@ export default {
   },
   computed: {
     hasName() {
-      return this.state.profiles[this.state.peerID]?.name != null
+      return this.state.profiles[this.state.peerID]?.name != null || localStorage.getItem('name') != null
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || 'Set your name'
+      return this.state.profiles[this.state.peerID]?.name || localStorage.getItem('name') || 'Set your name'
     },
     teacherName() {
       return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'
@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     editProfile() {
-      let name = prompt('What\'s your name?')
+      let name = prompt('What\'s your name?', this.hasName ? this.name : '')
       if (name) {
         setProfileName(name)
       }
@@ -106,7 +106,7 @@ export default {
       if (this.state.teacher) {
         setStudent()
       }
-    }
+    },
   },
   async mounted() {
   },
