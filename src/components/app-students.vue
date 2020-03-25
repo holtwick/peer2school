@@ -5,10 +5,12 @@
       v-for="student of students"
       :key="student.id"
       :class="{ '-active': student.active }"
+      @click="doShowStudent(student.id, false)"
+      title="Click to show student to the class"
     >
       {{ student.name }}
-      <button @click="doShowStudent(student.id, false)">show</button>
-      <button @click="doShowStudent(student.id, true)">wb</button>
+      <i data-f7-icon="videocam_circle_fill"></i>
+      <!--      <button @click="doShowStudent(student.id, true)">wb</button>-->
     </div>
   </div>
 </template>
@@ -19,6 +21,11 @@
 
   .student {
     font-size: 0.8rem;
+    cursor: pointer;
+
+    &:hover {
+      color: blue;
+    }
 
     &:before {
       display: inline-block;

@@ -15,7 +15,7 @@
         {{ name }}
         <i v-if="!hasName" data-f7-icon="pencil"></i>
       </app-peer>
-      
+
     </div>
 
     <app-students v-if="state.teacher"/>
