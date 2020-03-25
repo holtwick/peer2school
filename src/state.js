@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import * as Y from 'yjs'
 import { ENABLE_VIDEO } from './config'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
@@ -62,9 +63,6 @@ export let state = {
   // Video stream of the local user without sound
   stream: null,
 
-  // The teachers stream
-  teacherStream: null,
-
   // By Yjs synched objects
   ...synched,
 }
@@ -76,6 +74,7 @@ export let sync = setupSync({
 })
 
 sync.whiteboard = sync.doc.getArray('whiteboard')
+export const whiteboardUndoManager = new Y.UndoManager(sync.whiteboard)
 
 for (const [name, dft] of Object.entries(synched)) {
   sync[name] = Array.isArray(dft) ? sync.doc.getArray(name) : sync.doc.getMap(name)
@@ -107,19 +106,12 @@ sync.on('ready', () => {
 
 function updateState() {
   state.peers = sync.getPeerList()
-  if (!teacher) {
-    let teacherID = getTeacherID()
-    if (teacherID) {
-      state.teacherStream = sync.getStream(teacherID)
-    }
-  }
 }
 
 sync.on('peers', updateState)
 
 sync.on('stream', ({ peerID, stream }) => {
   Vue.set(state.streams, peerID, stream)
-  // state.streams[peerID] = stream
   updateState() // todo
 })
 

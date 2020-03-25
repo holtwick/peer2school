@@ -26,10 +26,19 @@
         @click="doTrash">
         <i data-f7-icon="trash"></i>
       </button>
+      <button
+        class="tool"
+        @click="doUndo">
+        <i data-f7-icon="arrow_uturn_left"></i>
+      </button>
+      <button
+        class="tool"
+        @click="doRedo">
+        <i data-f7-icon="arrow_uturn_right"></i>
+      </button>
     </div>
   </div>
 </template>
-
 
 <style lang="scss">
 .whiteboard {
@@ -81,11 +90,10 @@
 
 </style>
 
-
 <script>
 import * as Y from 'yjs'
 import { assert } from '../lib/assert'
-import { sync } from '../state'
+import { sync, whiteboardUndoManager } from '../state'
 
 const log = require('debug')('app:app-whiteboard')
 
@@ -225,6 +233,12 @@ export default {
     doTrash() {
       sync.whiteboard.delete(0, sync.whiteboard.length)
     },
+    doUndo() {
+      whiteboardUndoManager.undo()
+    },
+    doRedo() {
+      whiteboardUndoManager.redo()
+    }
   },
   async mounted() {
     // log('mounted')

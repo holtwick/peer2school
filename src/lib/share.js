@@ -8,12 +8,15 @@ export function createLinkForRoom(room) {
   return `https://peer.school/class/${room}`
 }
 
-export async function shareLink(url, { title = 'Student\'s link', text = 'Dear student, please open the link in your browser to follow our class' } = {}) {
+export async function shareLink(url, {
+  title = 'Student\'s link',
+  text = 'Dear student, please open the link in your browser to follow our class',
+} = {}) {
   if (navigator.share) {
     try {
       await navigator.share({
-        title: 'web.dev',
-        text: 'Check out web.dev.',
+        title,
+        text,
         url,
       })
       return true
