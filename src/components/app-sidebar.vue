@@ -9,32 +9,37 @@
         title="Teacher"
       />
 
-      <div v-if="!state.teacher" title="Teacher">
-        <app-video
-          v-if="!state.teacher && state.teacherStream"
-          :stream="state.teacherStream"
-          class="peer peer-teacher"
-        />
-        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">
-          <i data-f7-icon="rectangle_stack_person_crop"></i>
-        </div>
-      </div>
+      <app-peer
+        :stream="state.stream"
+        class="peer peer-student"
+        title="You"
+      />
+
+<!--      <div v-if="!state.teacher" title="Teacher">-->
+<!--        <app-video-->
+<!--          v-if="!state.teacher && state.teacherStream"-->
+<!--          :stream="state.teacherStream"-->
+<!--          class="peer peer-teacher"-->
+<!--        />-->
+<!--        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">-->
+<!--          <i data-f7-icon="rectangle_stack_person_crop"></i>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <!--      {{ state.info.studentID }}-->
-      <div v-for="p in state.peers">
-        <app-video
-          :stream="state.streams[p]"
-          class="peer peer-student"
-        />
-      </div>
+<!--      <div v-for="p in state.peers">-->
+<!--        <app-video-->
+<!--          :stream="state.streams[p]"-->
+<!--          class="peer peer-student"-->
+<!--        />-->
+<!--      </div>-->
 
-
-      <div @click="editProfile" title="This is you :)">
-        <app-video
-          :stream="state.stream"
-          class="peer peer-self"
-        />
-      </div>
+<!--      <div @click="editProfile" title="This is you :)">-->
+<!--        <app-video-->
+<!--          :stream="state.stream"-->
+<!--          class="peer peer-self"-->
+<!--        />-->
+<!--      </div>-->
     </div>
 
     <app-students v-if="state.teacher"/>
@@ -69,38 +74,6 @@
     padding: 0.5rem;
     display: block;
     width: 100%;
-  }
-
-  .peer {
-    background: #333;
-    width: 100%;
-    max-height: 20rem;
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.25rem;
-  }
-
-  @keyframes blink {
-    from {
-      opacity: 1.0;
-    }
-    50% {
-      opacity: 0.5;
-    }
-    to {
-      opacity: 1.0;
-    }
-  }
-
-  .peer-placeholder {
-    min-height: 6rem;
-
-    i {
-      font-size: 4rem;
-      color: white;
-      animation: blink 1000ms infinite;
-    }
-
   }
 }
 </style>

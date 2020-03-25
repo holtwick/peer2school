@@ -1,9 +1,13 @@
 <template>
   <div class="peer">
     <app-video
-      :stream="state.streams[id]"
+      :stream="stream || state.streams[id]"
     />
-    <div class="peer-footer">{{id}}</div>
+    <div class="peer-footer" v-if="slotted">x
+      <slot>
+        y
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -60,9 +64,17 @@ export default {
       type: String,
       default: null,
     },
+    stream: {
+      type: MediaStream,
+    },
   },
   data() {
     return {}
+  },
+  computed: {
+    slotted() {
+      return this.$slots?.default?.[0] != null
+    },
   },
   methods: {},
   async mounted() {
