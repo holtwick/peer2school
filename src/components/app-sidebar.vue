@@ -2,31 +2,21 @@
   <div class="vstack sidebar">
 
     <div>
-      <div v-if="!state.teacher" title="Teacher">
-        <app-video
-          v-if="!state.teacher && state.teacherStream"
-          :stream="state.teacherStream"
-          class="peer peer-teacher"
-        />
-        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">
-          <i data-f7-icon="rectangle_stack_person_crop"></i>
-        </div>
-      </div>
 
-<!--      {{ state.info.studentID }}-->
-<!--      <div v-if="state.info.studentID">-->
-<!--        <app-video-->
-<!--          :id="state.info.studentID"-->
-<!--          class="peer peer-student"-->
-<!--        />-->
-<!--      </div>-->
+      <app-peer v-if="!state.teacher" :id="state.info.teacherID">
+        {{ teacherName }}
+      </app-peer>
 
-      <div @click="editProfile" title="This is you :)">
-        <app-video
-          :stream="state.stream"
-          class="peer peer-self"
-        />
-      </div>
+      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">
+        {{ studentName }}
+        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
+      </app-peer>
+
+      <app-peer :stream="state.stream" @click="editProfile" :active="state.info.studentID === state.peerID">
+        {{ name }}
+        <i v-if="!hasName" data-f7-icon="pencil"></i>
+      </app-peer>
+
     </div>
 
     <app-students v-if="state.teacher"/>
@@ -42,7 +32,6 @@
       </button>
     </div>
 
-
   </div>
 </template>
 
@@ -52,6 +41,8 @@
   width: 16rem;
   background: #eee;
   padding: 1rem;
+  margin: 1rem;
+  box-shadow: rgba(15, 15, 15, 0.2) 0 9px 24px;;
 
   .btn {
     border-radius: 0.25rem;
@@ -61,45 +52,14 @@
     display: block;
     width: 100%;
   }
-
-  .peer {
-    background: #333;
-    width: 100%;
-    max-height: 20rem;
-    margin-right: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.25rem;
-  }
-
-  @keyframes blink {
-    from {
-      opacity: 1.0;
-    }
-    50% {
-      opacity: 0.5;
-    }
-    to {
-      opacity: 1.0;
-    }
-  }
-
-  .peer-placeholder {
-    min-height: 6rem;
-
-    i {
-      font-size: 4rem;
-      color: white;
-      animation: blink 1000ms infinite;
-    }
-
-  }
 }
 </style>
 
 <script>
 import { createLinkForRoom, shareLink } from '../lib/share'
-import { setProfileName } from '../state'
+import { setProfileName, setStudent } from '../state'
 import AppChat from './app-chat'
+import AppPeer from './app-peer'
 import AppSignal from './app-signal'
 import AppStudents from './app-students'
 import AppVideo from './app-video'
@@ -109,25 +69,43 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppPeer,
     AppStudents,
     AppSignal,
     AppChat,
     AppVideo,
   },
   data() {
-    return {
-      username: '',
-    }
+    return {}
+  },
+  computed: {
+    hasName() {
+      return this.state.profiles[this.state.peerID]?.name != null
+    },
+    name() {
+      return this.state.profiles[this.state.peerID]?.name || 'Set your name'
+    },
+    teacherName() {
+      return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'
+    },
+    studentName() {
+      return this.state.profiles[this.state.info.studentID]?.name || 'Student'
+    },
   },
   methods: {
     editProfile() {
-      let name = prompt('Wie heißt du?')
+      let name = prompt('What\'s your name?')
       if (name) {
         setProfileName(name)
       }
     },
     doShare() {
       shareLink(createLinkForRoom(this.state.room))
+    },
+    stopVideo() {
+      if (this.state.teacher) {
+        setStudent()
+      }
     }
   },
   async mounted() {

@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { ENABLE_VIDEO } from './config'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
@@ -55,6 +56,9 @@ export let state = {
   // IDs of all currently active WebRTC peers
   peers: [],
 
+  // Streams per peerID
+  streams: [],
+
   // Video stream of the local user without sound
   stream: null,
 
@@ -95,7 +99,6 @@ for (const [name, dft] of Object.entries(synched)) {
 
 function updateState() {
   state.peers = sync.getPeerList()
-  log('peers', state.peers)
   if (!teacher) {
     let teacherID = getTeacherID()
     if (teacherID) {
@@ -105,7 +108,12 @@ function updateState() {
 }
 
 sync.on('peers', updateState)
-sync.on('stream', updateState)
+
+sync.on('stream', ({ peerID, stream }) => {
+  Vue.set(state.streams, peerID, stream)
+  // state.streams[peerID] = stream
+  updateState() // todo
+})
 
 // MEDIA
 

@@ -32,6 +32,8 @@
     display: block;
     width: 100%;
     padding: 0.25rem;
+    background: white;
+    border-radius: 0.25rem;
   }
 
 }

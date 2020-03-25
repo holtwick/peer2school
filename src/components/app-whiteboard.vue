@@ -1,5 +1,5 @@
 <template>
-  <div class="whiteboard" ref="whiteboard">
+  <div class="whiteboard" ref="whiteboard" :class="{'-editable': editable}">
     <canvas
       width="4000"
       height="3000"
@@ -32,46 +32,50 @@
 
 
 <style lang="scss">
-:host, .whiteboard {
+.whiteboard {
   position: relative;
   display: block;
   touch-action: none;
-}
 
-canvas {
-  width: 100%;
-
-  // Grid
-  // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
-  // background-size: 1rem 1rem;
-}
-
-.tools {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-
-  .color, .tool {
-    display: block;
-    border-radius: 2rem;
-    height: 2rem;
-    width: 2rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.25;
-    transition: opacity 100ms;
-
-    &:hover {
-      opacity: 0.9;
-    }
-
-    &.-active {
-      opacity: 1;
-    }
+  &.-editable {
+    cursor: crosshair;
   }
 
-  .tool {
-    background: #666;
-    color: white;
+  canvas {
+    width: 100%;
+
+    // Grid
+    // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
+    // background-size: 1rem 1rem;
+  }
+
+  .tools {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    .color, .tool {
+      display: block;
+      border-radius: 2rem;
+      height: 2rem;
+      width: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.25;
+      transition: opacity 100ms;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &.-active {
+        opacity: 1;
+      }
+    }
+
+    .tool {
+      background: #666;
+      color: white;
+    }
   }
 }
 
