@@ -24,7 +24,36 @@ class Sync extends Emitter {
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
       filterBcConns: true,
       peerSettings: {
-        turn: true,
+        config: {
+          // trickle: false,
+          iceTransportPolicy: 'all',
+          reconnectTimer: 3000,
+          config: {
+            iceServers: [{
+              urls: 'stun:stun.l.google.com:19302',
+            }, {
+              urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+            }, {
+              urls: 'turn:numb.viagenie.ca',
+              username: 'dirk.holtwick@gmail.com',
+              credential: 'ssg94JnM/;Pu',
+            }],
+          },
+          // iceServers: [{
+          //   urls: 'stun:vs.holtwick.de',
+          // }, {
+          //   urls: 'turn:vs.holtwick.de', // 3478
+          // }],
+          // iceServers: [{
+          //   urls: 'stun:numb.viagenie.ca',
+          //   username: 'dirk.holtwick@gmail.com',
+          //   credential: 'ssg94JnM/;Pu',
+          // }, {
+          //   urls: 'turn:numb.viagenie.ca',
+          //   username: 'dirk.holtwick@gmail.com',
+          //   credential: 'ssg94JnM/;Pu',
+          // }],
+        },
       },
     })
 

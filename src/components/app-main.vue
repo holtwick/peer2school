@@ -31,7 +31,7 @@
 import AppPeers from './app-peers'
 
 export default {
-  name: 'app-student',
+  name: 'app-main',
   components: {
     AppPeers,
   },

@@ -181,7 +181,6 @@ export class WebrtcConn {
     /**
      * @type {any}
      */
-    console.log('peersettings', peerSettings)
     this.peer = new Peer({ initiator, ...peerSettings })
     this.peer.on('signal', signal => {
       publishSignalingMessage(signalingConn, room, { to: remotePeerId, from: room.peerId, type: 'signal', signal })
