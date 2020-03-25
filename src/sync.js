@@ -1,7 +1,7 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
-import { WebrtcProvider } from 'y-webrtc'
 import * as Y from 'yjs'
 import { Emitter } from './lib/emitter'
+import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
@@ -23,6 +23,9 @@ class Sync extends Emitter {
 
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
       filterBcConns: true,
+      peerSettings: {
+        turn: true,
+      },
     })
 
     webrtcProvider.on('peers', info => {
