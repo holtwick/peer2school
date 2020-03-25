@@ -11,7 +11,7 @@
 .video-container {
   padding: 0;
   margin: 0;
-  
+
   .video-placeholder {
     min-height: 6rem;
 

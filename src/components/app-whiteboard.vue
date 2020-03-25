@@ -39,6 +39,7 @@
 }
 
 canvas {
+  cursor: crosshair;
   width: 100%;
 
   // Grid
