@@ -1,5 +1,5 @@
 <template>
-  <div class="peer" :class="{'-active': active}">
+  <div class="peer" :class="{'-active': active}" @click="$emit('click')">
     <app-video
       :stream="stream || state.streams[id]"
       class="video"
@@ -26,6 +26,10 @@
   &.-active {
     border-radius: 0.25rem;
     box-shadow: 0 0 0 $px-2 rgba(0, 126, 217, 0.76);
+  }
+
+  &:hover {
+    opacity: 0.8;
   }
 
   .video {

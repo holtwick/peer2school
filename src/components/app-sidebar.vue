@@ -3,22 +3,13 @@
 
     <div>
 
-      <app-peer
-        v-if="!state.teacher"
-        :id="state.info.teacherID"
-      >
+      <app-peer v-if="!state.teacher" :id="state.info.teacherID">
         {{ teacherName }}
       </app-peer>
 
-      <app-peer
-        :stream="state.stream"
-        class="peer peer-student"
-        title="You"
-      >
-        <button @click="editProfile">
-          {{ name }}
-          <i v-if="!hasName" data-f7-icon="pencil"></i>
-        </button>
+      <app-peer :stream="state.stream" @click="editProfile">
+        {{ name }}
+        <i v-if="!hasName" data-f7-icon="pencil"></i>
       </app-peer>
 
       <!--      <div v-if="!state.teacher" title="Teacher">-->
