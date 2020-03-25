@@ -2,11 +2,10 @@
   <div class="peer">
     <app-video
       :stream="stream || state.streams[id]"
+      class="video"
     />
-    <div class="peer-footer" v-if="slotted">x
-      <slot>
-        y
-      </slot>
+    <div class="peer-footer" v-if="slotted">
+      <slot/>
     </div>
   </div>
 </template>
@@ -14,18 +13,26 @@
 <style lang="scss">
 .peer {
   color: white;
-  background: #333;
+  /*background: #333;*/
   width: 100%;
   max-height: 20rem;
   margin-right: 1rem;
   margin-bottom: 1rem;
-  border-radius: 0.25rem;
+  /*border-radius: 0.25rem;*/
   // border: 0.0625rem solid #333;
 
+  .video {
+    border-radius: 0.25rem 0.25rem 0 0;
+  }
+
   .peer-footer {
+    color: white;
+    background: #333;
+    margin-top: 0.0625rem;
     text-align: center;
     padding: 0.25rem;
     white-space: nowrap;
+    border-radius: 0 0 0.25rem 0.25rem;
   }
 
   @keyframes blink {

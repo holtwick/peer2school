@@ -6,14 +6,17 @@
       <app-peer
         v-if="!state.teacher"
         :id="state.info.teacherID"
-        title="Teacher"
-      />
+      >
+        Teacher
+      </app-peer>
 
       <app-peer
         :stream="state.stream"
         class="peer peer-student"
         title="You"
-      />
+      >
+        You
+      </app-peer>
 
 <!--      <div v-if="!state.teacher" title="Teacher">-->
 <!--        <app-video-->
