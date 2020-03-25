@@ -7,14 +7,12 @@
 
 <script>
 import { connectStreamToVideoElement } from '../lib/usermedia'
-import { sync } from '../state'
 
 const log = require('debug')('app:app-video')
 
 export default {
   name: 'app-video',
   props: {
-    id: null,
     stream: null,
   },
   data() {
@@ -26,13 +24,7 @@ export default {
     },
   },
   async mounted() {
-    if (this.id) {
-      let stream = sync.getStream(this.id)
-      log('stream', this.id, stream)
-      await this.doConnectStream(stream)
-    } else {
-      await this.doConnectStream(this.stream)
-    }
+    await this.doConnectStream(this.stream)
   },
   watch: {
     stream(value) {

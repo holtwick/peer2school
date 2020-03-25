@@ -55,6 +55,9 @@ export let state = {
   // IDs of all currently active WebRTC peers
   peers: [],
 
+  // Streams per peerID
+  streams: [],
+
   // Video stream of the local user without sound
   stream: null,
 
@@ -105,7 +108,11 @@ function updateState() {
 }
 
 sync.on('peers', updateState)
-sync.on('stream', updateState)
+
+sync.on('stream', ({peerID, stream}) => {
+  state.streams[peerID] = stream
+  updateState() // todo
+})
 
 // MEDIA
 

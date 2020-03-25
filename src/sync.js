@@ -35,7 +35,7 @@ class Sync extends Emitter {
           }
           peer.peer.on('stream', stream => {
             this.streams[peerID] = stream
-            this.emit('stream', { peer, stream })
+            this.emit('stream', { peerID, stream })
           })
         } else {
           console.warn('added peer but cannot find', peerID, info)

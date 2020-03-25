@@ -13,13 +13,13 @@
         </div>
       </div>
 
-<!--      {{ state.info.studentID }}-->
-<!--      <div v-if="state.info.studentID">-->
-<!--        <app-video-->
-<!--          :id="state.info.studentID"-->
-<!--          class="peer peer-student"-->
-<!--        />-->
-<!--      </div>-->
+      <!--      {{ state.info.studentID }}-->
+      <div v-for="p in state.peers">
+        <app-video
+          :stream="state.streams[p]"
+          class="peer peer-student"
+        />
+      </div>
 
       <div @click="editProfile" title="This is you :)">
         <app-video
@@ -128,7 +128,7 @@ export default {
     },
     doShare() {
       shareLink(createLinkForRoom(this.state.room))
-    }
+    },
   },
   async mounted() {
   },
