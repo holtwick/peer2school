@@ -7,7 +7,7 @@
         v-if="!state.teacher"
         :id="state.info.teacherID"
       >
-        Teacher
+        {{ teacherName }}
       </app-peer>
 
       <app-peer
@@ -15,34 +15,37 @@
         class="peer peer-student"
         title="You"
       >
-        You
+        <button @click="editProfile">
+          {{ name }}
+          <i v-if="!hasName" data-f7-icon="pencil"></i>
+        </button>
       </app-peer>
 
-<!--      <div v-if="!state.teacher" title="Teacher">-->
-<!--        <app-video-->
-<!--          v-if="!state.teacher && state.teacherStream"-->
-<!--          :stream="state.teacherStream"-->
-<!--          class="peer peer-teacher"-->
-<!--        />-->
-<!--        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">-->
-<!--          <i data-f7-icon="rectangle_stack_person_crop"></i>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--      <div v-if="!state.teacher" title="Teacher">-->
+      <!--        <app-video-->
+      <!--          v-if="!state.teacher && state.teacherStream"-->
+      <!--          :stream="state.teacherStream"-->
+      <!--          class="peer peer-teacher"-->
+      <!--        />-->
+      <!--        <div v-else class="peer peer-teacher peer-placeholder -content-placeholder">-->
+      <!--          <i data-f7-icon="rectangle_stack_person_crop"></i>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <!--      {{ state.info.studentID }}-->
-<!--      <div v-for="p in state.peers">-->
-<!--        <app-video-->
-<!--          :stream="state.streams[p]"-->
-<!--          class="peer peer-student"-->
-<!--        />-->
-<!--      </div>-->
+      <!--      <div v-for="p in state.peers">-->
+      <!--        <app-video-->
+      <!--          :stream="state.streams[p]"-->
+      <!--          class="peer peer-student"-->
+      <!--        />-->
+      <!--      </div>-->
 
-<!--      <div @click="editProfile" title="This is you :)">-->
-<!--        <app-video-->
-<!--          :stream="state.stream"-->
-<!--          class="peer peer-self"-->
-<!--        />-->
-<!--      </div>-->
+      <!--      <div @click="editProfile" title="This is you :)">-->
+      <!--        <app-video-->
+      <!--          :stream="state.stream"-->
+      <!--          class="peer peer-self"-->
+      <!--        />-->
+      <!--      </div>-->
     </div>
 
     <app-students v-if="state.teacher"/>
@@ -102,13 +105,22 @@ export default {
     AppVideo,
   },
   data() {
-    return {
-      username: '',
-    }
+    return {}
+  },
+  computed: {
+    hasName() {
+      return this.state.profiles[this.state.peerID]?.name != null
+    },
+    name() {
+      return this.state.profiles[this.state.peerID]?.name || 'Set your name'
+    },
+    teacherName() {
+      return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'
+    },
   },
   methods: {
     editProfile() {
-      let name = prompt('Wie heißt du?')
+      let name = prompt('What\'s your name?')
       if (name) {
         setProfileName(name)
       }

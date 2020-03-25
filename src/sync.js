@@ -60,7 +60,6 @@ class Sync extends Emitter {
   }
 
   getWebRTCConns() {
-    log('getWebRTCConns', this.webrtcProvider?.room?.webrtcConns)
     return this.webrtcProvider?.room?.webrtcConns
   }
 

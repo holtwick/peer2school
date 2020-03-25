@@ -99,7 +99,6 @@ for (const [name, dft] of Object.entries(synched)) {
 
 function updateState() {
   state.peers = sync.getPeerList()
-  log('peers', state.peers)
   if (!teacher) {
     let teacherID = getTeacherID()
     if (teacherID) {
