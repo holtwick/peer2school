@@ -1,7 +1,7 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
-import { WebrtcProvider } from 'y-webrtc'
 import * as Y from 'yjs'
 import { Emitter } from './lib/emitter'
+import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
@@ -23,6 +23,38 @@ class Sync extends Emitter {
 
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
       filterBcConns: true,
+      peerSettings: {
+        config: {
+          // trickle: false,
+          iceTransportPolicy: 'all',
+          reconnectTimer: 3000,
+          config: {
+            iceServers: [{
+              urls: 'stun:stun.l.google.com:19302',
+            }, {
+              urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+            }, {
+              urls: 'turn:numb.viagenie.ca',
+              username: 'dirk.holtwick@gmail.com',
+              credential: 'ssg94JnM/;Pu',
+            }],
+          },
+          // iceServers: [{
+          //   urls: 'stun:vs.holtwick.de',
+          // }, {
+          //   urls: 'turn:vs.holtwick.de', // 3478
+          // }],
+          // iceServers: [{
+          //   urls: 'stun:numb.viagenie.ca',
+          //   username: 'dirk.holtwick@gmail.com',
+          //   credential: 'ssg94JnM/;Pu',
+          // }, {
+          //   urls: 'turn:numb.viagenie.ca',
+          //   username: 'dirk.holtwick@gmail.com',
+          //   credential: 'ssg94JnM/;Pu',
+          // }],
+        },
+      },
     })
 
     webrtcProvider.on('peers', info => {
@@ -35,7 +67,7 @@ class Sync extends Emitter {
           }
           peer.peer.on('stream', stream => {
             this.streams[peerID] = stream
-            this.emit('stream', { peer, stream })
+            this.emit('stream', { peerID, stream })
           })
         } else {
           console.warn('added peer but cannot find', peerID, info)
@@ -60,7 +92,6 @@ class Sync extends Emitter {
   }
 
   getWebRTCConns() {
-    log('getWebRTCConns', this.webrtcProvider?.room?.webrtcConns)
     return this.webrtcProvider?.room?.webrtcConns
   }
 

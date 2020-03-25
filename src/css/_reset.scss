@@ -26,6 +26,8 @@ button, input, select, textarea {
   border: none;
   width: auto;
   min-width: 0;
+  background: inherit;
+  color: inherit;
   // display: inline-block;
 
   //&:focus {

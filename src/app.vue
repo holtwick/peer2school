@@ -1,17 +1,14 @@
 <template>
-  <app-teacher v-if="state.teacher" class="app"/>
-  <app-student v-else class="app"/>
+  <app-main class="app"/>
 </template>
 
 <script>
-import AppStudent from './components/app-student'
-import AppTeacher from './components/app-teacher'
+import AppMain from './components/app-main'
 
 export default {
   name: 'App',
   components: {
-    AppStudent,
-    AppTeacher,
+    AppMain,
   },
 }
 </script>

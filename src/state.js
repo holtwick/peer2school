@@ -1,3 +1,5 @@
+import Vue from 'vue'
+import * as Y from 'yjs'
 import { ENABLE_VIDEO } from './config'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
@@ -17,19 +19,51 @@ location.hash = `#${hash}`
 // STATE
 
 let synched = {
-  info: {},
+
+  // Flags
+  info: {
+
+    // Teacher's peer ID that is used for video stream
+    teacherID: null,
+
+    // Student's peer ID that is used for video stream
+    studentID: null,
+
+    // Allow active student (studentID) to use single whiteboard tool
+    allowWhiteboard: false,
+  },
+
+  // Simple chat
   chat: [],
+
+  // Peer IDs of students raising their hands
   signals: {},
+
+  // Details of participants, like name
   profiles: {},
 }
 
 export let state = {
+
+  // ID of this room
   room,
+
+  // Boolean
   teacher,
+
+  // Local users peer ID
   peerID: null,
+
+  // IDs of all currently active WebRTC peers
   peers: [],
+
+  // Streams per peerID
+  streams: [],
+
+  // Video stream of the local user without sound
   stream: null,
-  teacherStream: null,
+
+  // By Yjs synched objects
   ...synched,
 }
 
@@ -39,19 +73,8 @@ export let sync = setupSync({
   room,
 })
 
-function getTeacherID() {
-  return sync.info.get('teacherID')
-}
-
-sync.on('ready', () => {
-  state.peerID = sync.peerID
-  if (teacher) {
-    sync.info.set('teacherID', sync.peerID)
-  }
-  updateState()
-})
-
 sync.whiteboard = sync.doc.getArray('whiteboard')
+export const whiteboardUndoManager = new Y.UndoManager(sync.whiteboard)
 
 for (const [name, dft] of Object.entries(synched)) {
   sync[name] = Array.isArray(dft) ? sync.doc.getArray(name) : sync.doc.getMap(name)
@@ -61,19 +84,36 @@ for (const [name, dft] of Object.entries(synched)) {
   })
 }
 
-function updateState() {
-  state.peers = sync.getPeerList()
-  log('peers', state.peers)
-  if (!teacher) {
-    let teacherID = getTeacherID()
-    if (teacherID) {
-      state.teacherStream = sync.getStream(teacherID)
+function getTeacherID() {
+  return sync.info.get('teacherID')
+}
+
+sync.on('ready', () => {
+  state.peerID = sync.peerID
+  if (state.peerID) {
+    let name = localStorage.getItem('name')
+    if (name) {
+      setProfileName(name)
     }
   }
+  log('peerID', state.peerID)
+  if (teacher) {
+    sync.info.set('teacherID', sync.peerID)
+  }
+  updateState()
+})
+
+
+function updateState() {
+  state.peers = sync.getPeerList()
 }
 
 sync.on('peers', updateState)
-sync.on('stream', updateState)
+
+sync.on('stream', ({ peerID, stream }) => {
+  Vue.set(state.streams, peerID, stream)
+  updateState() // todo
+})
 
 // MEDIA
 
@@ -97,5 +137,11 @@ export function toggleSignal() {
 }
 
 export function setProfileName(name) {
+  localStorage.setItem('name', name)
   sync.profiles.set(state.peerID, { name })
+}
+
+export function setStudent(peerID = null, allowWhiteboard = false) {
+  sync.info.set('studentID', peerID)
+  sync.info.set('allowWhiteboard', allowWhiteboard)
 }
