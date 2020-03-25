@@ -2,9 +2,9 @@
   <div class="vstack">
     <app-peers class="-fit"></app-peers>
     <div class="header hstack">
-      <div class="title -fit">peer.school</div>
-      <div class="link">
-        Share <a :href="url">{{ url }}</a>
+      <!--      <div class="title -fit">peer.school</div>-->
+      <div class="title link -fit">
+        Your are the teacher, please share this link with your students: Share <a :href="url">{{ url }}</a>. Draw on the whiteboard.
       </div>
     </div>
   </div>
@@ -19,6 +19,8 @@
 
   .title {
     margin-left: 1rem;
+    overflow: hidden;
+    white-space: nowrap;
     // font-size: 2rem;
   }
 
@@ -34,6 +36,7 @@
 </style>
 
 <script>
+import { createLinkForRoom } from '../lib/share'
 import AppPeers from './app-peers'
 
 export default {
@@ -46,11 +49,7 @@ export default {
   },
   computed: {
     url() {
-      const DEBUG = location.port.toString() === '8080' || !location.pathname.startsWith('/dist')
-      if (DEBUG) {
-        return `https://${location.host}/#${this.state.room}`
-      }
-      return `https://peer.school/class/${this.state.room}`
+      return createLinkForRoom(this.state.room)
     },
   },
   methods: {},
