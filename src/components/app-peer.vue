@@ -1,5 +1,5 @@
 <template>
-  <div class="peer">
+  <div class="peer" :class="{'-active': active}">
     <app-video
       :stream="stream || state.streams[id]"
       class="video"
@@ -11,6 +11,8 @@
 </template>
 
 <style lang="scss">
+@import "../css/variables";
+
 .peer {
   color: white;
   /*background: #333;*/
@@ -20,6 +22,11 @@
   margin-bottom: 1rem;
   /*border-radius: 0.25rem;*/
   // border: 0.0625rem solid #333;
+
+  &.-active {
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0 $px-2 rgba(0, 126, 217, 0.76);
+  }
 
   .video {
     border-radius: 0.25rem 0.25rem 0 0;
@@ -73,6 +80,11 @@ export default {
     },
     stream: {
       type: MediaStream,
+      default: null,
+    },
+    active: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

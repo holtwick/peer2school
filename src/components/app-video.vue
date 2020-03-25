@@ -1,6 +1,6 @@
 <template>
   <video ref="video" v-if="stream" />
-  <div v-else class="video-paceholder -content-placeholder">
+  <div v-else class="video-placeholder -content-placeholder">
     <i data-f7-icon="rectangle_stack_person_crop"></i>
   </div>
 </template>
@@ -13,6 +13,8 @@ video {
 
 .video-placeholder {
   min-height: 6rem;
+  background: #333;
+  color: white;
 
   i {
     font-size: 4rem;
@@ -40,8 +42,10 @@ export default {
   },
   methods: {
     async doConnectStream(stream) {
-      await this.$nextTick()
-      connectStreamToVideoElement(stream, this.$refs.video)
+      if (stream) {
+        await this.$nextTick()
+        connectStreamToVideoElement(stream, this.$refs.video)
+      }
     },
   },
   async mounted() {
