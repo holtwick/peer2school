@@ -28,17 +28,15 @@ class Sync extends Emitter {
           // trickle: false,
           iceTransportPolicy: 'all',
           reconnectTimer: 3000,
-          config: {
-            iceServers: [{
-              urls: 'stun:stun.l.google.com:19302',
-            }, {
-              urls: 'stun:global.stun.twilio.com:3478?transport=udp',
-            }, {
-              urls: 'turn:numb.viagenie.ca',
-              username: 'dirk.holtwick@gmail.com',
-              credential: 'ssg94JnM/;Pu',
-            }],
-          },
+          iceServers: [{
+            urls: 'stun:stun.l.google.com:19302',
+          }, {
+            urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+          }, {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'dirk.holtwick@gmail.com',
+            credential: 'ssg94JnM/;Pu',
+          }],
           // iceServers: [{
           //   urls: 'stun:vs.holtwick.de',
           // }, {
