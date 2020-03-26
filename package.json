@@ -19,14 +19,14 @@
     "uuid": "^7.0.2",
     "vue": "^2.6.11",
     "y-indexeddb": "^9.0.3",
-    "y-protocols": "^0.2.1",
+    "y-protocols": "^0.2.2",
     "yjs": "^13.0.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.3",
     "@vue/cli-plugin-pwa": "~4.2.3",
     "@vue/cli-service": "~4.2.3",
-    "jest": "^25.1.0",
+    "jest": "^25.2.2",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
