@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_VIDEO } from './config'
+import { setupJitsi } from './lib/jitsi'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
@@ -145,3 +146,5 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('studentID', peerID)
   sync.info.set('allowWhiteboard', allowWhiteboard)
 }
+
+setupJitsi()
