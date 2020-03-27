@@ -1,3 +1,6 @@
+import { Emitter } from '../lib/emitter'
+
+// Hack!
 require('strophe.js')
 window.$ = require('./jquery-2.1.1')
 const JitsiMeetJS = require('./lib-jitsi-meet.min')
@@ -22,7 +25,7 @@ const confOptions = {
   openBridgeChannel: true,
 }
 
-class JitsiBridge {
+class JitsiBridge extends Emitter {
 
   connection = null
   isJoined = false
@@ -34,6 +37,7 @@ class JitsiBridge {
   remoteTracks = {}
 
   constructor({ room } = {}) {
+    super()
     log('setupJitsi', room)
 
     this.conferenceName = room.toLowerCase() // !sic
@@ -98,38 +102,42 @@ class JitsiBridge {
     //     }
     //   })
     // }
+    log('setup done')
   }
 
   onLocalTracks(tracks) {
     log('onLocalTracks', tracks)
     this.localTracks = tracks
     for (let i = 0; i < this.localTracks.length; i++) {
-      this.localTracks[i].addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED, audioLevel => log(`Audio Level local: ${audioLevel}`))
-      this.localTracks[i].addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, () => log('local track muted'))
-      this.localTracks[i].addEventListener(JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED, () => log('local track stoped'))
-      this.localTracks[i].addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_OUTPUT_CHANGED, deviceId => log(`track audio output device was changed to ${deviceId}`))
+      let track = this.localTracks[i]
 
-      // if (this.localTracks[i].getType() === 'video') {
+      log('local id', track.getParticipantId())
+
+      track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED, audioLevel => log(`Audio Level local: ${audioLevel}`))
+      track.addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, () => log('local track muted'))
+      track.addEventListener(JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED, () => log('local track stoped'))
+      track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_OUTPUT_CHANGED, deviceId => log(`track audio output device was changed to ${deviceId}`))
+
+      // if (track.getType() === 'video') {
       //   $('body').append(`<video autoplay="1" id="localVideo${i}" />`)
-      //   this.localTracks[i].attach($(`#localVideo${i}`)[0])
+      //   track.attach($(`#localVideo${i}`)[0])
       // } else {
       //   $('body').append(
       //     `<audio autoplay="1" muted="true" id="localAudio${i}" />`)
-      //   this.localTracks[i].attach($(`#localAudio${i}`)[0])
+      //   track.attach($(`#localAudio${i}`)[0])
       // }
 
       if (this.isJoined) {
-        this.room.addTrack(this.localTracks[i])
+        this.room.addTrack(track)
       }
     }
   }
 
   onRemoteTrack(track) {
-    log('onRemoteTrack')
-    if (track.isLocal()) {
-      return
-    }
+    if (track.isLocal()) return
+
     const participant = track.getParticipantId()
+    log('onRemoteTrack', participant)
 
     if (!this.remoteTracks[participant]) {
       this.remoteTracks[participant] = []
@@ -151,8 +159,7 @@ class JitsiBridge {
   }
 
   onConferenceJoined() {
-    log('onConferenceJoined')
-    log('conference joined!')
+    log('onConferenceJoined', this.room.myUserId())
     this.isJoined = true
     for (let i = 0; i < this.localTracks.length; i++) {
       this.room.addTrack(this.localTracks[i])
@@ -179,7 +186,7 @@ class JitsiBridge {
     this.room.on(JitsiMeetJS.events.conference.TRACK_REMOVED, track => log(`track removed!!!${track}`))
     this.room.on(JitsiMeetJS.events.conference.CONFERENCE_JOINED, _ => this.onConferenceJoined())
     this.room.on(JitsiMeetJS.events.conference.USER_JOINED, id => {
-      log('user join')
+      log('user join', id)
       this.remoteTracks[id] = []
     })
     this.room.on(JitsiMeetJS.events.conference.USER_LEFT, id => this.onUserLeft(id))
