@@ -1,18 +1,26 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_VIDEO } from './config'
+import { createLinkForRoom } from './lib/share'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
 
 const log = require('debug')('app:state')
 
-// Force a unique room ID
+// ROOM
+const testToken = '.test'
 const teacherToken = '.teacher'
-let hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
-let teacher = hash.endsWith(teacherToken)
+
+const hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let room = hash
+
+const TEST = hash.endsWith(testToken)
+if (TEST) room = room.replace(testToken, '')
+
+const teacher = hash.endsWith(teacherToken)
 if (teacher) room = room.replace(teacherToken, '')
+
 room = room.substr(0, UUID_length)
 location.hash = `#${hash}`
 
@@ -65,12 +73,16 @@ export let state = {
 
   // By Yjs synched objects
   ...synched,
+
+  // Testing
+  test: TEST,
 }
 
 // SYNC
 
 export let sync = setupSync({
   room,
+  connectionTest: TEST,
 })
 
 sync.whiteboard = sync.doc.getArray('whiteboard')
@@ -117,7 +129,7 @@ sync.on('stream', ({ peerID, stream }) => {
 
 // MEDIA
 
-ENABLE_VIDEO && getUserMedia(stream => {
+!TEST && ENABLE_VIDEO && getUserMedia(stream => {
   state.stream = new MediaStream(stream.getVideoTracks())
   sync.setStream(stream)
 })
@@ -144,4 +156,18 @@ export function setProfileName(name) {
 export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('studentID', peerID)
   sync.info.set('allowWhiteboard', allowWhiteboard)
+}
+
+// import { setupJitsi } from './lib/jitsi'
+// setupJitsi()
+
+//
+
+window.launchConnections = (n = 1) => {
+  for (let i = 0; i < n; i++) {
+    let el = document.createElement('iframe')
+    el.setAttribute('style', `position: absolute; width: 20rem; height: 20rem; bottom: ${i}rem; right: ${i}rem;`)
+    el.src = createLinkForRoom(room) // + testToken
+    document.body.appendChild(el)
+  }
 }

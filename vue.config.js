@@ -27,7 +27,7 @@ if (isProduction) {
     disableHostCheck: true,
 
     // Some API (like WebRTC getUserMedia) is only allowed in secure context
-    https: true,
+    https: (process.env.HTTPS_OFF || '').toString() !== '1',
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true',

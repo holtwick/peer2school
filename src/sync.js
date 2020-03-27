@@ -5,9 +5,7 @@ import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
-const doc = new Y.Doc()
-
-class Sync extends Emitter {
+export class Sync extends Emitter {
 
   chat
   stream
@@ -18,25 +16,28 @@ class Sync extends Emitter {
 
   streams = {}
 
-  constructor({ room }) {
+  constructor({ room, connectionTest = false }) {
     super()
 
-    const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
+    this.doc = new Y.Doc()
+
+    const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
+      maxConns: 30 + Math.floor(Math.random() * 15), // just to prevent that exactly n clients form a cluster
       filterBcConns: true,
       peerSettings: {
         config: {
           // trickle: false,
           iceTransportPolicy: 'all',
           reconnectTimer: 3000,
-          iceServers: [{
-            urls: 'stun:stun.l.google.com:19302',
-          }, {
-            urls: 'stun:global.stun.twilio.com:3478?transport=udp',
-          }, {
-            urls: 'turn:numb.viagenie.ca',
-            username: 'dirk.holtwick@gmail.com',
-            credential: 'ssg94JnM/;Pu',
-          }],
+          // iceServers: [{
+          //   urls: 'stun:stun.l.google.com:19302',
+          // }, {
+          //   urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+          // }, {
+          //   urls: 'turn:numb.viagenie.ca',
+          //   username: 'dirk.holtwick@gmail.com',
+          //   credential: 'ssg94JnM/;Pu',
+          // }],
           // iceServers: [{
           //   urls: 'stun:vs.holtwick.de',
           // }, {
@@ -54,6 +55,7 @@ class Sync extends Emitter {
         },
       },
     })
+    this.webrtcProvider = webrtcProvider
 
     webrtcProvider.on('peers', info => {
       let added = Array.from(info.added)
@@ -81,12 +83,9 @@ class Sync extends Emitter {
 
     //  const awareness = webrtcProvider.awareness
 
-    const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
+    if (connectionTest) return
 
-    this.webrtcProvider = webrtcProvider
-    this.indexeddbPersistence = indexeddbPersistence
-
-    this.doc = doc
+    this.indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, this.doc)
   }
 
   getWebRTCConns() {
@@ -98,6 +97,7 @@ class Sync extends Emitter {
   }
 
   getPeer(peerID) {
+    log('getPeers', this.webrtcProvider?.room)
     return this.getWebRTCConns()?.get(peerID) || null
   }
 
@@ -129,6 +129,6 @@ class Sync extends Emitter {
 
 }
 
-export function setupSync({ room } = {}) {
-  return new Sync({ room })
+export function setupSync(opt) {
+  return new Sync(opt)
 }

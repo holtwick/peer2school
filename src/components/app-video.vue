@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     async doConnectStream(stream) {
-      if (stream) {
+      if (stream && !this.state.test) {
         await this.$nextTick()
         connectStreamToVideoElement(stream, this.$refs.video)
       }
