@@ -46,11 +46,15 @@ export default {
   },
   methods: {
     async doConnectStream(stream) {
+      log('doConnectStream')
       if (stream && !this.state.test) {
         await this.$nextTick()
         if (stream.attach) {
+          log('doConnectStream jitsi')
           stream.attach(this.$refs.video)
+          this.$refs.video.play()
         } else {
+          log('doConnectStream webrtc')
           connectStreamToVideoElement(stream, this.$refs.video)
         }
       }

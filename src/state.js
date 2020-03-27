@@ -74,7 +74,7 @@ export let state = {
   peers: [],
 
   // Streams per peerID
-  streams: [],
+  streams: {},
 
   // Video stream of the local user without sound
   stream: null,
@@ -108,7 +108,7 @@ function getTeacherID() {
   return sync.info.get('teacherID')
 }
 
-sync.on('ready', ({peerID}) => {
+sync.on('ready', ({ peerID }) => {
   state.peerID = peerID
   if (peerID) {
     let name = getLocal(LOCAL_NAME)
@@ -117,8 +117,8 @@ sync.on('ready', ({peerID}) => {
     }
 
     if (jitsiID) {
-      log('set jitsi id')
-      sync.tracks.set(peerID, jitsiID)
+      log('set jitsi id', jitsiID, peerID)
+      sync.tracks.set(jitsiID, peerID)
     }
   }
   log('peerID', peerID)
@@ -183,13 +183,18 @@ if (ENABLE_JITSI) {
       jitsiID = id
       if (state.peerID) {
         log('set jitsi id via joined', state.peerID, jitsiID)
-        sync.tracks.set(state.peerID, jitsiID)
+        sync.tracks.set(jitsiID, state.peerID)
       }
     })
 
     jitsi.on('add', ({ id, track, video }) => {
       if (video) {
         videoTracks[id] = track
+        let peerID = state.tracks[id]
+        if (peerID) {
+          log('set stream', peerID, id)
+          Vue.set(state.streams, peerID, track)
+        }
       } else {
         audioTracks[id] = track
       }
