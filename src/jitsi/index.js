@@ -119,8 +119,6 @@ export class JitsiBridge extends Emitter {
     for (let i = 0; i < this.localTracks.length; i++) {
       let track = this.localTracks[i]
 
-      log('local id', track.getParticipantId())
-
       track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED, audioLevel => log(`Audio Level local: ${audioLevel}`))
       track.addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, () => log('local track muted'))
       track.addEventListener(JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED, () => log('local track stoped'))
@@ -128,16 +126,9 @@ export class JitsiBridge extends Emitter {
 
       if (track.getType() === 'video') {
         this.emit('stream', {
-          stream: track
+          stream: track,
         })
       }
-      //   $('body').append(`<video autoplay="1" id="localVideo${i}" />`)
-      //   track.attach($(`#localVideo${i}`)[0])
-      // } else {
-      //   $('body').append(
-      //     `<audio autoplay="1" muted="true" id="localAudio${i}" />`)
-      //   track.attach($(`#localAudio${i}`)[0])
-      // }
 
       if (this.isJoined) {
         this.room.addTrack(track)
@@ -148,29 +139,21 @@ export class JitsiBridge extends Emitter {
   onRemoteTrack(track) {
     if (track.isLocal()) return
 
-    const participant = track.getParticipantId()
-    log('onRemoteTrack', participant)
+    const id = track.getParticipantId()
+    log('onRemoteTrack', id)
 
-    if (!this.remoteTracks[participant]) {
-      this.remoteTracks[participant] = []
+    if (!this.remoteTracks[id]) {
+      this.remoteTracks[id] = []
     }
-    const idx = this.remoteTracks[participant].push(track)
+    this.remoteTracks[id].push(track)
 
     track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_LEVEL_CHANGED, audioLevel => log(`Audio Level remote: ${audioLevel}`))
     track.addEventListener(JitsiMeetJS.events.track.TRACK_MUTE_CHANGED, () => log('remote track muted'))
     track.addEventListener(JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED, () => log('remote track stoped'))
     track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_OUTPUT_CHANGED, deviceId => log(`track audio output device was changed to ${deviceId}`))
-    const id = participant + track.getType() + idx
-
-    // if (track.getType() === 'video') {
-    //   $('body').append(`<video autoplay="1" id="${id}" />`)
-    // } else {
-    //   $('body').append(`<audio autoplay="1" id="${id}" />`)
-    // }
-    // track.attach($(`#${id}`)[0])
 
     this.emit('add', {
-      id: participant,
+      id,
       track,
       video: track.getType() === 'video',
     })

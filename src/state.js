@@ -104,27 +104,30 @@ for (const [name, dft] of Object.entries(synched)) {
   })
 }
 
-function getTeacherID() {
-  return sync.info.get('teacherID')
-}
-
 sync.on('ready', ({ peerID }) => {
-  state.peerID = peerID
-  if (peerID) {
-    let name = getLocal(LOCAL_NAME)
-    if (name) {
-      setProfileName(name)
-    }
+  // log('peerID', peerID)
+  // state.peerID = peerID
+  //
+  // if (peerID) {
+  //   let name = getLocal(LOCAL_NAME)
+  //   if (name) {
+  //     setProfileName(name)
+  //   }
+  //
+  //   if (teacher) {
+  //     sync.info.set('teacherID', peerID)
+  //   }
+  //
+  //   if (jitsiID) {
+  //     log('set jitsi id', jitsiID, peerID, !!videoTracks[jitsiID])
+  //     sync.tracks.set(jitsiID, peerID)
+  //     let track = videoTracks[jitsiID]
+  //     if (track) {
+  //       Vue.set(state.streams, peerID, track)
+  //     }
+  //   }
+  // }
 
-    if (jitsiID) {
-      log('set jitsi id', jitsiID, peerID)
-      sync.tracks.set(jitsiID, peerID)
-    }
-  }
-  log('peerID', peerID)
-  if (teacher) {
-    sync.info.set('teacherID', peerID)
-  }
   updateState()
 })
 
@@ -135,10 +138,30 @@ function updateState() {
 
 sync.on('peers', updateState)
 
-sync.on('stream', ({ peerID, stream }) => {
-  Vue.set(state.streams, peerID, stream)
-  updateState() // todo
+sync.on('peerID', peerID => {
+  log('peerID', peerID)
+  if (peerID) {
+    state.peerID = peerID
+    let name = getLocal(LOCAL_NAME)
+    if (name) {
+      setProfileName(name)
+    }
+
+    if (teacher) {
+      sync.info.set('teacherID', peerID)
+    }
+
+    if (jitsiID) {
+      log('set jitsi id', jitsiID, peerID, !!videoTracks[jitsiID])
+      sync.tracks.set(jitsiID, peerID)
+      let track = videoTracks[jitsiID]
+      if (track) {
+        Vue.set(state.streams, peerID, track)
+      }
+    }
+  }
 })
+
 
 // UTILS
 
@@ -188,9 +211,10 @@ if (ENABLE_JITSI) {
     })
 
     jitsi.on('add', ({ id, track, video }) => {
+      let peerID = state.tracks[id]
+      log('add', id, video, peerID)
       if (video) {
         videoTracks[id] = track
-        let peerID = state.tracks[id]
         if (peerID) {
           log('set stream', peerID, id)
           Vue.set(state.streams, peerID, track)
@@ -205,8 +229,14 @@ if (ENABLE_JITSI) {
 
     jitsi.connect().then()
   })
-} else {
-  !TEST && ENABLE_VIDEO && getUserMedia(stream => {
+
+} else if (ENABLE_VIDEO && !TEST) {
+  sync.on('stream', ({ peerID, stream }) => {
+    Vue.set(state.streams, peerID, stream)
+    updateState() // todo
+  })
+
+  getUserMedia(stream => {
     state.stream = new MediaStream(stream.getVideoTracks())
     sync.setStream(stream)
   })

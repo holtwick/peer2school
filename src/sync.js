@@ -76,12 +76,13 @@ export class Sync extends Emitter {
           }
         }
       }
+      this.checkPeerID()
       this.emit('peers')
     })
 
     webrtcProvider.on('synced', info => {
       log('synced', info)
-      this.peerID = webrtcProvider.room.peerId
+      this.checkPeerID()
       this.emit('ready', { peerID: this.peerID })
     })
 
@@ -90,6 +91,15 @@ export class Sync extends Emitter {
     if (connectionTest) return
 
     this.indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, this.doc)
+  }
+
+  checkPeerID() {
+    if (!this.peerID) {
+      this.peerID = this.webrtcProvider.room.peerId
+      if (this.peerID) {
+        this.emit('peerID', this.peerID)
+      }
+    }
   }
 
   getWebRTCConns() {
