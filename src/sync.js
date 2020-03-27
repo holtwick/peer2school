@@ -5,9 +5,7 @@ import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
-const doc = new Y.Doc()
-
-class Sync extends Emitter {
+export class Sync extends Emitter {
 
   chat
   stream
@@ -18,10 +16,12 @@ class Sync extends Emitter {
 
   streams = {}
 
-  constructor({ room }) {
+  constructor({ room, connectionTest = false }) {
     super()
 
-    const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
+    this.doc = new Y.Doc()
+
+    const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
       filterBcConns: true,
       peerSettings: {
         config: {
@@ -54,6 +54,7 @@ class Sync extends Emitter {
         },
       },
     })
+    this.webrtcProvider = webrtcProvider
 
     webrtcProvider.on('peers', info => {
       let added = Array.from(info.added)
@@ -81,12 +82,9 @@ class Sync extends Emitter {
 
     //  const awareness = webrtcProvider.awareness
 
-    const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
+    if (connectionTest) return
 
-    this.webrtcProvider = webrtcProvider
-    this.indexeddbPersistence = indexeddbPersistence
-
-    this.doc = doc
+    this.indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, this.doc)
   }
 
   getWebRTCConns() {

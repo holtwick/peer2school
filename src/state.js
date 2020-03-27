@@ -1,19 +1,25 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_VIDEO } from './config'
-import { setupJitsi } from './lib/jitsi'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
-import { setupSync } from './sync'
+import { setupSync, Sync } from './sync'
 
 const log = require('debug')('app:state')
 
-// Force a unique room ID
-const teacherToken = '.teacher'
-let hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
-let teacher = hash.endsWith(teacherToken)
+// ROOM
+
+const hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let room = hash
+
+const testToken = '.test'
+const test = hash.endsWith(testToken)
+if (test) room = room.replace(testToken, '')
+
+const teacherToken = '.teacher'
+const teacher = hash.endsWith(teacherToken)
 if (teacher) room = room.replace(teacherToken, '')
+
 room = room.substr(0, UUID_length)
 location.hash = `#${hash}`
 
@@ -147,4 +153,13 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('allowWhiteboard', allowWhiteboard)
 }
 
-setupJitsi()
+// import { setupJitsi } from './lib/jitsi'
+// setupJitsi()
+
+//
+
+window.launchConnections = (n = 1) => {
+  for (let i = 0; i < n; i++) {
+    new Sync({ room, connectionTest: true })
+  }
+}
