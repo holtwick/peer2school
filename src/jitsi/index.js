@@ -1,6 +1,6 @@
 require('strophe.js')
-require('./jquery-2.1.1')
-require('./lib-jitsi-meet.min')
+window.$ = require('./jquery-2.1.1')
+const JitsiMeetJS = require('./lib-jitsi-meet.min')
 
 const log = require('debug')('app:jitsi')
 
