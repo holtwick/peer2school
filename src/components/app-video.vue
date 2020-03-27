@@ -1,5 +1,6 @@
 <template>
-  <video ref="video" v-if="stream" />
+  <!--  <audio autoplay ref="audio" v-if="audioStream" />-->
+  <video autoplay ref="video" v-if="stream"/>
   <div v-else class="video-placeholder -content-placeholder">
     <i data-f7-icon="rectangle_stack_person_crop"></i>
   </div>
@@ -34,7 +35,10 @@ export default {
   name: 'app-video',
   props: {
     stream: {
-      type: MediaStream,
+      type: MediaStream | Object,
+    },
+    audioStream: {
+      type: MediaStream | Object,
     },
   },
   data() {
@@ -44,7 +48,11 @@ export default {
     async doConnectStream(stream) {
       if (stream && !this.state.test) {
         await this.$nextTick()
-        connectStreamToVideoElement(stream, this.$refs.video)
+        if (stream.attach) {
+          stream.attach(this.$refs.video)
+        } else {
+          connectStreamToVideoElement(stream, this.$refs.video)
+        }
       }
     },
   },

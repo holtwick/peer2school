@@ -3,7 +3,9 @@ import { Emitter } from '../lib/emitter'
 // Hack!
 require('strophe.js')
 window.$ = require('./jquery-2.1.1')
+// window.$ = (...args) => log('jQuery required for', args)
 const JitsiMeetJS = require('./lib-jitsi-meet.min')
+
 
 const log = require('debug')('app:jitsi')
 
@@ -25,10 +27,32 @@ const confOptions = {
   openBridgeChannel: true,
 }
 
-class JitsiBridge extends Emitter {
+const initOptions = {
+  disableAudioLevels: true,
+
+  // The ID of the jidesha extension for Chrome.
+  desktopSharingChromeExtId: 'mbocklcggfhnbahlnepmldehdhpjfcjp',
+
+  // Whether desktop sharing should be disabled on Chrome.
+  desktopSharingChromeDisabled: false,
+
+  // The media sources to use when using screen sharing with the Chrome
+  // extension.
+  desktopSharingChromeSources: ['screen', 'window'],
+
+  // Required version of Chrome extension
+  desktopSharingChromeMinExtVersion: '0.1',
+
+  // Whether desktop sharing should be disabled on Firefox.
+  desktopSharingFirefoxDisabled: true,
+}
+
+export class JitsiBridge extends Emitter {
 
   connection = null
   isJoined = false
+
+  userID = null
 
   room = null
   conferenceName = 'peerSchoolConference'
@@ -41,32 +65,13 @@ class JitsiBridge extends Emitter {
     log('setupJitsi', room)
 
     this.conferenceName = room.toLowerCase() // !sic
+  }
 
+  async connect() {
     window.addEventListener('beforeunload', this.unload)
     window.addEventListener('unload', this.unload)
 
     JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.INFO)
-
-    const initOptions = {
-      disableAudioLevels: true,
-
-      // The ID of the jidesha extension for Chrome.
-      desktopSharingChromeExtId: 'mbocklcggfhnbahlnepmldehdhpjfcjp',
-
-      // Whether desktop sharing should be disabled on Chrome.
-      desktopSharingChromeDisabled: false,
-
-      // The media sources to use when using screen sharing with the Chrome
-      // extension.
-      desktopSharingChromeSources: ['screen', 'window'],
-
-      // Required version of Chrome extension
-      desktopSharingChromeMinExtVersion: '0.1',
-
-      // Whether desktop sharing should be disabled on Firefox.
-      desktopSharingFirefoxDisabled: true,
-    }
-
     JitsiMeetJS.init(initOptions)
 
     this.connection = new JitsiMeetJS.JitsiConnection(null, null, options)
@@ -79,11 +84,13 @@ class JitsiBridge extends Emitter {
 
     this.connection.connect()
 
-    JitsiMeetJS.createLocalTracks({ devices: ['audio', 'video'] })
-      .then(tracks => this.onLocalTracks(tracks))
-      .catch(error => {
-        throw error
-      })
+    try {
+      let tracks = await JitsiMeetJS.createLocalTracks({ devices: ['audio', 'video'] })
+      this.onLocalTracks(tracks)
+    } catch (err) {
+      log('connect err', err)
+      console.error('Exception:', err)
+    }
 
     // if (JitsiMeetJS.mediaDevices.isDeviceChangeAvailable('output')) {
     //   JitsiMeetJS.mediaDevices.enumerateDevices(devices => {
@@ -118,7 +125,11 @@ class JitsiBridge extends Emitter {
       track.addEventListener(JitsiMeetJS.events.track.LOCAL_TRACK_STOPPED, () => log('local track stoped'))
       track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_OUTPUT_CHANGED, deviceId => log(`track audio output device was changed to ${deviceId}`))
 
-      // if (track.getType() === 'video') {
+      if (track.getType() === 'video') {
+        this.emit('stream', {
+          stream: track
+        })
+      }
       //   $('body').append(`<video autoplay="1" id="localVideo${i}" />`)
       //   track.attach($(`#localVideo${i}`)[0])
       // } else {
@@ -150,20 +161,30 @@ class JitsiBridge extends Emitter {
     track.addEventListener(JitsiMeetJS.events.track.TRACK_AUDIO_OUTPUT_CHANGED, deviceId => log(`track audio output device was changed to ${deviceId}`))
     const id = participant + track.getType() + idx
 
-    if (track.getType() === 'video') {
-      $('body').append(`<video autoplay="1" id="${id}" />`)
-    } else {
-      $('body').append(`<audio autoplay="1" id="${id}" />`)
-    }
-    track.attach($(`#${id}`)[0])
+    // if (track.getType() === 'video') {
+    //   $('body').append(`<video autoplay="1" id="${id}" />`)
+    // } else {
+    //   $('body').append(`<audio autoplay="1" id="${id}" />`)
+    // }
+    // track.attach($(`#${id}`)[0])
+
+    this.emit('add', {
+      id: participant,
+      track,
+      video: track.getType() === 'video',
+    })
   }
 
   onConferenceJoined() {
-    log('onConferenceJoined', this.room.myUserId())
+    this.userID = this.room.myUserId()
+    log('onConferenceJoined', this.userID)
     this.isJoined = true
     for (let i = 0; i < this.localTracks.length; i++) {
       this.room.addTrack(this.localTracks[i])
     }
+    this.emit('joined', {
+      id: this.userID,
+    })
   }
 
   onUserLeft(id) {
@@ -172,11 +193,10 @@ class JitsiBridge extends Emitter {
     if (!this.remoteTracks[id]) {
       return
     }
-    const tracks = this.remoteTracks[id]
-
-    for (let i = 0; i < tracks.length; i++) {
-      tracks[i].detach($(`#${id}${tracks[i].getType()}`))
-    }
+    // const tracks = this.remoteTracks[id]
+    // for (let i = 0; i < tracks.length; i++) {
+    //   tracks[i].detach($(`#${id}${tracks[i].getType()}`))
+    // }
   }
 
   onConnectionSuccess() {
@@ -224,8 +244,4 @@ class JitsiBridge extends Emitter {
     this.connection.disconnect()
   }
 
-}
-
-export function setupJitsi(opt) {
-  return new JitsiBridge(opt)
 }

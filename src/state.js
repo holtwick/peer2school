@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
+import { ENABLE_JITSI, LOCAL_ID, LOCAL_NAME } from './config'
 import { getLocal, setLocal } from './lib/local'
 import { createLinkForRoom } from './lib/share'
-import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
 
@@ -135,10 +134,10 @@ sync.on('stream', ({ peerID, stream }) => {
 
 // MEDIA
 
-!TEST && ENABLE_VIDEO && getUserMedia(stream => {
-  state.stream = new MediaStream(stream.getVideoTracks())
-  sync.setStream(stream)
-})
+// !TEST && ENABLE_VIDEO && getUserMedia(stream => {
+//   state.stream = new MediaStream(stream.getVideoTracks())
+//   sync.setStream(stream)
+// })
 
 // UTILS
 
@@ -166,9 +165,33 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
 
 //
 
+let videoTracks = {}
+let audioTracks = {}
+
 if (ENABLE_JITSI) {
-  import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ setupJitsi }) => {
-    setupJitsi({ room })
+  import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ JitsiBridge }) => {
+    const jitsi = new JitsiBridge({ room })
+
+    jitsi.on('stream', ({ stream }) => {
+      state.stream = stream
+    })
+
+    jitsi.on('joined', ({ id }) => {
+
+    })
+
+    jitsi.on('add', ({ id, track, video }) => {
+      if (video) {
+        videoTracks[id] = track
+      } else {
+        audioTracks[id] = track
+      }
+      if (videoTracks[id] && audioTracks[id]) {
+
+      }
+    })
+
+    jitsi.connect().then()
   })
 }
 

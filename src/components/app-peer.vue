@@ -83,7 +83,11 @@ export default {
       default: null,
     },
     stream: {
-      type: MediaStream,
+      type: MediaStream | Object,
+      default: null,
+    },
+    audioStream: {
+      type: MediaStream | Object,
       default: null,
     },
     active: {
