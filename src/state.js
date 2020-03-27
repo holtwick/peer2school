@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_JITSI, LOCAL_ID, LOCAL_NAME } from './config'
+import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { getLocal, setLocal } from './lib/local'
 import { createLinkForRoom } from './lib/share'
+import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
 
@@ -54,6 +55,8 @@ let synched = {
 
   // Details of participants, like name
   profiles: {},
+
+  tracks: {},
 }
 
 export let state = {
@@ -105,17 +108,22 @@ function getTeacherID() {
   return sync.info.get('teacherID')
 }
 
-sync.on('ready', () => {
-  state.peerID = sync.peerID
-  if (state.peerID) {
+sync.on('ready', ({peerID}) => {
+  state.peerID = peerID
+  if (peerID) {
     let name = getLocal(LOCAL_NAME)
     if (name) {
       setProfileName(name)
     }
+
+    if (jitsiID) {
+      log('set jitsi id')
+      sync.tracks.set(peerID, jitsiID)
+    }
   }
-  log('peerID', state.peerID)
+  log('peerID', peerID)
   if (teacher) {
-    sync.info.set('teacherID', sync.peerID)
+    sync.info.set('teacherID', peerID)
   }
   updateState()
 })
@@ -131,13 +139,6 @@ sync.on('stream', ({ peerID, stream }) => {
   Vue.set(state.streams, peerID, stream)
   updateState() // todo
 })
-
-// MEDIA
-
-// !TEST && ENABLE_VIDEO && getUserMedia(stream => {
-//   state.stream = new MediaStream(stream.getVideoTracks())
-//   sync.setStream(stream)
-// })
 
 // UTILS
 
@@ -167,6 +168,7 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
 
 let videoTracks = {}
 let audioTracks = {}
+let jitsiID = null
 
 if (ENABLE_JITSI) {
   import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ JitsiBridge }) => {
@@ -177,7 +179,12 @@ if (ENABLE_JITSI) {
     })
 
     jitsi.on('joined', ({ id }) => {
-
+      log('joined', state.peerID, id)
+      jitsiID = id
+      if (state.peerID) {
+        log('set jitsi id via joined', state.peerID, jitsiID)
+        sync.tracks.set(state.peerID, jitsiID)
+      }
     })
 
     jitsi.on('add', ({ id, track, video }) => {
@@ -192,6 +199,11 @@ if (ENABLE_JITSI) {
     })
 
     jitsi.connect().then()
+  })
+} else {
+  !TEST && ENABLE_VIDEO && getUserMedia(stream => {
+    state.stream = new MediaStream(stream.getVideoTracks())
+    sync.setStream(stream)
   })
 }
 

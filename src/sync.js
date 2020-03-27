@@ -1,5 +1,6 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
 import * as Y from 'yjs'
+import { ENABLE_JITSI } from './config'
 import { Emitter } from './lib/emitter'
 import { WebrtcProvider } from './lib/y-webrtc'
 
@@ -59,24 +60,27 @@ export class Sync extends Emitter {
 
     webrtcProvider.on('peers', info => {
       let added = Array.from(info.added)
-      for (let peerID of added) {
-        let peer = this.getPeer(peerID)
-        if (peer) {
-          if (this.stream) {
-            peer.peer.addStream(this.stream)
+      if (!ENABLE_JITSI) {
+        for (let peerID of added) {
+          let peer = this.getPeer(peerID)
+          if (peer) {
+            if (this.stream) {
+              peer.peer.addStream(this.stream)
+            }
+            peer.peer.on('stream', stream => {
+              this.streams[peerID] = stream
+              this.emit('stream', { peerID, stream })
+            })
+          } else {
+            console.warn('added peer but cannot find', peerID, info)
           }
-          peer.peer.on('stream', stream => {
-            this.streams[peerID] = stream
-            this.emit('stream', { peerID, stream })
-          })
-        } else {
-          console.warn('added peer but cannot find', peerID, info)
         }
       }
       this.emit('peers')
     })
 
     webrtcProvider.on('synced', info => {
+      log('synced', info)
       this.peerID = webrtcProvider.room.peerId
       this.emit('ready', { peerID: this.peerID })
     })

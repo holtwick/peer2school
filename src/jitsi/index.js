@@ -71,7 +71,8 @@ export class JitsiBridge extends Emitter {
     window.addEventListener('beforeunload', this.unload)
     window.addEventListener('unload', this.unload)
 
-    JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.INFO)
+    // JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.INFO)
+    JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.WARN)
     JitsiMeetJS.init(initOptions)
 
     this.connection = new JitsiMeetJS.JitsiConnection(null, null, options)
