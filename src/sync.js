@@ -22,7 +22,7 @@ export class Sync extends Emitter {
     this.doc = new Y.Doc()
 
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
-      maxConns: 30 + Math.floor(Math.random() * 15), // just to prevent that exactly n clients form a cluster
+      // maxConns: 30 + Math.floor(Math.random() * 15), // just to prevent that exactly n clients form a cluster
       filterBcConns: true,
       peerSettings: {
         config: {
