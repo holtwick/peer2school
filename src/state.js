@@ -1,22 +1,23 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_VIDEO } from './config'
+import { createLinkForRoom } from './lib/share'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
-import { setupSync, Sync } from './sync'
+import { setupSync } from './sync'
 
 const log = require('debug')('app:state')
 
 // ROOM
+const testToken = '.test'
+const teacherToken = '.teacher'
 
 const hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let room = hash
 
-const testToken = '.test'
 const TEST = hash.endsWith(testToken)
 if (TEST) room = room.replace(testToken, '')
 
-const teacherToken = '.teacher'
 const teacher = hash.endsWith(teacherToken)
 if (teacher) room = room.replace(teacherToken, '')
 
@@ -74,14 +75,14 @@ export let state = {
   ...synched,
 
   // Testing
-  test: TEST
+  test: TEST,
 }
 
 // SYNC
 
 export let sync = setupSync({
   room,
-  connectionTest: TEST
+  connectionTest: TEST,
 })
 
 sync.whiteboard = sync.doc.getArray('whiteboard')
@@ -164,6 +165,8 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
 
 window.launchConnections = (n = 1) => {
   for (let i = 0; i < n; i++) {
-    new Sync({ room, connectionTest: true })
+    let el = document.createElement('iframe')
+    el.src = createLinkForRoom(room) + testToken
+    document.body.appendChild(el)
   }
 }
