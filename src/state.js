@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
+import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { getLocal, setLocal } from './lib/local'
 import { createLinkForRoom } from './lib/share'
 import { getUserMedia } from './lib/usermedia'
@@ -164,8 +164,13 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('allowWhiteboard', allowWhiteboard)
 }
 
-// import { setupJitsi } from './lib/jitsi'
-// setupJitsi()
+//
+
+if (ENABLE_JITSI) {
+  import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ setupJitsi }) => {
+    setupJitsi({ room })
+  })
+}
 
 //
 

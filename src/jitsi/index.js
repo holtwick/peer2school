@@ -1,6 +1,6 @@
-import 'strophe.js'
-import '../vendor/jquery-2.1.1.min'
-import '../vendor/lib-jitsi-meet.min'
+require('strophe.js')
+require('./jquery-2.1.1')
+require('./lib-jitsi-meet.min')
 
 const log = require('debug')('app:jitsi')
 
@@ -173,6 +173,8 @@ function unload() {
 // }
 
 export function setupJitsi() {
+  log('setupJitsi')
+
   window.addEventListener('beforeunload', unload)
   window.addEventListener('unload', unload)
 
