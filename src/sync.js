@@ -22,21 +22,22 @@ export class Sync extends Emitter {
     this.doc = new Y.Doc()
 
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
+      maxConns: 30 + math.floor(random.rand() * 15), // just to prevent that exactly n clients form a cluster
       filterBcConns: true,
       peerSettings: {
         config: {
           // trickle: false,
           iceTransportPolicy: 'all',
           reconnectTimer: 3000,
-          iceServers: [{
-            urls: 'stun:stun.l.google.com:19302',
-          }, {
-            urls: 'stun:global.stun.twilio.com:3478?transport=udp',
-          }, {
-            urls: 'turn:numb.viagenie.ca',
-            username: 'dirk.holtwick@gmail.com',
-            credential: 'ssg94JnM/;Pu',
-          }],
+          // iceServers: [{
+          //   urls: 'stun:stun.l.google.com:19302',
+          // }, {
+          //   urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+          // }, {
+          //   urls: 'turn:numb.viagenie.ca',
+          //   username: 'dirk.holtwick@gmail.com',
+          //   credential: 'ssg94JnM/;Pu',
+          // }],
           // iceServers: [{
           //   urls: 'stun:vs.holtwick.de',
           // }, {
@@ -96,6 +97,7 @@ export class Sync extends Emitter {
   }
 
   getPeer(peerID) {
+    log('getPeers', this.webrtcProvider?.room)
     return this.getWebRTCConns()?.get(peerID) || null
   }
 
@@ -127,6 +129,6 @@ export class Sync extends Emitter {
 
 }
 
-export function setupSync({ room } = {}) {
-  return new Sync({ room })
+export function setupSync(opt) {
+  return new Sync(opt)
 }

@@ -13,8 +13,8 @@ const hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let room = hash
 
 const testToken = '.test'
-const test = hash.endsWith(testToken)
-if (test) room = room.replace(testToken, '')
+const TEST = hash.endsWith(testToken)
+if (TEST) room = room.replace(testToken, '')
 
 const teacherToken = '.teacher'
 const teacher = hash.endsWith(teacherToken)
@@ -72,12 +72,16 @@ export let state = {
 
   // By Yjs synched objects
   ...synched,
+
+  // Testing
+  test: TEST
 }
 
 // SYNC
 
 export let sync = setupSync({
   room,
+  connectionTest: TEST
 })
 
 sync.whiteboard = sync.doc.getArray('whiteboard')
@@ -124,7 +128,7 @@ sync.on('stream', ({ peerID, stream }) => {
 
 // MEDIA
 
-ENABLE_VIDEO && getUserMedia(stream => {
+!TEST && ENABLE_VIDEO && getUserMedia(stream => {
   state.stream = new MediaStream(stream.getVideoTracks())
   sync.setStream(stream)
 })
