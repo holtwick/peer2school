@@ -56,6 +56,7 @@
 </style>
 
 <script>
+import { LOCAL_NAME } from '../config'
 import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName, setStudent } from '../state'
 import AppChat from './app-chat'
@@ -80,10 +81,10 @@ export default {
   },
   computed: {
     hasName() {
-      return this.state.profiles[this.state.peerID]?.name != null || localStorage.getItem('name') != null
+      return this.state.profiles[this.state.peerID]?.name != null || localStorage.getItem(LOCAL_NAME) != null
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || localStorage.getItem('name') || 'Set your name'
+      return this.state.profiles[this.state.peerID]?.name || localStorage.getItem(LOCAL_NAME) || 'Set your name'
     },
     teacherName() {
       return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'

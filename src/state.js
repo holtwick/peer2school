@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_VIDEO } from './config'
+import { ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { createLinkForRoom } from './lib/share'
 import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
@@ -9,6 +9,7 @@ import { setupSync } from './sync'
 const log = require('debug')('app:state')
 
 // ROOM
+
 const testToken = '.test'
 const teacherToken = '.teacher'
 
@@ -23,6 +24,14 @@ if (teacher) room = room.replace(teacherToken, '')
 
 room = room.substr(0, UUID_length)
 location.hash = `#${hash}`
+
+// PEER / STUDENT
+
+export let profileID = localStorage.getItem(LOCAL_ID)
+if (profileID == null) {
+  profileID = UUID()
+  localStorage.setItem(LOCAL_ID, profileID)
+}
 
 // STATE
 
@@ -103,7 +112,7 @@ function getTeacherID() {
 sync.on('ready', () => {
   state.peerID = sync.peerID
   if (state.peerID) {
-    let name = localStorage.getItem('name')
+    let name = localStorage.getItem(LOCAL_NAME)
     if (name) {
       setProfileName(name)
     }
@@ -149,7 +158,7 @@ export function toggleSignal() {
 }
 
 export function setProfileName(name) {
-  localStorage.setItem('name', name)
+  localStorage.setItem(LOCAL_NAME, name)
   sync.profiles.set(state.peerID, { name })
 }
 
