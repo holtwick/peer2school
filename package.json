@@ -6,6 +6,7 @@
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "demoServe": "HTTPS_OFF=1 npm start",
     "demo": "ssh -R 80:localhost:8080 ssh.localhost.run",
     "test": "jest"
   },

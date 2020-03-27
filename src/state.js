@@ -166,7 +166,8 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
 window.launchConnections = (n = 1) => {
   for (let i = 0; i < n; i++) {
     let el = document.createElement('iframe')
-    el.src = createLinkForRoom(room) + testToken
+    el.setAttribute('style', `position: absolute; width: 20rem; height: 20rem; bottom: ${i}rem; right: ${i}rem;`)
+    el.src = createLinkForRoom(room) // + testToken
     document.body.appendChild(el)
   }
 }
