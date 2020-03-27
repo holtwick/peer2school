@@ -12,11 +12,11 @@ export class Emitter {
         try {
           fn(info)
         } catch (err) {
-          console.warn('emit err:', err)
+          console.warn('emit warning:', err)
         }
       }
     } catch (err) {
-      console.error('Exception:', err)
+      console.error('emit exception', err)
     }
   }
 

@@ -27,7 +27,16 @@ video {
 </style>
 
 <script>
-import { connectStreamToVideoElement } from '../lib/usermedia'
+export function connectStreamToVideoElement(stream, video) {
+  if (stream) {
+    if ('srcObject' in video) {
+      video.srcObject = stream
+    } else {
+      video.src = window.URL.createObjectURL(stream) // for older browsers
+    }
+    video.play()
+  }
+}
 
 const log = require('debug')('app:app-video')
 
@@ -50,7 +59,7 @@ export default {
       if (stream && !this.state.test) {
         await this.$nextTick()
         if (stream.attach) {
-          log('doConnectStream jitsi')
+          log('doConnectStream jitsi', stream)
           stream.attach(this.$refs.video)
           this.$refs.video.play()
         } else {

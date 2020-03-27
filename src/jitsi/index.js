@@ -220,12 +220,16 @@ export class JitsiBridge extends Emitter {
   // }
 
   unload() {
-    log('unload')
-    for (let i = 0; i < (this.localTracks || []).length; i++) {
-      this.localTracks[i].dispose()
+    if (this.room) {
+      log('unload')
+      for (let i = 0; i < (this.localTracks || []).length; i++) {
+        this.localTracks[i].dispose()
+      }
+      this.room.leave()
+      this.connection.disconnect()
+      this.room = null
+      this.connection = null
     }
-    this.room.leave()
-    this.connection.disconnect()
   }
 
 }

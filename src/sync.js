@@ -6,6 +6,37 @@ import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
+const peerSettings = {
+  config: {
+    // trickle: false,
+    iceTransportPolicy: 'all',
+    reconnectTimer: 3000,
+    // iceServers: [{
+    //   urls: 'stun:stun.l.google.com:19302',
+    // }, {
+    //   urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+    // }, {
+    //   urls: 'turn:numb.viagenie.ca',
+    //   username: 'dirk.holtwick@gmail.com',
+    //   credential: 'ssg94JnM/;Pu',
+    // }],
+    // iceServers: [{
+    //   urls: 'stun:vs.holtwick.de',
+    // }, {
+    //   urls: 'turn:vs.holtwick.de', // 3478
+    // }],
+    // iceServers: [{
+    //   urls: 'stun:numb.viagenie.ca',
+    //   username: 'dirk.holtwick@gmail.com',
+    //   credential: 'ssg94JnM/;Pu',
+    // }, {
+    //   urls: 'turn:numb.viagenie.ca',
+    //   username: 'dirk.holtwick@gmail.com',
+    //   credential: 'ssg94JnM/;Pu',
+    // }],
+  },
+}
+
 export class Sync extends Emitter {
 
   chat
@@ -17,7 +48,7 @@ export class Sync extends Emitter {
 
   streams = {}
 
-  constructor({ room, connectionTest = false }) {
+  constructor({ room }) {
     super()
 
     this.doc = new Y.Doc()
@@ -25,42 +56,13 @@ export class Sync extends Emitter {
     const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
       // maxConns: 30 + Math.floor(Math.random() * 15), // just to prevent that exactly n clients form a cluster
       filterBcConns: true,
-      peerSettings: {
-        config: {
-          // trickle: false,
-          iceTransportPolicy: 'all',
-          reconnectTimer: 3000,
-          // iceServers: [{
-          //   urls: 'stun:stun.l.google.com:19302',
-          // }, {
-          //   urls: 'stun:global.stun.twilio.com:3478?transport=udp',
-          // }, {
-          //   urls: 'turn:numb.viagenie.ca',
-          //   username: 'dirk.holtwick@gmail.com',
-          //   credential: 'ssg94JnM/;Pu',
-          // }],
-          // iceServers: [{
-          //   urls: 'stun:vs.holtwick.de',
-          // }, {
-          //   urls: 'turn:vs.holtwick.de', // 3478
-          // }],
-          // iceServers: [{
-          //   urls: 'stun:numb.viagenie.ca',
-          //   username: 'dirk.holtwick@gmail.com',
-          //   credential: 'ssg94JnM/;Pu',
-          // }, {
-          //   urls: 'turn:numb.viagenie.ca',
-          //   username: 'dirk.holtwick@gmail.com',
-          //   credential: 'ssg94JnM/;Pu',
-          // }],
-        },
-      },
+      peerSettings,
     })
     this.webrtcProvider = webrtcProvider
 
     webrtcProvider.on('peers', info => {
-      let added = Array.from(info.added)
       if (!ENABLE_JITSI) {
+        let added = Array.from(info.added)
         for (let peerID of added) {
           let peer = this.getPeer(peerID)
           if (peer) {
@@ -87,8 +89,6 @@ export class Sync extends Emitter {
     })
 
     //  const awareness = webrtcProvider.awareness
-
-    if (connectionTest) return
 
     this.indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, this.doc)
   }

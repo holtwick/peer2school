@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
+import { assert } from './lib/assert'
 import { getLocal, setLocal } from './lib/local'
-import { createLinkForRoom } from './lib/share'
-import { getUserMedia } from './lib/usermedia'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
 
@@ -37,14 +36,14 @@ let synched = {
   // Flags
   info: {
 
-    // Teacher's peer ID that is used for video stream
-    teacherID: null,
-
-    // Student's peer ID that is used for video stream
-    studentID: null,
-
-    // Allow active student (studentID) to use single whiteboard tool
-    allowWhiteboard: false,
+    // // Teacher's peer ID that is used for video stream
+    // teacherID: null,
+    //
+    // // Student's peer ID that is used for video stream
+    // studentID: null,
+    //
+    // // Allow active student (studentID) to use single whiteboard tool
+    // allowWhiteboard: false,
   },
 
   // Simple chat
@@ -81,16 +80,12 @@ export let state = {
 
   // By Yjs synched objects
   ...synched,
-
-  // Testing
-  test: TEST,
 }
 
 // SYNC
 
 export let sync = setupSync({
   room,
-  connectionTest: TEST,
 })
 
 sync.whiteboard = sync.doc.getArray('whiteboard')
@@ -141,6 +136,7 @@ sync.on('peers', updateState)
 sync.on('peerID', peerID => {
   log('peerID', peerID)
   if (peerID) {
+
     state.peerID = peerID
     let name = getLocal(LOCAL_NAME)
     if (name) {
@@ -194,61 +190,107 @@ let audioTracks = {}
 let jitsiID = null
 
 if (ENABLE_JITSI) {
-  import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ JitsiBridge }) => {
-    const jitsi = new JitsiBridge({ room })
+  // import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ JitsiBridge }) => {
+  //   const jitsi = new JitsiBridge({ room })
+  //
+  //   jitsi.on('stream', ({ stream }) => {
+  //     state.stream = stream // local video
+  //   })
+  //
+  //   jitsi.on('joined', ({ id }) => {
+  //     let peerID = state.peerID
+  //     log('joined', peerID, id)
+  //     jitsiID = id
+  //     if (peerID) {
+  //       log('set jitsi id via joined', peerID, jitsiID)
+  //       sync.tracks.set(jitsiID, state.peerID)
+  //     }
+  //   })
+  //
+  //   jitsi.on('add', ({ id, track, video }) => {
+  //     let peerID = state.tracks[id]
+  //     log('add', id, video, peerID)
+  //     assert(id)
+  //     assert(track)
+  //     if (video) {
+  //       videoTracks[id] = track
+  //       if (peerID) {
+  //         log('set stream', peerID, id)
+  //         Vue.set(state.streams, peerID, track)
+  //       }
+  //     } else {
+  //       audioTracks[id] = track
+  //     }
+  //     if (videoTracks[id] && audioTracks[id]) {
+  //
+  //     }
+  //     log('add done')
+  //   })
+  //
+  //   jitsi.connect().then(_ => log('jitsi connect') ).catch(err => log('jitsi err', err))
+  // })
 
-    jitsi.on('stream', ({ stream }) => {
-      state.stream = stream
-    })
+}
+else if (ENABLE_VIDEO) {
 
-    jitsi.on('joined', ({ id }) => {
-      log('joined', state.peerID, id)
-      jitsiID = id
-      if (state.peerID) {
-        log('set jitsi id via joined', state.peerID, jitsiID)
-        sync.tracks.set(jitsiID, state.peerID)
-      }
-    })
-
-    jitsi.on('add', ({ id, track, video }) => {
-      let peerID = state.tracks[id]
-      log('add', id, video, peerID)
-      if (video) {
-        videoTracks[id] = track
-        if (peerID) {
-          log('set stream', peerID, id)
-          Vue.set(state.streams, peerID, track)
-        }
-      } else {
-        audioTracks[id] = track
-      }
-      if (videoTracks[id] && audioTracks[id]) {
-
-      }
-    })
-
-    jitsi.connect().then()
-  })
-
-} else if (ENABLE_VIDEO && !TEST) {
   sync.on('stream', ({ peerID, stream }) => {
     Vue.set(state.streams, peerID, stream)
     updateState() // todo
   })
 
+  navigator.getUserMedia = (
+    navigator['getUserMedia'] ||
+    navigator['webkitGetUserMedia'] ||
+    navigator['mozGetUserMedia'] ||
+    navigator['msGetUserMedia']
+  )
+
+  function getUserMedia(fn) {
+
+    function errorHandler(err) {
+      log('error', err)
+    }
+
+    try {
+      // Solution via https://stackoverflow.com/a/47958949/140927
+      // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
+      const opt = {
+        audio: true,
+        video: {
+          facingMode: 'user',
+          video: {
+            width: { ideal: 224 },
+            height: { ideal: 168 },
+          },
+          frameRate: {
+            ideal: 10,
+          },
+        },
+      }
+      if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+        navigator.getUserMedia(opt, fn, errorHandler)
+      } else {
+        navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
+      }
+    } catch (err) {
+      console.warn('getUserMedia err', err)
+    }
+  }
+
   getUserMedia(stream => {
     state.stream = new MediaStream(stream.getVideoTracks())
     sync.setStream(stream)
   })
+
 }
 
 //
 
-window.launchConnections = (n = 1) => {
-  for (let i = 0; i < n; i++) {
-    let el = document.createElement('iframe')
-    el.setAttribute('style', `position: absolute; width: 20rem; height: 20rem; bottom: ${i}rem; right: ${i}rem;`)
-    el.src = createLinkForRoom(room) // + testToken
-    document.body.appendChild(el)
-  }
-}
+// window.launchConnections = (n = 1) => {
+//   for (let i = 0; i < n; i++) {
+//     let el = document.createElement('iframe')
+//     el.setAttribute('style', `position: absolute; width: 20rem; height: 20rem; bottom: ${i}rem; right: ${i}rem;`)
+//     el.src = createLinkForRoom(room) // + testToken
+//     document.body.appendChild(el)
+//   }
+// }

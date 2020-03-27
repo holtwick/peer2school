@@ -3,6 +3,14 @@
 
     <div>
 
+      <p>
+        {{ state.info }}
+      </p>
+
+      <p>
+        {{ state.peers }}
+      </p>
+
       <app-peer v-if="!state.teacher" :id="state.info.teacherID">
         {{ teacherName }}
       </app-peer>
