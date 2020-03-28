@@ -73,12 +73,21 @@ export default {
 
       log('iframe connect', iFrameWindow)
       channel.connect(iFrameWindow)
+
+      queue.emit('state', {
+        peerID: this.state.peerID,
+        teacherID: this.state.info.teacherID,
+        studentID: this.state.info.studentID,
+      })
     }
   },
   beforeDestroy() {
     this.clearTimer()
   },
   watch: {
+    'state.peerID'(value) {
+      queue.emit('state', { peerID: value })
+    },
     'state.info.teacherID'(value) {
       queue.emit('state', { teacherID: value })
     },

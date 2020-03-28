@@ -3,7 +3,7 @@
     <jitsi-peer :stream="state.stream">
       Me
     </jitsi-peer>
-    
+
     <jitsi-peer v-if="!state.teacher" :id="state.teacherID">
       {{ teacherName }}
     </jitsi-peer>
