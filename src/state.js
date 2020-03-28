@@ -2,7 +2,7 @@ import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { getLocal, setLocal } from './lib/local'
-import { ToIFrameChannel } from './lib/mq/channel'
+import { ToIFrameChannel } from './lib/mq/iframe'
 import { ChannelTaskQueue } from './lib/mq/mq'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
@@ -263,17 +263,7 @@ if (ENABLE_JITSI) {
 export let channel = new ToIFrameChannel('jitsi')
 export let queue = new ChannelTaskQueue(channel)
 
-queue.on('xready', _ => {
-  log('ready received on window', _)
-  queue.emit('xtest')
-})
-
-queue.on('xtest', _ => {
-  log('ready received on window xtest')
-})
-
-
-queue.emit('xready', 'from window')
+queue.emit('state', { teacher })
 
 // window.launchConnections = (n = 1) => {
 //   for (let i = 0; i < n; i++) {
