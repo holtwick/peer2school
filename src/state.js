@@ -265,6 +265,16 @@ export let queue = new ChannelTaskQueue(channel)
 
 queue.emit('state', { teacher })
 
+queue.on('jitsi', ({ id }) => {
+  let peerID = state.peerID
+  log('joined', peerID, id)
+  jitsiID = id
+  if (peerID) {
+    log('set jitsi id via joined', peerID, jitsiID)
+    sync.tracks.set(jitsiID, state.peerID)
+  }
+})
+
 // window.launchConnections = (n = 1) => {
 //   for (let i = 0; i < n; i++) {
 //     let el = document.createElement('iframe')

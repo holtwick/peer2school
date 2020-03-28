@@ -13,6 +13,8 @@ export let state = {
 
   room,
 
+  jitsiID: null,
+
   teacher: false,
 
   stream: null,
@@ -21,7 +23,18 @@ export let state = {
   streams: {},
 }
 
-//
+// PARENT WINDOW COMMUNICATION
+
+export let queue = new ChannelTaskQueue(new FromIFrameChannel('jitsi'))
+
+queue.on('state', newState => {
+  log('state', newState)
+  for (let [key, value] of Object.entries(newState)) {
+    Vue.set(state, key, value)
+  }
+})
+
+// JITSI
 
 const jitsi = new JitsiBridge({ room })
 
@@ -31,6 +44,8 @@ jitsi.on('stream', ({ stream }) => {
 })
 
 jitsi.on('joined', ({ id }) => {
+  state.jitsiID = id
+  queue.emit('jitsi', { id })
   // let peerID = state.peerID
   // log('joined', peerID, id)
   // jitsiID = id
@@ -61,13 +76,3 @@ jitsi.connect()
   .catch(err => log('jitsi err', err))
 
 //
-
-export let queue = new ChannelTaskQueue(new FromIFrameChannel('jitsi'))
-
-queue.on('state', newState => {
-  log('state', newState)
-  for (let [key, value] of Object.entries(newState)) {
-    Vue.set(state, key, value)
-  }
-})
-
