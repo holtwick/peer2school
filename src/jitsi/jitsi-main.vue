@@ -1,10 +1,14 @@
 <template>
   <div class="jitsi">
-    <jitsi-video v-if="stream" :stream="stream"></jitsi-video>
+    <jitsi-peer :stream="stream">
+      Me
+    </jitsi-peer>
   </div>
 </template>
 
 <style lang="scss">
+@import "../css/index";
+
 .jitsi {
   max-width: 100%;
   width: 100%;
@@ -17,6 +21,7 @@
 
 <script>
 import { JitsiBridge } from './jitsi'
+import JitsiPeer from './jitsi-peer'
 import JitsiVideo from './jitsi-video'
 
 require('debug').enable('*')
@@ -24,7 +29,7 @@ const log = require('debug')('jitsi:main')
 
 export default {
   name: 'jitsi-main',
-  components: { JitsiVideo },
+  components: { JitsiPeer, JitsiVideo },
   data() {
     return {
       stream: null,

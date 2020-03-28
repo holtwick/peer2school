@@ -13,7 +13,6 @@
 <style lang="scss">
 .iframe {
   width: 100%;
-  border: 1px solid gray;
 }
 </style>
 
