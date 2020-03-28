@@ -18,6 +18,10 @@
 </style>
 
 <script>
+const log = require('debug')('app:app-jitsi')
+
+const minHeight = 100;
+
 export default {
   name: 'app-jitsi',
   data() {
@@ -43,22 +47,24 @@ export default {
     this.clearTimer()
     let iFrame = this.$refs.iframe
     if (iFrame) {
-      iFrame.style.height = '200px'
+      iFrame.style.height = minHeight + 'px'
       const iFrameWindow = iFrame.contentWindow
       const iFrameDocument = iFrameWindow.document
-      iFrame.style.height = Math.max(200, iFrameDocument.body.offsetHeight + 120) + 'px'
+      iFrame.style.height = Math.max(minHeight, iFrameDocument.body.offsetHeight + 120) + 'px'
       let prevHeight = 0
       this.timer = setInterval(() => {
-        let bodyHeight = +iFrameDocument.body.getBoundingClientRect().height
+        const iFrameDocument = iFrameWindow.document
+        let bodyHeight = Math.ceil(+iFrameDocument.body.getBoundingClientRect().height)
+        log('bodyheight', iFrameDocument,  bodyHeight)
         let childrenHeight = 0
         let el = iFrameDocument.body.firstElementChild
         while (el) {
           childrenHeight += el.getBoundingClientRect().height
           el = el.nextElementSibling
         }
-        const currentHeight = Math.max(childrenHeight, bodyHeight)
+        const currentHeight = Math.ceil(Math.max(childrenHeight, bodyHeight))
         prevHeight = currentHeight
-        iFrame.style.height = Math.max(400, currentHeight) + 'px'
+        iFrame.style.height = Math.max(minHeight, currentHeight) + 'px'
       }, 500)
     }
   },
