@@ -3,6 +3,8 @@
 import { assert } from '../assert'
 import { UUID } from '../uuid'
 
+const log = require('debug')('mq:channel')
+
 export class Channel {
 
   _name = UUID()
@@ -23,13 +25,20 @@ export class Channel {
 
   connect(channel) {
     assert(channel, 'Channel missing')
+    assert(!this._channel, 'Already connected to a channel')
     this._channel = channel
     this._connectChannel()
   }
 
   publishBuffered() {
-    this.buffer.forEach(data => this.send(data))
-    this.buffer = []
+    if (this.isConnected()) {
+      log('publishBuffered', this._name)
+      let data
+      while ((data = this.buffer.shift())) {
+        log('send buffered', this._name, data)
+        this.send(data)
+      }
+    }
   }
 
   disconnect() {
@@ -50,6 +59,7 @@ export class Channel {
   }
 
   publish(obj) {
+    log('publish', this._name, obj)
     const data = this.encode(obj)
     if (this.isConnected()) {
       this.send(data)
@@ -63,6 +73,7 @@ export class Channel {
   }
 
   receive(data) {
+    log('receive channel', this._name, data)
     let obj = this.decode(data)
     if (this._subscriber) {
       this._subscriber(obj)
@@ -71,38 +82,46 @@ export class Channel {
 
   // Override this in a subclass!
   send(data) {
+    log('send', this._name, data)
     // this._channel.postMessage(payload)
     this._channel.receive(data)
   }
 
 }
 
-const HANDSHAKE = '__handshake__'
+const HANDSHAKE_PING = '__handshake__ping__'
+const HANDSHAKE_PONG = '__handshake__pong__'
 
-class HandshakeChannel extends Channel {
+export class HandshakeChannel extends Channel {
 
   _handshake = false
 
+  isConnected() {
+    return this._handshake
+  }
+
   _connectChannel() {
-    this.send(HANDSHAKE)
-    this.subscribe(HANDSHAKE, () => {
-      super._connectChannel()
-      this.publish(HANDSHAKE)
-    })
-    this.send(HANDSHAKE)
+    log('_connectChannel HandshakeChannel', this._name)
+    // super._connectChannel()
+    this.send(HANDSHAKE_PING)
   }
 
   receive(data) {
-    if (!this._handshake && data === HANDSHAKE) {
-      this._handshake = true
+    log('receive handshake', this._name, data)
+    if (data === HANDSHAKE_PING) {
+      if (this._channel && !this._handshake) {
+        this._handshake = true
+        this.send(HANDSHAKE_PONG)
+        this.publishBuffered()
+      }
+    } else if (data === HANDSHAKE_PONG) {
+      if (!this._handshake) {
+        this._handshake = true
+        this.publishBuffered()
+      }
     } else {
       super.receive(data)
     }
-  }
-
-  subscribe(fn) {
-
-    super.subscribe(fn)
   }
 
 }
@@ -110,18 +129,87 @@ class HandshakeChannel extends Channel {
 export class PostChannel extends HandshakeChannel {
 
   _connectChannel() {
+    this._channel.addEventListener('message', e => {
+      log('receive postchannel', this._name, e)
+      this.receive(e.data)
+    }, false)
     super._connectChannel()
-    this._channel.addEventListener('message', e => this.receive(e.data))
-    // this._channel.onmessage = e => this.receive(e.data)
   }
 
   send(data) {
+    log('send postmessage', this._name, data)
     this._channel.postMessage(data)
   }
 
-  // Proxy?
-  // Heartbeat?
-  // Error and disconnect handling?
+}
+
+export class ToIFrameChannel extends HandshakeChannel {
+
+  _id
+
+  constructor(id, channel) {
+    super()
+    this._id = id
+    if (channel) {
+      this.connect(channel)
+    }
+  }
+
+  connect(channel) {
+    if (channel.contentWindow) {
+      channel = channel.contentWindow
+    }
+    super.connect(channel)
+  }
+
+  _connectChannel() {
+    window.addEventListener('message', e => {
+      log('receive postchannel', this._name, e)
+      let info = e.data
+      if (info.source === this._id) {
+        this.receive(info.data)
+      }
+    }, false)
+    super._connectChannel()
+  }
+
+  send(data) {
+    log('send postmessage', this._name, data)
+    this._channel.postMessage({ source: 'window', data })
+  }
+
+}
+
+export class FromIFrameChannel extends HandshakeChannel {
+
+  _id
+
+  constructor(id) {
+    assert(id, 'An identifier is required to get in sync with the parent page')
+    super()
+    this._id = id
+    this.connect(window.parent)
+  }
+
+  connect(channel) {
+    super.connect(channel)
+  }
+
+  _connectChannel() {
+    window.addEventListener('message', e => {
+      log('receive postchannel', this._name, e)
+      let info = e.data
+      if (info.source === 'window') {
+        this.receive(info.data)
+      }
+    }, false)
+    super._connectChannel()
+  }
+
+  send(data) {
+    log('send postmessage', this._name, data)
+    this._channel.postMessage({ source: this._id, data })
+  }
 
 }
 

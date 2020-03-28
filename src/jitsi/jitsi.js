@@ -6,7 +6,7 @@ window.$ = require('./jquery-2.1.1')
 // window.$ = (...args) => log('jQuery required for', args)
 const JitsiMeetJS = require('./lib-jitsi-meet.min')
 
-const log = require('debug')('app:jitsi')
+const log = require('debug')('jitsi:jitsi')
 
 // https://github.com/jitsi/lib-jitsi-meet/blob/master/doc/API.md#installation
 // See https://beta.meet.jit.si/config.js

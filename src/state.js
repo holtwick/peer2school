@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
-import { assert } from './lib/assert'
 import { getLocal, setLocal } from './lib/local'
-import { PostChannel } from './lib/mq/channel'
+import { ToIFrameChannel } from './lib/mq/channel'
 import { ChannelTaskQueue } from './lib/mq/mq'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
@@ -208,8 +207,7 @@ if (ENABLE_JITSI) {
   //
   //   jitsi.connect().then(_ => log('jitsi connect') ).catch(err => log('jitsi err', err))
   // })
-}
-else if (ENABLE_VIDEO) {
+} else if (ENABLE_VIDEO) {
 
   sync.on('stream', ({ peerID, stream }) => {
     Vue.set(state.streams, peerID, stream)
@@ -262,16 +260,20 @@ else if (ENABLE_VIDEO) {
 
 }
 
-export let channel = new PostChannel()
+export let channel = new ToIFrameChannel('jitsi')
 export let queue = new ChannelTaskQueue(channel)
 
-queue.on('ready', _ => {
-  log('ready window')
-  queue.emit('ready')
+queue.on('xready', _ => {
+  log('ready received on window', _)
+  queue.emit('xtest')
+})
+
+queue.on('xtest', _ => {
+  log('ready received on window xtest')
 })
 
 
-//
+queue.emit('xready', 'from window')
 
 // window.launchConnections = (n = 1) => {
 //   for (let i = 0; i < n; i++) {

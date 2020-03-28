@@ -1,6 +1,7 @@
-import { PostChannel } from '../lib/mq/channel'
+import { FromIFrameChannel } from '../lib/mq/channel'
 import { ChannelTaskQueue } from '../lib/mq/mq'
 
+require('debug').enable('*')
 const log = require('debug')('jitsi:state')
 
 export let state = {
@@ -9,11 +10,17 @@ export let state = {
   streams: {},
 }
 
-export let queue = new ChannelTaskQueue(new PostChannel(this))
-queue.on('ready', _ => {
-  log('ready iframe')
+export let queue = new ChannelTaskQueue(new FromIFrameChannel('jitsi'))
+
+queue.on('xready', _ => {
+  log('ready received on iframe', _)
+  queue.emit('xtest')
 })
 
-queue.emit('ready')
+queue.on('xtest', _ => {
+  log('ready received on iframe xtest', _)
+})
+
+queue.emit('xready', 'from iframe')
 
 log('jitsi setup done')

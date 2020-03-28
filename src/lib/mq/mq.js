@@ -7,7 +7,7 @@ import { UUID } from '../uuid'
 const log = require('debug')('mq')
 
 export function now() {
-  return performance.now() // ms
+  return performance.now() || new Date().getTime() // ms
 }
 
 export function immediate(fn) {
@@ -90,6 +90,7 @@ export class TaskHandler {
 
   response(task, info, error) {
     if (task.response && this.queue) {
+      log('task response', task)
       this.queue.emit(task.response, {
         info,
         error,
@@ -234,6 +235,7 @@ export class TaskQueue {
   }
 
   on(name, fn, opt) {
+    log('task handler', name, window)
     let handler = new TaskHandler(name, fn, {
       ...opt,
       queue: this,
@@ -256,6 +258,7 @@ export class TaskQueue {
 
   // Returns the Task if handler was available
   _emit(name, info, props = {}) {
+    log('task emit', name, window)
     let handler = this._handlers[name]
     if (handler) {
       return handler.add(info, props)

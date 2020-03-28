@@ -1,13 +1,15 @@
 <template>
-  <iframe
-    :src="url"
-    frameborder="0"
-    marginheight="0"
-    marginwidth="0"
-    scrolling="no"
-    class="iframe"
-    style="overflow: hidden;"
-    ref="iframe"></iframe>
+  <div>
+    <iframe
+      :src="url"
+      frameborder="0"
+      marginheight="0"
+      marginwidth="0"
+      scrolling="no"
+      class="iframe"
+      style="overflow: hidden;"
+      ref="iframe"></iframe>
+  </div>
 </template>
 
 <style lang="scss">
@@ -69,6 +71,7 @@ export default {
 
       //
 
+      log('iframe connect', iFrameWindow)
       channel.connect(iFrameWindow)
     }
   },

@@ -39,7 +39,6 @@ import { JitsiBridge } from './jitsi'
 import JitsiPeer from './jitsi-peer'
 import JitsiVideo from './jitsi-video'
 
-require('debug').enable('*')
 const log = require('debug')('jitsi:main')
 
 export default {
