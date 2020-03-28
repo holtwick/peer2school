@@ -19,7 +19,7 @@
 </style>
 
 <script>
-import { channel } from '../state'
+import { channel, queue } from '../state'
 
 const log = require('debug')('app:app-jitsi')
 
@@ -77,6 +77,14 @@ export default {
   },
   beforeDestroy() {
     this.clearTimer()
+  },
+  watch: {
+    'state.info.teacherID'(value) {
+      queue.emit('state', { teacherID: value })
+    },
+    'state.info.studentID'(value) {
+      queue.emit('state', { studentID: value })
+    },
   },
 }
 </script>

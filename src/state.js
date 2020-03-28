@@ -37,14 +37,15 @@ let synched = {
   // Flags
   info: {
 
-    // // Teacher's peer ID that is used for video stream
-    // teacherID: null,
-    //
-    // // Student's peer ID that is used for video stream
-    // studentID: null,
-    //
-    // // Allow active student (studentID) to use single whiteboard tool
-    // allowWhiteboard: false,
+    // Teacher's peer ID that is used for video stream
+    teacherID: null,
+
+    // Student's peer ID that is used for video stream
+    studentID: null,
+
+    // Allow active student (studentID) to use single whiteboard tool
+    allowWhiteboard: false,
+
   },
 
   // Simple chat
@@ -103,7 +104,6 @@ for (const [name, dft] of Object.entries(synched)) {
 sync.on('ready', ({ peerID }) => {
   updateState()
 })
-
 
 function updateState() {
   state.peers = sync.getPeerList()
