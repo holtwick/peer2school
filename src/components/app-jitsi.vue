@@ -17,6 +17,8 @@
 </style>
 
 <script>
+import { channel } from '../state'
+
 const log = require('debug')('app:app-jitsi')
 
 const minHeight = 100
@@ -64,6 +66,10 @@ export default {
         prevHeight = currentHeight
         iFrame.style.height = Math.max(minHeight, currentHeight) + 'px'
       }, 500)
+
+      //
+
+      channel.connect(iFrameWindow)
     }
   },
   beforeDestroy() {

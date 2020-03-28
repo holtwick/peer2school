@@ -4,7 +4,7 @@ import { state } from './state'
 
 Vue.config.productionTip = false
 
-require('debug').enable('app:*')
+require('debug').enable('app:*,jitsi:*')
 
 Vue.mixin({
   data() {

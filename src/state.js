@@ -3,6 +3,8 @@ import * as Y from 'yjs'
 import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { assert } from './lib/assert'
 import { getLocal, setLocal } from './lib/local'
+import { PostChannel } from './lib/mq/channel'
+import { ChannelTaskQueue } from './lib/mq/mq'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
 
@@ -259,6 +261,15 @@ else if (ENABLE_VIDEO) {
   })
 
 }
+
+export let channel = new PostChannel()
+export let queue = new ChannelTaskQueue(channel)
+
+queue.on('ready', _ => {
+  log('ready window')
+  queue.emit('ready')
+})
+
 
 //
 

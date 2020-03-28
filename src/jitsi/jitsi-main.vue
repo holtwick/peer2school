@@ -3,6 +3,21 @@
     <jitsi-peer :stream="stream">
       Me
     </jitsi-peer>
+
+    <!--    <jitsi-peer v-if="!state.teacher" :id="state.info.teacherID">-->
+    <!--      {{ teacherName }}-->
+    <!--    </jitsi-peer>-->
+
+    <!--    <jitsi-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">-->
+    <!--      {{ studentName }}-->
+    <!--      <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>-->
+    <!--    </jitsi-peer>-->
+
+    <!--    <jitsi-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">-->
+    <!--      {{ name }}-->
+    <!--      <i v-if="!hasName" data-f7-icon="pencil"></i>-->
+    <!--    </jitsi-peer>-->
+
   </div>
 </template>
 
