@@ -20,7 +20,7 @@
 <script>
 const log = require('debug')('app:app-jitsi')
 
-const minHeight = 100;
+const minHeight = 100
 
 export default {
   name: 'app-jitsi',
@@ -55,7 +55,6 @@ export default {
       this.timer = setInterval(() => {
         const iFrameDocument = iFrameWindow.document
         let bodyHeight = Math.ceil(+iFrameDocument.body.getBoundingClientRect().height)
-        log('bodyheight', iFrameDocument,  bodyHeight)
         let childrenHeight = 0
         let el = iFrameDocument.body.firstElementChild
         while (el) {

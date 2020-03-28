@@ -1,8 +1,6 @@
 <template>
   <div class="jitsi">
-    JITSI {{ room }}
-
-    <app-video :stream="stream"></app-video>
+    <jitsi-video v-if="stream" :stream="stream"></jitsi-video>
   </div>
 </template>
 
@@ -18,18 +16,18 @@
 </style>
 
 <script>
-import AppVideo from '../components/app-video'
 import { JitsiBridge } from './jitsi'
+import JitsiVideo from './jitsi-video'
 
 require('debug').enable('*')
-const log = require('debug')('app:jitsi-main')
+const log = require('debug')('jitsi:main')
 
 export default {
   name: 'jitsi-main',
-  components: { AppVideo },
+  components: { JitsiVideo },
   data() {
     return {
-      stream: {},
+      stream: null,
       room: '',
     }
   },
