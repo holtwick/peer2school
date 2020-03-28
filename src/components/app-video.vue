@@ -56,7 +56,7 @@ export default {
   methods: {
     async doConnectStream(stream) {
       log('doConnectStream')
-      if (stream && !this.state.test) {
+      if (stream) {
         await this.$nextTick()
         if (stream.attach) {
           log('doConnectStream jitsi', stream)

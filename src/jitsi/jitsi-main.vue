@@ -1,19 +1,79 @@
 <template>
-  <div>
-    JITSI MAIN
+  <div class="jitsi">
+    JITSI {{ room }}
+
+    <app-video :stream="stream"></app-video>
   </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.jitsi {
+  max-width: 100%;
+  width: 100%;
+
+  video {
+    width: 100%;
+  }
+}
+</style>
 
 <script>
+import AppVideo from '../components/app-video'
+import { JitsiBridge } from './jitsi'
+
+require('debug').enable('*')
+const log = require('debug')('app:jitsi-main')
+
 export default {
   name: 'jitsi-main',
+  components: { AppVideo },
   data() {
-    return {}
+    return {
+      stream: {},
+      room: '',
+    }
   },
   methods: {},
   async mounted() {
+    this.room = location.hash.substr(1)
+    const jitsi = new JitsiBridge({ room: this.room })
+
+    jitsi.on('stream', ({ stream }) => {
+      log('stream', stream)
+      this.stream = stream // local video
+    })
+
+    // jitsi.on('joined', ({ id }) => {
+    //   let peerID = state.peerID
+    //   log('joined', peerID, id)
+    //   jitsiID = id
+    //   if (peerID) {
+    //     log('set jitsi id via joined', peerID, jitsiID)
+    //     sync.tracks.set(jitsiID, state.peerID)
+    //   }
+    // })
+    //
+    // jitsi.on('add', ({ id, track, video }) => {
+    //   let peerID = state.tracks[id]
+    //   log('add', id, video, peerID)
+    //   assert(id)
+    //   assert(track)
+    //   if (video) {
+    //     videoTracks[id] = track
+    //     if (peerID) {
+    //       log('set stream', peerID, id)
+    //       Vue.set(state.streams, peerID, track)
+    //     }
+    //   } else {
+    //     audioTracks[id] = track
+    //   }
+    //   if (videoTracks[id] && audioTracks[id]) {
+    //
+    //   }
+    //   log('add done')
+    // })
+
+    jitsi.connect().then(_ => log('jitsi connect')).catch(err => log('jitsi err', err))
   },
 }
 </script>
