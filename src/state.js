@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
 import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
-import { JitsiBridge } from './jitsi'
 import { assert } from './lib/assert'
 import { getLocal, setLocal } from './lib/local'
 import { UUID, UUID_length } from './lib/uuid'
@@ -169,43 +168,43 @@ let jitsiID = null
 
 if (ENABLE_JITSI) {
   // import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ JitsiBridge }) => {
-    const jitsi = new JitsiBridge({ room })
-
-    jitsi.on('stream', ({ stream }) => {
-      state.stream = stream // local video
-    })
-
-    jitsi.on('joined', ({ id }) => {
-      let peerID = state.peerID
-      log('joined', peerID, id)
-      jitsiID = id
-      if (peerID) {
-        log('set jitsi id via joined', peerID, jitsiID)
-        sync.tracks.set(jitsiID, state.peerID)
-      }
-    })
-
-    jitsi.on('add', ({ id, track, video }) => {
-      let peerID = state.tracks[id]
-      log('add', id, video, peerID)
-      assert(id)
-      assert(track)
-      if (video) {
-        videoTracks[id] = track
-        if (peerID) {
-          log('set stream', peerID, id)
-          Vue.set(state.streams, peerID, track)
-        }
-      } else {
-        audioTracks[id] = track
-      }
-      if (videoTracks[id] && audioTracks[id]) {
-
-      }
-      log('add done')
-    })
-
-    jitsi.connect().then(_ => log('jitsi connect') ).catch(err => log('jitsi err', err))
+  //   const jitsi = new JitsiBridge({ room })
+  //
+  //   jitsi.on('stream', ({ stream }) => {
+  //     state.stream = stream // local video
+  //   })
+  //
+  //   jitsi.on('joined', ({ id }) => {
+  //     let peerID = state.peerID
+  //     log('joined', peerID, id)
+  //     jitsiID = id
+  //     if (peerID) {
+  //       log('set jitsi id via joined', peerID, jitsiID)
+  //       sync.tracks.set(jitsiID, state.peerID)
+  //     }
+  //   })
+  //
+  //   jitsi.on('add', ({ id, track, video }) => {
+  //     let peerID = state.tracks[id]
+  //     log('add', id, video, peerID)
+  //     assert(id)
+  //     assert(track)
+  //     if (video) {
+  //       videoTracks[id] = track
+  //       if (peerID) {
+  //         log('set stream', peerID, id)
+  //         Vue.set(state.streams, peerID, track)
+  //       }
+  //     } else {
+  //       audioTracks[id] = track
+  //     }
+  //     if (videoTracks[id] && audioTracks[id]) {
+  //
+  //     }
+  //     log('add done')
+  //   })
+  //
+  //   jitsi.connect().then(_ => log('jitsi connect') ).catch(err => log('jitsi err', err))
   // })
 }
 else if (ENABLE_VIDEO) {

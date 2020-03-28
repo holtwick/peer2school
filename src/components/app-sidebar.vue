@@ -3,13 +3,7 @@
 
     <div>
 
-      <p>
-        {{ state.info }}
-      </p>
-
-      <p>
-        {{ state.peers }}
-      </p>
+      <app-jitsi></app-jitsi>
 
       <app-peer v-if="!state.teacher" :id="state.info.teacherID">
         {{ teacherName }}
@@ -69,6 +63,7 @@ import { getLocal } from '../lib/local'
 import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName, setStudent } from '../state'
 import AppChat from './app-chat'
+import AppJitsi from './app-jitsi'
 import AppPeer from './app-peer'
 import AppSignal from './app-signal'
 import AppStudents from './app-students'
@@ -79,6 +74,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppJitsi,
     AppPeer,
     AppStudents,
     AppSignal,
