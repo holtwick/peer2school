@@ -1,6 +1,8 @@
 <template>
-  <!--  <audio autoplay ref="audio" v-if="audioStream" />-->
-  <video autoplay ref="video" v-if="stream"/>
+  <div v-if="stream || audioStream">
+    <video autoplay ref="video" v-if="stream"/>
+    <audio autoplay ref="audio" v-if="audioStream"/>
+  </div>
   <div v-else class="video-placeholder -content-placeholder">
     <i data-f7-icon="rectangle_stack_person_crop"></i>
   </div>
@@ -44,20 +46,28 @@ export default {
   },
   methods: {
     async doConnectStream(stream) {
-      log('doConnectStream')
       if (stream) {
         await this.$nextTick()
-        log('doConnectStream jitsi', stream)
         stream.attach(this.$refs.video)
+      }
+    },
+    async doConnectAudioStream(audioStream) {
+      if (audioStream) {
+        await this.$nextTick()
+        audioStream.attach(this.$refs.audio)
       }
     },
   },
   async mounted() {
     await this.doConnectStream(this.stream)
+    await this.doConnectAudioStream(this.audioStream)
   },
   watch: {
     stream(value) {
       this.doConnectStream(value)
+    },
+    audioStream(value) {
+      this.doConnectAudioStream(value)
     },
   },
 }
