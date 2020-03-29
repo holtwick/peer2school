@@ -24,6 +24,7 @@ export let state = {
   audioStreams: {},
 
   tracks: {},
+  profiles: {}
 }
 
 // PARENT WINDOW COMMUNICATION
@@ -49,13 +50,6 @@ jitsi.on('stream', ({ stream }) => {
 jitsi.on('joined', ({ id }) => {
   state.jitsiID = id
   queue.emit('jitsi', { id })
-  // let peerID = state.peerID
-  // log('joined', peerID, id)
-  // jitsiID = id
-  // if (peerID) {
-  //   log('set jitsi id via joined', peerID, jitsiID)
-  //   sync.tracks.set(jitsiID, state.peerID)
-  // }
 })
 
 jitsi.on('add', ({ id, track, video }) => {
@@ -75,5 +69,3 @@ jitsi.on('add', ({ id, track, video }) => {
 jitsi.connect()
   .then(_ => log('jitsi connect'))
   .catch(err => log('jitsi err', err))
-
-//

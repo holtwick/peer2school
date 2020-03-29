@@ -1,22 +1,18 @@
 <template>
   <div class="jitsi">
 
-    {{ teacherJitsiID}}
-
-    {{ state.streams }}
-
     <jitsi-peer v-if="!state.teacher" :id="teacherJitsiID">
       {{ teacherName }}
     </jitsi-peer>
 
-    <jitsi-peer v-if="studentJitsiID" :id="studentJitsiID" @click="stopVideo">
+    <jitsi-peer v-if="studentJitsiID && studentJitsiID !== state.jitsiID" :id="studentJitsiID" @click="stopVideo">
       {{ studentName }}
       <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
     </jitsi-peer>
 
-    <jitsi-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">
+    <jitsi-peer :stream="state.stream" @click="editProfile" :active="state.jitsiID && studentJitsiID === state.jitsiID">
       {{ name }}
-      <!--          <i v-if="!hasName" data-f7-icon="pencil"></i>-->
+      <i v-if="!hasName" data-f7-icon="pencil"></i>
     </jitsi-peer>
 
   </div>
@@ -36,8 +32,11 @@
 </style>
 
 <script>
+import { LOCAL_NAME } from '../config'
+import { getLocal } from '../lib/local'
 import JitsiPeer from './jitsi-peer'
 import JitsiVideo from './jitsi-video'
+import { queue } from './state'
 
 const log = require('debug')('jitsi:main')
 
@@ -54,13 +53,25 @@ export default {
     teacherJitsiID() {
       return this.state.tracks[this.state.teacherID]
     },
+    hasName() {
+      return this.state.profiles[this.state.peerID]?.name != null || getLocal(LOCAL_NAME) != null
+    },
+    name() {
+      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || 'Set your name'
+    },
+    teacherName() {
+      return this.state.profiles[this.state.teacherID]?.name || 'Teacher'
+    },
+    studentName() {
+      return this.state.profiles[this.state.studentID]?.name || 'Student'
+    },
   },
   methods: {
     stopVideo() {
-
+      queue.emit('action', { action: 'stop' })
     },
     editProfile() {
-
+      queue.emit('action', { action: 'edit' })
     },
   },
   async mounted() {

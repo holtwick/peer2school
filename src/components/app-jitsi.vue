@@ -19,6 +19,8 @@
 </style>
 
 <script>
+import { LOCAL_NAME } from '../config'
+import { getLocal } from '../lib/local'
 import { channel, queue } from '../state'
 
 const log = require('debug')('app:app-jitsi')
@@ -95,6 +97,12 @@ export default {
     'state.tracks': {
       handler(value) {
         queue.emit('state', { tracks: value })
+      },
+      deep: true,
+    },
+    'state.profiles': {
+      handler(value) {
+        queue.emit('state', { profiles: value })
       },
       deep: true,
     },

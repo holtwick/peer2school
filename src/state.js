@@ -163,8 +163,6 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
 
 //
 
-let videoTracks = {}
-let audioTracks = {}
 let jitsiID = null
 
 if (ENABLE_JITSI) {
@@ -260,6 +258,8 @@ if (ENABLE_JITSI) {
 
 }
 
+//
+
 export let channel = new ToIFrameChannel('jitsi')
 export let queue = new ChannelTaskQueue(channel)
 
@@ -272,6 +272,19 @@ queue.on('jitsi', ({ id }) => {
   if (peerID) {
     log('set jitsi id via joined', peerID, jitsiID)
     sync.tracks.set(state.peerID, jitsiID)
+  }
+})
+
+queue.on('action', ({ action }) => {
+  if (action === 'stop') {
+    setStudent()
+  } else if (action === 'edit') {
+    let name = prompt('What\'s your name?')
+    if (name) {
+      setProfileName(name)
+    }
+  } else {
+    alert(`Unknown command ${action}`)
   }
 })
 
