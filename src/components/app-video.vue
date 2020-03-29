@@ -1,5 +1,4 @@
 <template>
-  <!--  <audio autoplay ref="audio" v-if="audioStream" />-->
   <video autoplay ref="video" v-if="stream"/>
   <div v-else class="video-placeholder -content-placeholder">
     <i data-f7-icon="rectangle_stack_person_crop"></i>
@@ -46,9 +45,6 @@ export default {
     stream: {
       type: MediaStream | Object,
     },
-    audioStream: {
-      type: MediaStream | Object,
-    },
   },
   data() {
     return {}
@@ -58,14 +54,7 @@ export default {
       log('doConnectStream')
       if (stream) {
         await this.$nextTick()
-        if (stream.attach) {
-          log('doConnectStream jitsi', stream)
-          stream.attach(this.$refs.video)
-          this.$refs.video.play()
-        } else {
-          log('doConnectStream webrtc')
-          connectStreamToVideoElement(stream, this.$refs.video)
-        }
+        connectStreamToVideoElement(stream, this.$refs.video)
       }
     },
   },

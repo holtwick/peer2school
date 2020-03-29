@@ -1,24 +1,24 @@
 <template>
   <div class="vstack sidebar">
 
-    <div>
-
+    <div v-if="state.useJitsi">
       <app-jitsi></app-jitsi>
+    </div>
 
-      <!--      <app-peer v-if="!state.teacher" :id="state.info.teacherID">-->
-      <!--        {{ teacherName }}-->
-      <!--      </app-peer>-->
+    <div v-else>
+      <app-peer v-if="!state.teacher" :id="state.info.teacherID">
+        {{ teacherName }}
+      </app-peer>
 
-      <!--      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">-->
-      <!--        {{ studentName }}-->
-      <!--        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>-->
-      <!--      </app-peer>-->
+      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">
+        {{ studentName }}
+        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
+      </app-peer>
 
-      <!--      <app-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">-->
-      <!--        {{ name }}-->
-      <!--        <i v-if="!hasName" data-f7-icon="pencil"></i>-->
-      <!--      </app-peer>-->
-
+      <app-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">
+        {{ name }}
+        <i v-if="!hasName" data-f7-icon="pencil"></i>
+      </app-peer>
     </div>
 
     <app-students v-if="state.teacher"/>

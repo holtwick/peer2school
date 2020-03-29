@@ -62,6 +62,8 @@ let synched = {
 
 export let state = {
 
+  useJitsi: ENABLE_JITSI,
+
   // ID of this room
   room,
 
@@ -126,16 +128,10 @@ sync.on('peerID', peerID => {
     }
 
     if (jitsiID) {
-      // log('set jitsi id', jitsiID, peerID, !!videoTracks[jitsiID])
       sync.tracks.set(peerID, jitsiID)
-      // let track = videoTracks[jitsiID]
-      // if (track) {
-      //   Vue.set(state.streams, peerID, track)
-      // }
     }
   }
 })
-
 
 // UTILS
 
@@ -163,48 +159,41 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
 
 //
 
+export let channel
+export let queue
+
 let jitsiID = null
 
 if (ENABLE_JITSI) {
-  // import(/* webpackChunkName: "jitsi" */ './jitsi').then(({ JitsiBridge }) => {
-  //   const jitsi = new JitsiBridge({ room })
-  //
-  //   jitsi.on('stream', ({ stream }) => {
-  //     state.stream = stream // local video
-  //   })
-  //
-  //   jitsi.on('joined', ({ id }) => {
-  //     let peerID = state.peerID
-  //     log('joined', peerID, id)
-  //     jitsiID = id
-  //     if (peerID) {
-  //       log('set jitsi id via joined', peerID, jitsiID)
-  //       sync.tracks.set(jitsiID, state.peerID)
-  //     }
-  //   })
-  //
-  //   jitsi.on('add', ({ id, track, video }) => {
-  //     let peerID = state.tracks[id]
-  //     log('add', id, video, peerID)
-  //     assert(id)
-  //     assert(track)
-  //     if (video) {
-  //       videoTracks[id] = track
-  //       if (peerID) {
-  //         log('set stream', peerID, id)
-  //         Vue.set(state.streams, peerID, track)
-  //       }
-  //     } else {
-  //       audioTracks[id] = track
-  //     }
-  //     if (videoTracks[id] && audioTracks[id]) {
-  //
-  //     }
-  //     log('add done')
-  //   })
-  //
-  //   jitsi.connect().then(_ => log('jitsi connect') ).catch(err => log('jitsi err', err))
-  // })
+
+  channel = new ToIFrameChannel('jitsi')
+  queue = new ChannelTaskQueue(channel)
+
+  queue.emit('state', { teacher })
+
+  queue.on('jitsi', ({ id }) => {
+    let peerID = state.peerID
+    log('joined', peerID, id)
+    jitsiID = id
+    if (peerID) {
+      log('set jitsi id via joined', peerID, jitsiID)
+      sync.tracks.set(state.peerID, jitsiID)
+    }
+  })
+
+  queue.on('action', ({ action }) => {
+    if (action === 'stop') {
+      setStudent()
+    } else if (action === 'edit') {
+      let name = prompt('What\'s your name?')
+      if (name) {
+        setProfileName(name)
+      }
+    } else {
+      alert(`Unknown command ${action}`)
+    }
+  })
+
 } else if (ENABLE_VIDEO) {
 
   sync.on('stream', ({ peerID, stream }) => {
@@ -258,41 +247,3 @@ if (ENABLE_JITSI) {
 
 }
 
-//
-
-export let channel = new ToIFrameChannel('jitsi')
-export let queue = new ChannelTaskQueue(channel)
-
-queue.emit('state', { teacher })
-
-queue.on('jitsi', ({ id }) => {
-  let peerID = state.peerID
-  log('joined', peerID, id)
-  jitsiID = id
-  if (peerID) {
-    log('set jitsi id via joined', peerID, jitsiID)
-    sync.tracks.set(state.peerID, jitsiID)
-  }
-})
-
-queue.on('action', ({ action }) => {
-  if (action === 'stop') {
-    setStudent()
-  } else if (action === 'edit') {
-    let name = prompt('What\'s your name?')
-    if (name) {
-      setProfileName(name)
-    }
-  } else {
-    alert(`Unknown command ${action}`)
-  }
-})
-
-// window.launchConnections = (n = 1) => {
-//   for (let i = 0; i < n; i++) {
-//     let el = document.createElement('iframe')
-//     el.setAttribute('style', `position: absolute; width: 20rem; height: 20rem; bottom: ${i}rem; right: ${i}rem;`)
-//     el.src = createLinkForRoom(room) // + testToken
-//     document.body.appendChild(el)
-//   }
-// }
