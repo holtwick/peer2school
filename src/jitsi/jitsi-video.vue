@@ -27,21 +27,10 @@ video {
 </style>
 
 <script>
-export function connectStreamToVideoElement(stream, video) {
-  if (stream) {
-    if ('srcObject' in video) {
-      video.srcObject = stream
-    } else {
-      video.src = window.URL.createObjectURL(stream) // for older browsers
-    }
-    video.play()
-  }
-}
-
 const log = require('debug')('app:app-video')
 
 export default {
-  name: 'app-video',
+  name: 'jitsi-video',
   props: {
     stream: {
       type: MediaStream | Object,
@@ -58,14 +47,8 @@ export default {
       log('doConnectStream')
       if (stream) {
         await this.$nextTick()
-        if (stream.attach) {
-          log('doConnectStream jitsi', stream)
-          stream.attach(this.$refs.video)
-          this.$refs.video.play()
-        } else {
-          log('doConnectStream webrtc')
-          connectStreamToVideoElement(stream, this.$refs.video)
-        }
+        log('doConnectStream jitsi', stream)
+        stream.attach(this.$refs.video)
       }
     },
   },

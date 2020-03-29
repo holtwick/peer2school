@@ -4,6 +4,18 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 let config = {
   productionSourceMap: false,
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      template: `public/index.html`,
+      filename: 'index.html',
+    },
+    jitsi: {
+      entry: 'src/jitsi/main.js',
+      template: `public/jitsi.html`,
+      filename: 'jitsi.html',
+    }
+  },
 }
 
 if (isProduction) {

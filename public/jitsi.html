@@ -5,8 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
 
-  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <title>Peer2School</title>
+  <title>Peer2School Jitsi</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -58,7 +57,6 @@
   html.f7-loaded .f7 {
     color: inherit;
   }
-
   </style>
   <script>
   if (document && document.fonts) {
@@ -70,25 +68,6 @@
   } else {
     document.documentElement.classList.add('f7-loaded')
   }
-  </script>
-  <script>
-  // https://stackoverflow.com/a/38573198/140927
-
-  document.addEventListener('touchmove', function (event) {
-    if (event.scale !== 1) {
-      event.preventDefault()
-    }
-  }, false)
-
-  var lastTouchEnd = 0
-  document.addEventListener('touchend', function (event) {
-    var now = (new Date()).getTime()
-    if (now - lastTouchEnd <= 300) {
-      event.preventDefault()
-    }
-    lastTouchEnd = now
-  }, false)
-
   </script>
 </head>
 <body>

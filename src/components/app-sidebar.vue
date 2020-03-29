@@ -3,19 +3,21 @@
 
     <div>
 
-      <app-peer v-if="!state.teacher" :id="state.info.teacherID">
-        {{ teacherName }}
-      </app-peer>
+      <app-jitsi></app-jitsi>
 
-      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">
-        {{ studentName }}
-        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
-      </app-peer>
+      <!--      <app-peer v-if="!state.teacher" :id="state.info.teacherID">-->
+      <!--        {{ teacherName }}-->
+      <!--      </app-peer>-->
 
-      <app-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">
-        {{ name }}
-        <i v-if="!hasName" data-f7-icon="pencil"></i>
-      </app-peer>
+      <!--      <app-peer v-if="state.info.studentID && state.info.studentID !== state.peerID" :id="state.info.studentID" @click="stopVideo">-->
+      <!--        {{ studentName }}-->
+      <!--        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>-->
+      <!--      </app-peer>-->
+
+      <!--      <app-peer :stream="state.stream" @click="editProfile" :active="state.peerID && state.info.studentID === state.peerID">-->
+      <!--        {{ name }}-->
+      <!--        <i v-if="!hasName" data-f7-icon="pencil"></i>-->
+      <!--      </app-peer>-->
 
     </div>
 
@@ -56,9 +58,12 @@
 </style>
 
 <script>
+import { LOCAL_NAME } from '../config'
+import { getLocal } from '../lib/local'
 import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName, setStudent } from '../state'
 import AppChat from './app-chat'
+import AppJitsi from './app-jitsi'
 import AppPeer from './app-peer'
 import AppSignal from './app-signal'
 import AppStudents from './app-students'
@@ -69,6 +74,7 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppJitsi,
     AppPeer,
     AppStudents,
     AppSignal,
@@ -80,10 +86,10 @@ export default {
   },
   computed: {
     hasName() {
-      return this.state.profiles[this.state.peerID]?.name != null || localStorage.getItem('name') != null
+      return this.state.profiles[this.state.peerID]?.name != null || getLocal(LOCAL_NAME) != null
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || localStorage.getItem('name') || 'Set your name'
+      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || 'Set your name'
     },
     teacherName() {
       return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'
