@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="jitsi-container">
     <iframe
       :src="url"
       frameborder="0"
@@ -13,14 +13,16 @@
 </template>
 
 <style lang="scss">
+.jitsi-container {
+  margin: -0.5rem;
+}
+
 .iframe {
   width: 100%;
 }
 </style>
 
 <script>
-import { LOCAL_NAME } from '../config'
-import { getLocal } from '../lib/local'
 import { channel, queue } from '../state'
 
 const log = require('debug')('app:app-jitsi')
@@ -55,18 +57,20 @@ export default {
       iFrame.style.height = minHeight + 'px'
       const iFrameWindow = iFrame.contentWindow
       const iFrameDocument = iFrameWindow.document
-      iFrame.style.height = Math.max(minHeight, iFrameDocument.body.offsetHeight + 120) + 'px'
+      iFrame.style.height = Math.max(minHeight, iFrameDocument.body.offsetHeight + 1) + 'px'
       let prevHeight = 0
       this.timer = setInterval(() => {
         const iFrameDocument = iFrameWindow.document
-        let bodyHeight = Math.ceil(+iFrameDocument.body.getBoundingClientRect().height)
+        // let bodyHeight = Math.ceil(+iFrameDocument.body.getBoundingClientRect().height)
         let childrenHeight = 0
         let el = iFrameDocument.body.firstElementChild
         while (el) {
           childrenHeight += el.getBoundingClientRect().height
           el = el.nextElementSibling
         }
-        const currentHeight = Math.ceil(Math.max(childrenHeight, bodyHeight))
+        // log('heights', childrenHeight, bodyHeight)
+        // const currentHeight = Math.ceil(Math.max(childrenHeight, bodyHeight))
+        const currentHeight = Math.ceil(childrenHeight)
         prevHeight = currentHeight
         iFrame.style.height = Math.max(minHeight, currentHeight) + 'px'
       }, 500)

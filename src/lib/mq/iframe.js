@@ -3,6 +3,12 @@ import { HandshakeChannel } from './channel'
 
 const log = require('debug')('mq:iframe')
 
+// https://developer.apple.com/library/archive/documentation/AppleApplications/Conceptual/SafariJSProgTopics/Cross-documentmessaging.html
+
+function targetOrigin() {
+  return '*' // todo: set real origin for security considerations, usually shouldn't be harmful though
+}
+
 export class ToIFrameChannel extends HandshakeChannel {
 
   _id
@@ -35,7 +41,7 @@ export class ToIFrameChannel extends HandshakeChannel {
 
   send(data) {
     log('send postmessage', this._name, data)
-    this._channel.postMessage({ source: 'window', data })
+    this._channel.postMessage({ source: 'window', data }, targetOrigin())
   }
 
 }
@@ -68,7 +74,7 @@ export class FromIFrameChannel extends HandshakeChannel {
 
   send(data) {
     log('send postmessage', this._name, data)
-    this._channel.postMessage({ source: this._id, data })
+    this._channel.postMessage({ source: this._id, data }, targetOrigin())
   }
 
 }

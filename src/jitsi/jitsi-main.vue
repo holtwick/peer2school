@@ -1,20 +1,22 @@
 <template>
-  <div class="jitsi">
+  <div>
+    <div class="jitsi">
 
-    <jitsi-peer v-if="!state.teacher" :id="teacherJitsiID">
-      {{ teacherName }}
-    </jitsi-peer>
+      <jitsi-peer v-if="!state.teacher" :id="teacherJitsiID">
+        {{ teacherName }}
+      </jitsi-peer>
 
-    <jitsi-peer v-if="studentJitsiID && studentJitsiID !== state.jitsiID" :id="studentJitsiID" @click="stopVideo">
-      {{ studentName }}
-      <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
-    </jitsi-peer>
+      <jitsi-peer v-if="studentJitsiID && studentJitsiID !== state.jitsiID" :id="studentJitsiID" @click="stopVideo">
+        {{ studentName }}
+        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
+      </jitsi-peer>
 
-    <jitsi-peer :stream="state.stream" @click="editProfile" :active="state.jitsiID && studentJitsiID === state.jitsiID">
-      {{ name }}
-      <i v-if="!hasName" data-f7-icon="pencil"></i>
-    </jitsi-peer>
+      <jitsi-peer :stream="state.stream" @click="editProfile" :active="state.jitsiID && studentJitsiID === state.jitsiID">
+        {{ name }}
+        <i v-if="!hasName" data-f7-icon="pencil"></i>
+      </jitsi-peer>
 
+    </div>
   </div>
 </template>
 
@@ -22,6 +24,7 @@
 @import "../css/index";
 
 .jitsi {
+  padding: 0.5rem;
   max-width: 100%;
   width: 100%;
 
