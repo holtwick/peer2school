@@ -83,7 +83,6 @@ export class Channel {
   // Override this in a subclass!
   send(data) {
     log('send', this._name, data)
-    // this._channel.postMessage(payload)
     this._channel.receive(data)
   }
 

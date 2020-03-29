@@ -16,14 +16,13 @@
 .jitsi-container {
   margin: -0.5rem;
 }
+
 .iframe {
   width: 100%;
 }
 </style>
 
 <script>
-import { LOCAL_NAME } from '../config'
-import { getLocal } from '../lib/local'
 import { channel, queue } from '../state'
 
 const log = require('debug')('app:app-jitsi')

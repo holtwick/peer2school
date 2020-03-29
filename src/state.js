@@ -126,7 +126,7 @@ sync.on('peerID', peerID => {
     }
 
     if (jitsiID) {
-      log('set jitsi id', jitsiID, peerID, !!videoTracks[jitsiID])
+      // log('set jitsi id', jitsiID, peerID, !!videoTracks[jitsiID])
       sync.tracks.set(peerID, jitsiID)
       // let track = videoTracks[jitsiID]
       // if (track) {
