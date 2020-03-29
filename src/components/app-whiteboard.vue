@@ -1,9 +1,14 @@
 <template>
-  <div class="whiteboard" ref="whiteboard" :class="{'-editable': editable}">
+  <div class="whiteboard hstack" ref="whiteboard">
     <canvas
       width="4000"
       height="3000"
       ref="canvas"
+      class="-fit"
+      :class="{
+        '-teacher': state.teacher,
+        '-editable': editable
+      }"
       @mousedown="drawStart"
       @touchstart="touchStart"
       @mouseleave="clearCurrPath"
@@ -52,16 +57,25 @@
 
   canvas {
     width: 100%;
+    align-self: start;
 
-    // Grid
-    // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
-    // background-size: 1rem 1rem;
+    &.-teacher {
+      background-image: radial-gradient(rgba(0, 0, 0, 0.2) 1px, transparent 1px);
+      background-position: 0 0;
+      background-size: 2% 2%;
+
+      // Grid
+      /*background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);*/
+      /*background-size: 2% 2%;*/
+    }
   }
 
   .tools {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+    /*position: absolute;*/
+    /*top: 1rem;*/
+    /*right: 1rem;*/
+
+    padding: 1rem;
 
     .color, .tool {
       display: block;
@@ -238,7 +252,7 @@ export default {
     },
     doRedo() {
       whiteboardUndoManager.redo()
-    }
+    },
   },
   async mounted() {
     // log('mounted')

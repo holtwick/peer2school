@@ -28,7 +28,10 @@
     <app-signal v-if="!state.teacher"/>
 
     <div v-if="state.teacher" class="share">
-      <button @click="doShare" class="btn">
+      <sea-modal :active.sync="active" close title="Share">
+       <app-share></app-share>
+      </sea-modal>
+      <button @click="active = true" class="btn">
         <i data-f7-icon="square_arrow_up"></i>
         Share with students
       </button>
@@ -62,9 +65,12 @@ import { LOCAL_NAME } from '../config'
 import { getLocal } from '../lib/local'
 import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName, setStudent } from '../state'
+import SeaButton from '../ui/sea-button'
+import SeaModal from '../ui/sea-modal'
 import AppChat from './app-chat'
 import AppJitsi from './app-jitsi'
 import AppPeer from './app-peer'
+import AppShare from './app-share'
 import AppSignal from './app-signal'
 import AppStudents from './app-students'
 import AppVideo from './app-video'
@@ -74,6 +80,9 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppShare,
+    SeaModal,
+    SeaButton,
     AppJitsi,
     AppPeer,
     AppStudents,
@@ -82,7 +91,9 @@ export default {
     AppVideo,
   },
   data() {
-    return {}
+    return {
+      active: false,
+    }
   },
   computed: {
     hasName() {
