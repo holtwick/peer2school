@@ -1,11 +1,8 @@
 import Vue from 'vue'
-import App from './app.vue'
-import './lib/registerServiceWorker'
+import App from './jitsi-main.vue'
 import { state } from './state'
 
 Vue.config.productionTip = false
-
-require('debug').enable('app:*,mq*')
 
 Vue.mixin({
   data() {

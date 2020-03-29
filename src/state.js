@@ -1,20 +1,34 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_VIDEO } from './config'
-import { getUserMedia } from './lib/usermedia'
+import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
+import { getLocal, setLocal } from './lib/local'
+import { ToIFrameChannel } from './lib/mq/iframe'
+import { ChannelTaskQueue } from './lib/mq/mq'
 import { UUID, UUID_length } from './lib/uuid'
 import { setupSync } from './sync'
 
 const log = require('debug')('app:state')
 
-// Force a unique room ID
+// ROOM
+
+const testToken = '.test'
 const teacherToken = '.teacher'
-let hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
-let teacher = hash.endsWith(teacherToken)
+
+const hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let room = hash
+
+const TEST = hash.endsWith(testToken)
+if (TEST) room = room.replace(testToken, '')
+
+const teacher = hash.endsWith(teacherToken)
 if (teacher) room = room.replace(teacherToken, '')
+
 room = room.substr(0, UUID_length)
 location.hash = `#${hash}`
+
+// PEER / STUDENT
+
+export let profileID = getLocal(LOCAL_ID, UUID)
 
 // STATE
 
@@ -31,6 +45,7 @@ let synched = {
 
     // Allow active student (studentID) to use single whiteboard tool
     allowWhiteboard: false,
+
   },
 
   // Simple chat
@@ -41,9 +56,13 @@ let synched = {
 
   // Details of participants, like name
   profiles: {},
+
+  tracks: {},
 }
 
 export let state = {
+
+  useJitsi: ENABLE_JITSI,
 
   // ID of this room
   room,
@@ -58,7 +77,7 @@ export let state = {
   peers: [],
 
   // Streams per peerID
-  streams: [],
+  streams: {},
 
   // Video stream of the local user without sound
   stream: null,
@@ -84,25 +103,9 @@ for (const [name, dft] of Object.entries(synched)) {
   })
 }
 
-function getTeacherID() {
-  return sync.info.get('teacherID')
-}
-
-sync.on('ready', () => {
-  state.peerID = sync.peerID
-  if (state.peerID) {
-    let name = localStorage.getItem('name')
-    if (name) {
-      setProfileName(name)
-    }
-  }
-  log('peerID', state.peerID)
-  if (teacher) {
-    sync.info.set('teacherID', sync.peerID)
-  }
+sync.on('ready', ({ peerID }) => {
   updateState()
 })
-
 
 function updateState() {
   state.peers = sync.getPeerList()
@@ -110,16 +113,24 @@ function updateState() {
 
 sync.on('peers', updateState)
 
-sync.on('stream', ({ peerID, stream }) => {
-  Vue.set(state.streams, peerID, stream)
-  updateState() // todo
-})
+sync.on('peerID', peerID => {
+  log('peerID', peerID)
+  if (peerID) {
 
-// MEDIA
+    state.peerID = peerID
+    let name = getLocal(LOCAL_NAME)
+    if (name) {
+      setProfileName(name)
+    }
 
-ENABLE_VIDEO && getUserMedia(stream => {
-  state.stream = new MediaStream(stream.getVideoTracks())
-  sync.setStream(stream)
+    if (teacher) {
+      sync.info.set('teacherID', peerID)
+    }
+
+    if (jitsiID) {
+      sync.tracks.set(peerID, jitsiID)
+    }
+  }
 })
 
 // UTILS
@@ -137,7 +148,7 @@ export function toggleSignal() {
 }
 
 export function setProfileName(name) {
-  localStorage.setItem('name', name)
+  setLocal(LOCAL_NAME, name)
   sync.profiles.set(state.peerID, { name })
 }
 
@@ -145,3 +156,94 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('studentID', peerID)
   sync.info.set('allowWhiteboard', allowWhiteboard)
 }
+
+//
+
+export let channel
+export let queue
+
+let jitsiID = null
+
+if (ENABLE_JITSI) {
+
+  channel = new ToIFrameChannel('jitsi')
+  queue = new ChannelTaskQueue(channel)
+
+  queue.emit('state', { teacher })
+
+  queue.on('jitsi', ({ id }) => {
+    let peerID = state.peerID
+    log('joined', peerID, id)
+    jitsiID = id
+    if (peerID) {
+      log('set jitsi id via joined', peerID, jitsiID)
+      sync.tracks.set(state.peerID, jitsiID)
+    }
+  })
+
+  queue.on('action', ({ action }) => {
+    if (action === 'stop') {
+      setStudent()
+    } else if (action === 'edit') {
+      let name = prompt('What\'s your name?')
+      if (name) {
+        setProfileName(name)
+      }
+    } else {
+      alert(`Unknown command ${action}`)
+    }
+  })
+
+} else if (ENABLE_VIDEO) {
+
+  sync.on('stream', ({ peerID, stream }) => {
+    Vue.set(state.streams, peerID, stream)
+    updateState() // todo
+  })
+
+  navigator.getUserMedia = (
+    navigator['getUserMedia'] ||
+    navigator['webkitGetUserMedia'] ||
+    navigator['mozGetUserMedia'] ||
+    navigator['msGetUserMedia']
+  )
+
+  function getUserMedia(fn) {
+
+    function errorHandler(err) {
+      log('error', err)
+    }
+
+    try {
+      // Solution via https://stackoverflow.com/a/47958949/140927
+      // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
+      const opt = {
+        audio: true,
+        video: {
+          facingMode: 'user',
+          video: {
+            width: { ideal: 224 },
+            height: { ideal: 168 },
+          },
+          frameRate: {
+            ideal: 10,
+          },
+        },
+      }
+      if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+        navigator.getUserMedia(opt, fn, errorHandler)
+      } else {
+        navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
+      }
+    } catch (err) {
+      console.warn('getUserMedia err', err)
+    }
+  }
+
+  getUserMedia(stream => {
+    state.stream = new MediaStream(stream.getVideoTracks())
+    sync.setStream(stream)
+  })
+
+}
+

@@ -1,7 +1,8 @@
 <template>
   <div class="peer" :class="{'-active': active}" @click="$emit('click')">
-    <app-video
+    <jitsi-video
       :stream="stream || state.streams[id]"
+      :audioStream="stream ? null : state.audioStreams[id]"
       class="video"
     />
     <div class="peer-footer" v-if="slotted">
@@ -72,11 +73,11 @@
 </style>
 
 <script>
-import AppVideo from './app-video'
+import JitsiVideo from './jitsi-video'
 
 export default {
-  name: 'app-peer',
-  components: { AppVideo },
+  name: 'jitsi-peer',
+  components: { JitsiVideo },
   props: {
     id: {
       type: String,

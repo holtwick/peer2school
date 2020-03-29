@@ -1,8 +1,11 @@
 <template>
   <div class="vstack sidebar">
 
-    <div>
+    <div v-if="state.useJitsi">
+      <app-jitsi></app-jitsi>
+    </div>
 
+    <div v-else>
       <app-peer v-if="!state.teacher" :id="state.info.teacherID">
         {{ teacherName }}
       </app-peer>
@@ -16,7 +19,6 @@
         {{ name }}
         <i v-if="!hasName" data-f7-icon="pencil"></i>
       </app-peer>
-
     </div>
 
     <app-students v-if="state.teacher"/>
@@ -26,7 +28,10 @@
     <app-signal v-if="!state.teacher"/>
 
     <div v-if="state.teacher" class="share">
-      <button @click="doShare" class="btn">
+      <sea-modal :active.sync="active" close title="Share">
+       <app-share></app-share>
+      </sea-modal>
+      <button @click="active = true" class="btn">
         <i data-f7-icon="square_arrow_up"></i>
         Share with students
       </button>
@@ -56,10 +61,16 @@
 </style>
 
 <script>
+import { LOCAL_NAME } from '../config'
+import { getLocal } from '../lib/local'
 import { createLinkForRoom, shareLink } from '../lib/share'
 import { setProfileName, setStudent } from '../state'
+import SeaButton from '../ui/sea-button'
+import SeaModal from '../ui/sea-modal'
 import AppChat from './app-chat'
+import AppJitsi from './app-jitsi'
 import AppPeer from './app-peer'
+import AppShare from './app-share'
 import AppSignal from './app-signal'
 import AppStudents from './app-students'
 import AppVideo from './app-video'
@@ -69,6 +80,10 @@ const log = require('debug')('app:app-sidebar')
 export default {
   name: 'app-sidebar',
   components: {
+    AppShare,
+    SeaModal,
+    SeaButton,
+    AppJitsi,
     AppPeer,
     AppStudents,
     AppSignal,
@@ -76,14 +91,16 @@ export default {
     AppVideo,
   },
   data() {
-    return {}
+    return {
+      active: false,
+    }
   },
   computed: {
     hasName() {
-      return this.state.profiles[this.state.peerID]?.name != null || localStorage.getItem('name') != null
+      return this.state.profiles[this.state.peerID]?.name != null || getLocal(LOCAL_NAME) != null
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || localStorage.getItem('name') || 'Set your name'
+      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || 'Set your name'
     },
     teacherName() {
       return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'

@@ -1,6 +1,9 @@
 <template>
   <div class="vstack">
-    <app-peers class="-fit"></app-peers>
+    <div class="-fit hstack">
+      <app-sidebar/>
+      <app-whiteboard class="-fit" :editable="state.teacher"/>
+    </div>
   </div>
 </template>
 
@@ -28,12 +31,14 @@
 </style>
 
 <script>
-import AppPeers from './app-peers'
+import AppSidebar from './app-sidebar'
+import AppWhiteboard from './app-whiteboard'
 
 export default {
   name: 'app-main',
   components: {
-    AppPeers,
+    AppWhiteboard,
+    AppSidebar,
   },
   data() {
     return {}

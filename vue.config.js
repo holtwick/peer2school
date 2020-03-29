@@ -4,6 +4,18 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 let config = {
   productionSourceMap: false,
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      template: `public/index.html`,
+      filename: 'index.html',
+    },
+    jitsi: {
+      entry: 'src/jitsi/main.js',
+      template: `public/jitsi.html`,
+      filename: 'jitsi.html',
+    }
+  },
 }
 
 if (isProduction) {
@@ -27,7 +39,7 @@ if (isProduction) {
     disableHostCheck: true,
 
     // Some API (like WebRTC getUserMedia) is only allowed in secure context
-    https: true,
+    https: (process.env.HTTPS_OFF || '').toString() !== '1',
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true',

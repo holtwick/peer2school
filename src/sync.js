@@ -1,13 +1,43 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
 import * as Y from 'yjs'
+import { ENABLE_JITSI } from './config'
 import { Emitter } from './lib/emitter'
 import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
-const doc = new Y.Doc()
+const peerSettings = {
+  config: {
+    // trickle: false,
+    iceTransportPolicy: 'all',
+    reconnectTimer: 3000,
+    // iceServers: [{
+    //   urls: 'stun:stun.l.google.com:19302',
+    // }, {
+    //   urls: 'stun:global.stun.twilio.com:3478?transport=udp',
+    // }, {
+    //   urls: 'turn:numb.viagenie.ca',
+    //   username: 'dirk.holtwick@gmail.com',
+    //   credential: 'ssg94JnM/;Pu',
+    // }],
+    // iceServers: [{
+    //   urls: 'stun:vs.holtwick.de',
+    // }, {
+    //   urls: 'turn:vs.holtwick.de', // 3478
+    // }],
+    // iceServers: [{
+    //   urls: 'stun:numb.viagenie.ca',
+    //   username: 'dirk.holtwick@gmail.com',
+    //   credential: 'ssg94JnM/;Pu',
+    // }, {
+    //   urls: 'turn:numb.viagenie.ca',
+    //   username: 'dirk.holtwick@gmail.com',
+    //   credential: 'ssg94JnM/;Pu',
+    // }],
+  },
+}
 
-class Sync extends Emitter {
+export class Sync extends Emitter {
 
   chat
   stream
@@ -21,74 +51,55 @@ class Sync extends Emitter {
   constructor({ room }) {
     super()
 
-    const webrtcProvider = new WebrtcProvider('peer-school-' + room, doc, {
+    this.doc = new Y.Doc()
+
+    const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
+      // maxConns: 30 + Math.floor(Math.random() * 15), // just to prevent that exactly n clients form a cluster
       filterBcConns: true,
-      peerSettings: {
-        config: {
-          // trickle: false,
-          iceTransportPolicy: 'all',
-          reconnectTimer: 3000,
-          config: {
-            iceServers: [{
-              urls: 'stun:stun.l.google.com:19302',
-            }, {
-              urls: 'stun:global.stun.twilio.com:3478?transport=udp',
-            }, {
-              urls: 'turn:numb.viagenie.ca',
-              username: 'dirk.holtwick@gmail.com',
-              credential: 'ssg94JnM/;Pu',
-            }],
-          },
-          // iceServers: [{
-          //   urls: 'stun:vs.holtwick.de',
-          // }, {
-          //   urls: 'turn:vs.holtwick.de', // 3478
-          // }],
-          // iceServers: [{
-          //   urls: 'stun:numb.viagenie.ca',
-          //   username: 'dirk.holtwick@gmail.com',
-          //   credential: 'ssg94JnM/;Pu',
-          // }, {
-          //   urls: 'turn:numb.viagenie.ca',
-          //   username: 'dirk.holtwick@gmail.com',
-          //   credential: 'ssg94JnM/;Pu',
-          // }],
-        },
-      },
+      peerSettings,
     })
+    this.webrtcProvider = webrtcProvider
 
     webrtcProvider.on('peers', info => {
-      let added = Array.from(info.added)
-      for (let peerID of added) {
-        let peer = this.getPeer(peerID)
-        if (peer) {
-          if (this.stream) {
-            peer.peer.addStream(this.stream)
+      if (!ENABLE_JITSI) {
+        let added = Array.from(info.added)
+        for (let peerID of added) {
+          let peer = this.getPeer(peerID)
+          if (peer) {
+            if (this.stream) {
+              peer.peer.addStream(this.stream)
+            }
+            peer.peer.on('stream', stream => {
+              this.streams[peerID] = stream
+              this.emit('stream', { peerID, stream })
+            })
+          } else {
+            console.warn('added peer but cannot find', peerID, info)
           }
-          peer.peer.on('stream', stream => {
-            this.streams[peerID] = stream
-            this.emit('stream', { peerID, stream })
-          })
-        } else {
-          console.warn('added peer but cannot find', peerID, info)
         }
       }
+      this.checkPeerID()
       this.emit('peers')
     })
 
     webrtcProvider.on('synced', info => {
-      this.peerID = webrtcProvider.room.peerId
+      log('synced', info)
+      this.checkPeerID()
       this.emit('ready', { peerID: this.peerID })
     })
 
     //  const awareness = webrtcProvider.awareness
 
-    const indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, doc)
+    this.indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, this.doc)
+  }
 
-    this.webrtcProvider = webrtcProvider
-    this.indexeddbPersistence = indexeddbPersistence
-
-    this.doc = doc
+  checkPeerID() {
+    if (!this.peerID) {
+      this.peerID = this.webrtcProvider.room.peerId
+      if (this.peerID) {
+        this.emit('peerID', this.peerID)
+      }
+    }
   }
 
   getWebRTCConns() {
@@ -100,6 +111,7 @@ class Sync extends Emitter {
   }
 
   getPeer(peerID) {
+    log('getPeers', this.webrtcProvider?.room)
     return this.getWebRTCConns()?.get(peerID) || null
   }
 
@@ -131,6 +143,6 @@ class Sync extends Emitter {
 
 }
 
-export function setupSync({ room } = {}) {
-  return new Sync({ room })
+export function setupSync(opt) {
+  return new Sync(opt)
 }
