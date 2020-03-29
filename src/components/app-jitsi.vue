@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     url() {
-      return `/jitsi.html#${this.state.room}`
+      return `jitsi.html#${this.state.room}`
     },
   },
   methods: {
