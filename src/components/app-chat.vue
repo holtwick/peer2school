@@ -10,7 +10,7 @@
         </div>
       </div>
       <div ref="chat">
-        <input placeholder="Send message" v-model="message">
+        <input :placeholder="l.send_message" v-model="message">
       </div>
     </form>
   </div>

@@ -33,7 +33,8 @@
       </sea-modal>
       <button @click="active = true" class="btn">
         <i data-f7-icon="square_arrow_up"></i>
-        Share with students
+        {{ l.share_button }}
+<!--        Share with students-->
       </button>
     </div>
 
@@ -100,18 +101,18 @@ export default {
       return this.state.profiles[this.state.peerID]?.name != null || getLocal(LOCAL_NAME) != null
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || 'Set your name'
+      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || this.l.set_name
     },
     teacherName() {
-      return this.state.profiles[this.state.info.teacherID]?.name || 'Teacher'
+      return this.state.profiles[this.state.info.teacherID]?.name || this.l.teacher
     },
     studentName() {
-      return this.state.profiles[this.state.info.studentID]?.name || 'Student'
+      return this.state.profiles[this.state.info.studentID]?.name || this.l.student
     },
   },
   methods: {
     editProfile() {
-      let name = prompt('What\'s your name?', this.hasName ? this.name : '')
+      let name = prompt(this.l.what_name, this.hasName ? this.name : '')
       if (name) {
         setProfileName(name)
       }
