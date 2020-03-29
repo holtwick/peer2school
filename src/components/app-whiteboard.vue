@@ -4,6 +4,7 @@
       width="4000"
       height="3000"
       ref="canvas"
+      :class="{'-dots': state.teacher}"
       @mousedown="drawStart"
       @touchstart="touchStart"
       @mouseleave="clearCurrPath"
@@ -53,9 +54,15 @@
   canvas {
     width: 100%;
 
-    // Grid
-    // background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);
-    // background-size: 1rem 1rem;
+    &.-dots {
+      background-image: radial-gradient(rgba(0, 0, 0, 0.2) 1px, transparent 1px);
+      background-position: 0 0;
+      background-size: 2% 2%;
+
+      // Grid
+      /*background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2) 1px, transparent 1px, transparent 100%);*/
+      /*background-size: 2% 2%;*/
+    }
   }
 
   .tools {
@@ -238,7 +245,7 @@ export default {
     },
     doRedo() {
       whiteboardUndoManager.redo()
-    }
+    },
   },
   async mounted() {
     // log('mounted')
