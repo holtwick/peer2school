@@ -21,6 +21,9 @@ export let state = {
 
   // Streams per peerID
   streams: {},
+  audioStreams: {},
+
+  tracks: {},
 }
 
 // PARENT WINDOW COMMUNICATION
@@ -57,16 +60,14 @@ jitsi.on('joined', ({ id }) => {
 
 jitsi.on('add', ({ id, track, video }) => {
   let peerID = state.tracks[id]
-  log('add', id, video, peerID)
+  log('add', id, video, track, peerID)
   assert(id)
   assert(track)
   if (video) {
-    if (peerID) {
-      log('set stream', peerID, id)
-      Vue.set(state.streams, id, track)
-    }
+    log('set stream', peerID, id)
+    Vue.set(state.streams, id, track)
   } else {
-
+    Vue.set(state.audioStreams, id, track)
   }
   log('add done')
 })

@@ -127,11 +127,11 @@ sync.on('peerID', peerID => {
 
     if (jitsiID) {
       log('set jitsi id', jitsiID, peerID, !!videoTracks[jitsiID])
-      sync.tracks.set(jitsiID, peerID)
-      let track = videoTracks[jitsiID]
-      if (track) {
-        Vue.set(state.streams, peerID, track)
-      }
+      sync.tracks.set(peerID, jitsiID)
+      // let track = videoTracks[jitsiID]
+      // if (track) {
+      //   Vue.set(state.streams, peerID, track)
+      // }
     }
   }
 })
@@ -271,7 +271,7 @@ queue.on('jitsi', ({ id }) => {
   jitsiID = id
   if (peerID) {
     log('set jitsi id via joined', peerID, jitsiID)
-    sync.tracks.set(jitsiID, state.peerID)
+    sync.tracks.set(state.peerID, jitsiID)
   }
 })
 

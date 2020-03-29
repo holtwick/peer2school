@@ -1,14 +1,15 @@
 <template>
   <div class="jitsi">
-    <jitsi-peer :stream="state.stream">
-      Me
-    </jitsi-peer>
 
-    <jitsi-peer v-if="!state.teacher" :id="state.teacherID">
+    {{ teacherJitsiID}}
+
+    {{ state.streams }}
+
+    <jitsi-peer v-if="!state.teacher" :id="teacherJitsiID">
       {{ teacherName }}
     </jitsi-peer>
 
-    <jitsi-peer v-if="state.studentID && state.studentID !== state.peerID" :id="state.studentID" @click="stopVideo">
+    <jitsi-peer v-if="studentJitsiID" :id="studentJitsiID" @click="stopVideo">
       {{ studentName }}
       <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
     </jitsi-peer>
@@ -45,6 +46,14 @@ export default {
   components: { JitsiPeer, JitsiVideo },
   data() {
     return {}
+  },
+  computed: {
+    studentJitsiID() {
+      return this.state.tracks[this.state.studentID]
+    },
+    teacherJitsiID() {
+      return this.state.tracks[this.state.teacherID]
+    },
   },
   methods: {
     stopVideo() {

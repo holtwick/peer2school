@@ -69,8 +69,6 @@ export default {
         iFrame.style.height = Math.max(minHeight, currentHeight) + 'px'
       }, 500)
 
-      //
-
       log('iframe connect', iFrameWindow)
       channel.connect(iFrameWindow)
 
@@ -93,6 +91,12 @@ export default {
     },
     'state.info.studentID'(value) {
       queue.emit('state', { studentID: value })
+    },
+    'state.tracks': {
+      handler(value) {
+        queue.emit('state', { tracks: value })
+      },
+      deep: true,
     },
   },
 }
