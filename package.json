@@ -28,7 +28,7 @@
     "@vue/cli-plugin-babel": "~4.2.3",
     "@vue/cli-plugin-pwa": "~4.2.3",
     "@vue/cli-service": "~4.2.3",
-    "jest": "^25.2.3",
+    "jest": "^25.2.4",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"

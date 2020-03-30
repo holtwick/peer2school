@@ -1,4 +1,7 @@
 import Vue from 'vue'
+import locale from '../lib/locale'
+import de from '../locales/de'
+import en from '../locales/en'
 import App from './jitsi-main.vue'
 import { state } from './state'
 
@@ -8,6 +11,10 @@ Vue.mixin({
   data() {
     return { state }
   },
+})
+
+Vue.use(locale, {
+  locales: { en, de },
 })
 
 new Vue({

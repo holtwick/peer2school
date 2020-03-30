@@ -28,7 +28,7 @@
     <app-signal v-if="!state.teacher"/>
 
     <div v-if="state.teacher" class="share">
-      <sea-modal :active.sync="active" close title="Share">
+      <sea-modal :active.sync="active" close :title="l.share.title">
        <app-share></app-share>
       </sea-modal>
       <button @click="active = true" class="btn">
