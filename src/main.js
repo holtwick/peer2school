@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './app.vue'
+import locale from './lib/locale'
 import './lib/registerServiceWorker'
+import de from './locales/de'
+import en from './locales/en'
 import { state } from './state'
 
 Vue.config.productionTip = false
@@ -11,6 +14,10 @@ Vue.mixin({
   data() {
     return { state }
   },
+})
+
+Vue.use(locale, {
+  locales: { en, de },
 })
 
 new Vue({

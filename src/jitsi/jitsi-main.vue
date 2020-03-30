@@ -69,13 +69,13 @@ export default {
       return this.state.profiles[this.state.peerID]?.name != null || getLocal(LOCAL_NAME) != null
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || 'Set your name'
+      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || this.l.set_name
     },
     teacherName() {
-      return this.state.profiles[this.state.teacherID]?.name || 'Teacher'
+      return this.state.profiles[this.state.teacherID]?.name || this.l.teacher
     },
     studentName() {
-      return this.state.profiles[this.state.studentID]?.name || 'Student'
+      return this.state.profiles[this.state.studentID]?.name || this.l.student
     },
   },
   methods: {
