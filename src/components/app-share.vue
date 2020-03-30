@@ -1,7 +1,7 @@
 <template>
   <div class="share-container ">
     <p>
-      Please give this link to your students to participate:
+      {{ l.share.link_info }}
     </p>
     <div class="p">
       <p>
@@ -14,12 +14,12 @@
           @click="selectAll">
       </p>
       <p>
-        <sea-button @action="doShare">Copy Link</sea-button>
+        <sea-button @action="doShare">{{ l.share.button_copy }}</sea-button>
       </p>
     </div>
-    <p>You can also scan this QR Code with a mobile device camera:</p>
+    <p>{{ l.share.qr_info }}</p>
     <p class="qrcode" v-html="qrcode">QRCode</p>
-    <p>For feedback write to <a href="mailto:info@peer.school">info@peer.school</a></p>
+    <p v-html="l.share.feedback"></p>
   </div>
 </template>
 
