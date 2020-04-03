@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
+import { ENABLE_MEDIASERVER, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { getLocal, setLocal } from './lib/local'
 import { ToIFrameChannel } from './lib/mq/iframe'
 import { ChannelTaskQueue } from './lib/mq/mq'
@@ -65,7 +65,7 @@ let synched = {
 
 export let state = {
 
-  useJitsi: ENABLE_JITSI,
+  useJitsi: ENABLE_MEDIASERVER,
 
   // ID of this room
   room,
@@ -171,7 +171,7 @@ export let queue
 
 let jitsiID = null
 
-if (ENABLE_JITSI) {
+if (ENABLE_MEDIASERVER) {
 
   channel = new ToIFrameChannel('jitsi')
   queue = new ChannelTaskQueue(channel)
@@ -208,15 +208,7 @@ if (ENABLE_JITSI) {
     updateState() // todo
   })
 
-  navigator.getUserMedia = (
-    navigator['getUserMedia'] ||
-    navigator['webkitGetUserMedia'] ||
-    navigator['mozGetUserMedia'] ||
-    navigator['msGetUserMedia']
-  )
-
   function getUserMedia(fn) {
-
     try {
       // Solution via https://stackoverflow.com/a/47958949/140927
       // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
@@ -225,11 +217,14 @@ if (ENABLE_JITSI) {
         video: {
           facingMode: 'user',
           video: {
-            width: { ideal: 224 },
-            height: { ideal: 168 },
+            width: { ideal: 320 },
+            height: { ideal: 240 },
           },
+          width: { ideal: 320 },
+          height: { ideal: 240 },
           frameRate: {
-            ideal: 10,
+            min: 1,
+            ideal: 15,
           },
         },
       }
@@ -240,6 +235,28 @@ if (ENABLE_JITSI) {
   }
 
   getUserMedia(stream => {
+    let video = stream.getVideoTracks()[0]
+
+    // width: { min: 640, ideal: 1920, max: 1920 },
+    // height: { min: 400, ideal: 1080 },
+    // aspectRatio: 1.777777778,
+    //   frameRate: { max: 30 },
+    // facingMode: { exact: "user" }
+
+    // video.applyConstraints({
+    //   width: {
+    //     min: 640,
+    //     ideal: 1280,
+    //   },
+    //   height: { min: 480, ideal: 720 },
+    //   advanced: [
+    //     { width: 1920, height: 1280 },
+    //     { aspectRatio: 1.333 },
+    //   ],
+    // })
+    log('stream', video)
+    log('video settings', video.getSettings())
+
     state.stream = new MediaStream(stream.getVideoTracks())
     sync.setStream(stream)
   })

@@ -1,16 +1,64 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
 import * as Y from 'yjs'
-import { ENABLE_JITSI } from './config'
+import { ENABLE_MEDIASERVER } from './config'
 import { Emitter } from './lib/emitter'
 import { WebrtcProvider } from './lib/y-webrtc'
 
 const log = require('debug')('app:sync')
 
+// https://webrtchacks.com/limit-webrtc-bandwidth-sdp/
+function setMediaBitrate(sdp, media, bitrate) {
+  let lines = sdp.split('\n')
+  let line = -1
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].indexOf('m=' + media) === 0) {
+      line = i
+      break
+    }
+  }
+  if (line === -1) {
+    console.debug('Could not find the m line for', media)
+    return sdp
+  }
+  log('Found the m line for', media, 'at line', line)
+
+  // Pass the m line
+  line++
+
+  // Skip i and c lines
+  while (lines[line].indexOf('i=') === 0 || lines[line].indexOf('c=') === 0) {
+    line++
+  }
+
+  // If we're on a b line, replace it
+  if (lines[line].indexOf('b') === 0) {
+    log('Replaced b line at line', line)
+    lines[line] = 'b=AS:' + bitrate
+    return lines.join('\n')
+  }
+
+  // Add a new b line
+  log('Adding new b line before line', line)
+  let newLines = lines.slice(0, line)
+  newLines.push('b=AS:' + bitrate)
+  newLines = newLines.concat(lines.slice(line, lines.length))
+  return newLines.join('\n')
+}
+
 const peerSettings = {
+  // trickle: false,
+  sdpTransform: sdp => {
+    let newSDP = sdp
+    log('Old SDP', newSDP)
+    newSDP = setMediaBitrate(newSDP, 'video', 233)
+    newSDP = setMediaBitrate(newSDP, 'audio', 80)
+    log('New SDP', newSDP)
+    return newSDP
+  },
   config: {
-    // trickle: false,
     iceTransportPolicy: 'all',
     reconnectTimer: 3000,
+
     // iceServers: [{
     //   urls: 'stun:stun.l.google.com:19302',
     // }, {
@@ -34,6 +82,7 @@ const peerSettings = {
     //   username: 'dirk.holtwick@gmail.com',
     //   credential: 'ssg94JnM/;Pu',
     // }],
+
   },
 }
 
@@ -61,7 +110,7 @@ export class Sync extends Emitter {
     this.webrtcProvider = webrtcProvider
 
     webrtcProvider.on('peers', info => {
-      if (!ENABLE_JITSI) {
+      if (!ENABLE_MEDIASERVER) {
         let added = Array.from(info.added)
         for (let peerID of added) {
           let peer = this.getPeer(peerID)

@@ -20,9 +20,9 @@
     <p>{{ l.share.qr_info }}</p>
     <p class="qrcode" v-html="qrcode">QRCode</p>
     <p v-html="l.share.feedback"></p>
-    <p>&nbsp;</p>
+    <!-- p>&nbsp;</p>
     <sea-button @action="doToggleMediaServer">{{ l.share.media_server }} &nbsp; {{ state.info.useMediaServer ? '✅' : '❌' }}</sea-button>
-    <p>&nbsp;</p>
+    <p>&nbsp;</p -->
   </div>
 </template>
 
