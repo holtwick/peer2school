@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import * as Y from 'yjs'
-import { ENABLE_JITSI, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
+import { ENABLE_MEDIASERVER, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
 import { getLocal, setLocal } from './lib/local'
 import { ToIFrameChannel } from './lib/mq/iframe'
 import { ChannelTaskQueue } from './lib/mq/mq'
@@ -46,6 +46,9 @@ let synched = {
     // Allow active student (studentID) to use single whiteboard tool
     allowWhiteboard: false,
 
+    // Use the media server
+    useMediaServer: false,
+
   },
 
   // Simple chat
@@ -62,7 +65,7 @@ let synched = {
 
 export let state = {
 
-  useJitsi: ENABLE_JITSI,
+  useJitsi: ENABLE_MEDIASERVER,
 
   // ID of this room
   room,
@@ -157,6 +160,10 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('allowWhiteboard', allowWhiteboard)
 }
 
+export function toggleMediaServer() {
+  sync.info.set('useMediaServer', !sync.info.get('useMediaServer'))
+}
+
 //
 
 export let channel
@@ -164,7 +171,7 @@ export let queue
 
 let jitsiID = null
 
-if (ENABLE_JITSI) {
+if (ENABLE_MEDIASERVER) {
 
   channel = new ToIFrameChannel('jitsi')
   queue = new ChannelTaskQueue(channel)
@@ -201,19 +208,7 @@ if (ENABLE_JITSI) {
     updateState() // todo
   })
 
-  navigator.getUserMedia = (
-    navigator['getUserMedia'] ||
-    navigator['webkitGetUserMedia'] ||
-    navigator['mozGetUserMedia'] ||
-    navigator['msGetUserMedia']
-  )
-
   function getUserMedia(fn) {
-
-    function errorHandler(err) {
-      log('error', err)
-    }
-
     try {
       // Solution via https://stackoverflow.com/a/47958949/140927
       // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
@@ -222,19 +217,18 @@ if (ENABLE_JITSI) {
         video: {
           facingMode: 'user',
           video: {
-            width: { ideal: 224 },
-            height: { ideal: 168 },
+            width: { ideal: 320 },
+            height: { ideal: 240 },
           },
+          width: { ideal: 320 },
+          height: { ideal: 240 },
           frameRate: {
-            ideal: 10,
+            min: 1,
+            ideal: 15,
           },
         },
       }
-      if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
-        navigator.getUserMedia(opt, fn, errorHandler)
-      } else {
-        navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
-      }
+      navigator.mediaDevices.getUserMedia(opt).then(fn).catch(err => log('error', err))
     } catch (err) {
       console.warn('getUserMedia err', err)
     }

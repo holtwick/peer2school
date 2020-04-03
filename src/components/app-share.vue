@@ -20,6 +20,9 @@
     <p>{{ l.share.qr_info }}</p>
     <p class="qrcode" v-html="qrcode">QRCode</p>
     <p v-html="l.share.feedback"></p>
+    <!-- p>&nbsp;</p>
+    <sea-button @action="doToggleMediaServer">{{ l.share.media_server }} &nbsp; {{ state.info.useMediaServer ? '✅' : '❌' }}</sea-button>
+    <p>&nbsp;</p -->
   </div>
 </template>
 
@@ -48,6 +51,7 @@
 <script>
 import { qrcode } from '../lib/qrcode'
 import { createLinkForRoom, shareLink } from '../lib/share'
+import { toggleMediaServer } from '../state'
 import SeaButton from '../ui/sea-button'
 
 const log = require('debug')('app:app-share')
@@ -70,7 +74,10 @@ export default {
     },
     doShare() {
       shareLink(createLinkForRoom(this.state.room))
-    }
+    },
+    doToggleMediaServer() {
+      toggleMediaServer()
+    },
   },
   async mounted() {
     this.url = createLinkForRoom(this.state.room)

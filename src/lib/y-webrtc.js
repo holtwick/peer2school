@@ -19,7 +19,7 @@ import * as syncProtocol from 'y-protocols/sync.js'
 import * as Y from 'yjs' // eslint-disable-line
 import * as cryptoutils from './y-webrtc-crypto.js'
 
-const log = logging.createModuleLogger('y-webrtc')
+const log = require('debug')('app:y-webrtc')
 
 const messageSync = 0
 const messageQueryAwareness = 3
@@ -178,10 +178,9 @@ export class WebrtcConn {
     this.closed = false
     this.connected = false
     this.synced = false
-    /**
-     * @type {any}
-     */
-    this.peer = new Peer({ initiator, ...peerSettings })
+    const settings = { initiator, ...peerSettings }
+    log('Peer settings', settings)
+    this.peer = new Peer(settings)
     this.peer.on('signal', signal => {
       publishSignalingMessage(signalingConn, room, { to: remotePeerId, from: room.peerId, type: 'signal', signal })
     })
