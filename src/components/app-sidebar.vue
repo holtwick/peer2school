@@ -29,12 +29,11 @@
 
     <div v-if="state.teacher" class="share">
       <sea-modal :active.sync="active" close :title="l.share.title">
-       <app-share></app-share>
+        <app-share></app-share>
       </sea-modal>
       <button @click="active = true" class="btn">
         <i data-f7-icon="square_arrow_up"></i>
         {{ l.share_button }}
-<!--        Share with students-->
       </button>
     </div>
 
