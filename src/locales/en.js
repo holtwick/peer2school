@@ -10,6 +10,7 @@ export default {
     link_info: 'Please give this link to your students to participate:',
     button_copy: 'Copy Link',
     qr_info: 'You can also scan this QR Code with a mobile device camera:',
-    feedback: 'For feedback write to <a href="mailto:info@peer.school">info@peer.school</a>'
+    feedback: 'For feedback write to <a href="mailto:info@peer.school">info@peer.school</a>',
+    media_server: 'Use media server'
   }
 }

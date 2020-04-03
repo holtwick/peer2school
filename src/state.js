@@ -46,6 +46,9 @@ let synched = {
     // Allow active student (studentID) to use single whiteboard tool
     allowWhiteboard: false,
 
+    // Use the media server
+    useMediaServer: false,
+
   },
 
   // Simple chat
@@ -157,6 +160,10 @@ export function setStudent(peerID = null, allowWhiteboard = false) {
   sync.info.set('allowWhiteboard', allowWhiteboard)
 }
 
+export function toggleMediaServer() {
+  sync.info.set('useMediaServer', !sync.info.get('useMediaServer'))
+}
+
 //
 
 export let channel
@@ -210,10 +217,6 @@ if (ENABLE_JITSI) {
 
   function getUserMedia(fn) {
 
-    function errorHandler(err) {
-      log('error', err)
-    }
-
     try {
       // Solution via https://stackoverflow.com/a/47958949/140927
       // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
@@ -230,11 +233,7 @@ if (ENABLE_JITSI) {
           },
         },
       }
-      if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
-        navigator.getUserMedia(opt, fn, errorHandler)
-      } else {
-        navigator.mediaDevices.getUserMedia(opt).then(fn).catch(errorHandler)
-      }
+      navigator.mediaDevices.getUserMedia(opt).then(fn).catch(err => log('error', err))
     } catch (err) {
       console.warn('getUserMedia err', err)
     }
