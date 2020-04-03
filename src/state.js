@@ -235,28 +235,6 @@ if (ENABLE_MEDIASERVER) {
   }
 
   getUserMedia(stream => {
-    let video = stream.getVideoTracks()[0]
-
-    // width: { min: 640, ideal: 1920, max: 1920 },
-    // height: { min: 400, ideal: 1080 },
-    // aspectRatio: 1.777777778,
-    //   frameRate: { max: 30 },
-    // facingMode: { exact: "user" }
-
-    // video.applyConstraints({
-    //   width: {
-    //     min: 640,
-    //     ideal: 1280,
-    //   },
-    //   height: { min: 480, ideal: 720 },
-    //   advanced: [
-    //     { width: 1920, height: 1280 },
-    //     { aspectRatio: 1.333 },
-    //   ],
-    // })
-    log('stream', video)
-    log('video settings', video.getSettings())
-
     state.stream = new MediaStream(stream.getVideoTracks())
     sync.setStream(stream)
   })
