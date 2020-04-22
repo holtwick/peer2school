@@ -1,6 +1,6 @@
 import { IndexeddbPersistence } from 'y-indexeddb'
 import * as Y from 'yjs'
-import { ENABLE_MEDIASERVER } from './config'
+import { ENABLE_MEDIASERVER, ICE_CONFIG } from './config'
 import { Emitter } from './lib/emitter'
 import { WebrtcProvider } from './lib/y-webrtc'
 
@@ -45,6 +45,8 @@ function setMediaBitrate(sdp, media, bitrate) {
   return newLines.join('\n')
 }
 
+let config = ICE_CONFIG
+
 const peerSettings = {
   // trickle: false,
   sdpTransform: sdp => {
@@ -55,35 +57,7 @@ const peerSettings = {
     log('New SDP', newSDP)
     return newSDP
   },
-  config: {
-    iceTransportPolicy: 'all',
-    reconnectTimer: 3000,
-
-    // iceServers: [{
-    //   urls: 'stun:stun.l.google.com:19302',
-    // }, {
-    //   urls: 'stun:global.stun.twilio.com:3478?transport=udp',
-    // }, {
-    //   urls: 'turn:numb.viagenie.ca',
-    //   username: 'dirk.holtwick@gmail.com',
-    //   credential: 'ssg94JnM/;Pu',
-    // }],
-    // iceServers: [{
-    //   urls: 'stun:vs.holtwick.de',
-    // }, {
-    //   urls: 'turn:vs.holtwick.de', // 3478
-    // }],
-    // iceServers: [{
-    //   urls: 'stun:numb.viagenie.ca',
-    //   username: 'dirk.holtwick@gmail.com',
-    //   credential: 'ssg94JnM/;Pu',
-    // }, {
-    //   urls: 'turn:numb.viagenie.ca',
-    //   username: 'dirk.holtwick@gmail.com',
-    //   credential: 'ssg94JnM/;Pu',
-    // }],
-
-  },
+  config,
 }
 
 export class Sync extends Emitter {
