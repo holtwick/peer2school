@@ -14,7 +14,7 @@ let config = {
       entry: 'src/jitsi/main.js',
       template: `public/jitsi.html`,
       filename: 'jitsi.html',
-    }
+    },
   },
 }
 
@@ -39,7 +39,7 @@ if (isProduction) {
     disableHostCheck: true,
 
     // Some API (like WebRTC getUserMedia) is only allowed in secure context
-    https: (process.env.HTTPS_OFF || '').toString() !== '1',
+    https: process.env.HTTPS,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true',
