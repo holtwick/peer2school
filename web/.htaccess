@@ -31,23 +31,23 @@ RewriteCond "%{HTTP_HOST}" "!^$"
 RewriteRule "^/?(.*)" "https://peer.school/$1?referrer=%{SERVER_NAME}" [L,R,NE]
 
 # French
-RewriteCond %{HTTP:Accept-Language} ^((?!de|en|it).)*de [NC]
-RewriteRule ^$ /fr/ [L,R=301]
+# RewriteCond %{HTTP:Accept-Language} ^((?!de|en|it).)*fr [NC]
+# RewriteRule ^$ /fr/ [L,R=301]
 
 # Italian
 RewriteCond %{HTTP:Accept-Language} ^((?!de|en|fr).)*it [NC]
 RewriteRule ^$ /it/ [L,R=301]
 
 # English
-RewriteCond %{HTTP:Accept-Language} ^((?!de|it|fr).)*en [NC]
-RewriteRule ^$ /en/ [L,R=301]
+# RewriteCond %{HTTP:Accept-Language} ^((?!de|it|fr).)*en [NC]
+# RewriteRule ^$ /en/ [L,R=301]
 
 # German
 RewriteCond %{HTTP:Accept-Language} ^((?!en|it|fr).)*de [NC]
 RewriteRule ^$ /de/ [L,R=301]
 
 # Fallback
-RewriteRule ^$ /en/ [L,R=301]
+# RewriteRule ^$ /en/ [L,R=301]
 
 # RewriteRule ^$ https://onepile.app/en/help/public-links [L,R=301]
 RewriteRule ^class/(.+)/?$ /class.php?room=$1 [PT]
