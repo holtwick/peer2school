@@ -4,6 +4,7 @@ import locale from './lib/locale'
 import de from './locales/de'
 import en from './locales/en'
 import it from './locales/it'
+import fr from './locales/fr'
 import { state } from './state'
 
 Vue.config.productionTip = false
@@ -17,7 +18,7 @@ Vue.mixin({
 })
 
 Vue.use(locale, {
-  locales: { en, de, it },
+  locales: { en, de, it, fr },
 })
 
 new Vue({
