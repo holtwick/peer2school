@@ -1,0 +1,65 @@
+body {
+  text-align: center;
+  margin-top: 3rem;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Hiragino Sans, Hiragino Kaku Gothic Pro, Yu Gothic, YuGothic, Meiryo, Helvetica Neue, sans-serif;
+  background: white;
+  color: #333;
+}
+
+.logo {
+  display: inline-flex;
+  align-content: center;
+  align-items: baseline;
+}
+
+.peer {
+  padding: 0.5rem;
+  background: #333;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  align-self: center;
+}
+
+.school {
+  color: black;
+  font-size: 4rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  font-family: Georgia;
+}
+
+.enter {
+  margin-top: 5rem;
+}
+
+.button {
+  background: #32b643;
+  color: white;
+  font-weight: 700;
+  border-radius: 0.25rem;
+  padding: 1.5rem;
+  text-decoration: none;
+}
+
+.button:hover {
+  background: #36ca4c;
+}
+
+.button:active {
+  background: #1f732b;
+}
+
+.footer {
+  margin-top: 5rem;
+  opacity: 0.6;
+}
+
+.abstract a,
+.footer a {
+  color: #32b643;
+  text-decoration: none;
+}
+
+.video {
+  margin-top: 5rem;
+}
