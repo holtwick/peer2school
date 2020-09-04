@@ -31,12 +31,12 @@ RewriteCond "%{HTTP_HOST}" "!^$"
 RewriteRule "^/?(.*)" "https://peer.school/$1?referrer=%{SERVER_NAME}" [L,R,NE]
 
 # French
-# RewriteCond %{HTTP:Accept-Language} ^((?!de|en|it).)*fr [NC]
-# RewriteRule ^$ /fr/ [L,R=301]
+RewriteCond %{HTTP:Accept-Language} ^((?!de|en|it).)*fr [NC]
+RewriteRule ^$ /fr/ [PT]
 
 # Italian
 RewriteCond %{HTTP:Accept-Language} ^((?!de|en|fr).)*it [NC]
-RewriteRule ^$ /it/ [L,R=301]
+RewriteRule ^$ /it/ [PT]
 
 # English
 # RewriteCond %{HTTP:Accept-Language} ^((?!de|it|fr).)*en [NC]
@@ -44,7 +44,10 @@ RewriteRule ^$ /it/ [L,R=301]
 
 # German
 RewriteCond %{HTTP:Accept-Language} ^((?!en|it|fr).)*de [NC]
-RewriteRule ^$ /de/ [L,R=301]
+RewriteRule ^$ /de/ [PT]
+
+# RewriteRule ^$ /de/ [L,R=301]
+# RewriteRule ^$ /it/ [L,R=301]
 
 # Fallback
 # RewriteRule ^$ /en/ [L,R=301]
