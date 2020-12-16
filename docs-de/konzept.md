@@ -4,9 +4,9 @@ Im ersten Schritt steht ausschließlich die möglichst einfache und unkomplizier
 
 **Zielsetzung**
 
-*Herstellung einer Klassensituation mit virtuellen Mitteln.* 
+_Herstellung einer Klassensituation mit virtuellen Mitteln._
 
-Die Bedienung soll ohne Kenntnisse im Lesen funktionieren und intuitiv sein. Bei jüngeren Schülern ist zur Einrichtung die Hilfe der Eltern gewünscht. 
+Die Bedienung soll ohne Kenntnisse im Lesen funktionieren und intuitiv sein. Bei jüngeren Schülern ist zur Einrichtung die Hilfe der Eltern gewünscht.
 
 - Kommunikation per Video, notfalls Audio
 - Präsentation per Whiteboard (Tafel-Ersatz)
@@ -16,7 +16,7 @@ Die Bedienung soll ohne Kenntnisse im Lesen funktionieren und intuitiv sein. Bei
 **Abgrenzung**
 
 - Keine interaktiven Lerninhalte, siehe stattdessen bzw. im Zusammenspiel: [Anton App](https://anton.app/de/)
-- Arbeitsmaterialien sind entweder als Bücher vorhanden oder sollen von den Eltern ausgedruckt werden. In einem späteren Schritt könnten online zu bearbeitende Materialien ergänzt werden. 
+- Arbeitsmaterialien sind entweder als Bücher vorhanden oder sollen von den Eltern ausgedruckt werden. In einem späteren Schritt könnten online zu bearbeitende Materialien ergänzt werden.
 
 **Technische Details**
 
@@ -28,4 +28,3 @@ Die Bedienung soll ohne Kenntnisse im Lesen funktionieren und intuitiv sein. Bei
 **Illustration**
 
 ![mockup](mockup.png)
-

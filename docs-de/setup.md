@@ -20,4 +20,3 @@
 1. Einen "Fork" erstellen
 2. Pull Requests von den Änderungen erstellen
 3. [Issues](https://github.com/holtwick/peer2school/issues) lesen und erstellen
-

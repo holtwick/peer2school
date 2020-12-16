@@ -1,67 +1,66 @@
-import { IndexeddbPersistence } from 'y-indexeddb'
-import * as Y from 'yjs'
-import { ENABLE_MEDIASERVER, ICE_CONFIG } from './config'
-import { Emitter } from './lib/emitter'
-import { WebrtcProvider } from './lib/y-webrtc'
+import { IndexeddbPersistence } from "y-indexeddb"
+import * as Y from "yjs"
+import { ENABLE_MEDIASERVER, ICE_CONFIG } from "./config"
+import { Emitter } from "./lib/emitter"
+import { WebrtcProvider } from "./lib/y-webrtc"
 
-const log = require('debug')('app:sync')
+const log = require("debug")("app:sync")
 
 // https://webrtchacks.com/limit-webrtc-bandwidth-sdp/
 function setMediaBitrate(sdp, media, bitrate) {
-  let lines = sdp.split('\n')
+  let lines = sdp.split("\n")
   let line = -1
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].indexOf('m=' + media) === 0) {
+    if (lines[i].indexOf("m=" + media) === 0) {
       line = i
       break
     }
   }
   if (line === -1) {
-    console.debug('Could not find the m line for', media)
+    console.debug("Could not find the m line for", media)
     return sdp
   }
-  log('Found the m line for', media, 'at line', line)
+  log("Found the m line for", media, "at line", line)
 
   // Pass the m line
   line++
 
   // Skip i and c lines
-  while (lines[line].indexOf('i=') === 0 || lines[line].indexOf('c=') === 0) {
+  while (lines[line].indexOf("i=") === 0 || lines[line].indexOf("c=") === 0) {
     line++
   }
 
   // If we're on a b line, replace it
-  if (lines[line].indexOf('b') === 0) {
-    log('Replaced b line at line', line)
-    lines[line] = 'b=AS:' + bitrate
-    return lines.join('\n')
+  if (lines[line].indexOf("b") === 0) {
+    log("Replaced b line at line", line)
+    lines[line] = "b=AS:" + bitrate
+    return lines.join("\n")
   }
 
   // Add a new b line
-  log('Adding new b line before line', line)
+  log("Adding new b line before line", line)
   let newLines = lines.slice(0, line)
-  newLines.push('b=AS:' + bitrate)
+  newLines.push("b=AS:" + bitrate)
   newLines = newLines.concat(lines.slice(line, lines.length))
-  return newLines.join('\n')
+  return newLines.join("\n")
 }
 
 let config = ICE_CONFIG
 
 const peerSettings = {
   // trickle: false,
-  sdpTransform: sdp => {
+  sdpTransform: (sdp) => {
     let newSDP = sdp
-    log('Old SDP', newSDP)
-    newSDP = setMediaBitrate(newSDP, 'video', 233)
-    newSDP = setMediaBitrate(newSDP, 'audio', 80)
-    log('New SDP', newSDP)
+    log("Old SDP", newSDP)
+    newSDP = setMediaBitrate(newSDP, "video", 233)
+    newSDP = setMediaBitrate(newSDP, "audio", 80)
+    log("New SDP", newSDP)
     return newSDP
   },
   config,
 }
 
 export class Sync extends Emitter {
-
   chat
   stream
   indexeddbPersistence
@@ -76,14 +75,14 @@ export class Sync extends Emitter {
 
     this.doc = new Y.Doc()
 
-    const webrtcProvider = new WebrtcProvider('peer-school-' + room, this.doc, {
+    const webrtcProvider = new WebrtcProvider("peer-school-" + room, this.doc, {
       // maxConns: 30 + Math.floor(Math.random() * 15), // just to prevent that exactly n clients form a cluster
       filterBcConns: true,
       peerSettings,
     })
     this.webrtcProvider = webrtcProvider
 
-    webrtcProvider.on('peers', info => {
+    webrtcProvider.on("peers", (info) => {
       if (!ENABLE_MEDIASERVER) {
         let added = Array.from(info.added)
         for (let peerID of added) {
@@ -92,35 +91,38 @@ export class Sync extends Emitter {
             if (this.stream) {
               peer.peer.addStream(this.stream)
             }
-            peer.peer.on('stream', stream => {
+            peer.peer.on("stream", (stream) => {
               this.streams[peerID] = stream
-              this.emit('stream', { peerID, stream })
+              this.emit("stream", { peerID, stream })
             })
           } else {
-            console.warn('added peer but cannot find', peerID, info)
+            console.warn("added peer but cannot find", peerID, info)
           }
         }
       }
       this.checkPeerID()
-      this.emit('peers')
+      this.emit("peers")
     })
 
-    webrtcProvider.on('synced', info => {
-      log('synced', info)
+    webrtcProvider.on("synced", (info) => {
+      log("synced", info)
       this.checkPeerID()
-      this.emit('ready', { peerID: this.peerID })
+      this.emit("ready", { peerID: this.peerID })
     })
 
     //  const awareness = webrtcProvider.awareness
 
-    this.indexeddbPersistence = new IndexeddbPersistence('peer-school-' + room, this.doc)
+    this.indexeddbPersistence = new IndexeddbPersistence(
+      "peer-school-" + room,
+      this.doc
+    )
   }
 
   checkPeerID() {
     if (!this.peerID) {
       this.peerID = this.webrtcProvider.room.peerId
       if (this.peerID) {
-        this.emit('peerID', this.peerID)
+        this.emit("peerID", this.peerID)
       }
     }
   }
@@ -134,7 +136,7 @@ export class Sync extends Emitter {
   }
 
   getPeer(peerID) {
-    log('getPeers', this.webrtcProvider?.room)
+    log("getPeers", this.webrtcProvider?.room)
     return this.getWebRTCConns()?.get(peerID) || null
   }
 
@@ -142,7 +144,7 @@ export class Sync extends Emitter {
     try {
       return Array.from(this.getWebRTCConns()?.keys() || [])
     } catch (err) {
-      console.warn('getPeerList err', err)
+      console.warn("getPeerList err", err)
     }
     return []
   }
@@ -151,7 +153,7 @@ export class Sync extends Emitter {
     try {
       return this.streams[peerID]
     } catch (err) {
-      console.warn('getStream err', err, peerID)
+      console.warn("getStream err", err, peerID)
     }
     return null
   }
@@ -163,7 +165,6 @@ export class Sync extends Emitter {
       peer.peer.addStream(stream)
     }
   }
-
 }
 
 export function setupSync(opt) {

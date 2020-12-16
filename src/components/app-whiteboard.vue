@@ -7,7 +7,7 @@
       class="-fit"
       :class="{
         '-teacher': state.teacher,
-        '-editable': editable
+        '-editable': editable,
       }"
       @mousedown="drawStart"
       @touchstart="touchStart"
@@ -22,23 +22,17 @@
       <button
         v-for="c in colorPresets"
         class="color"
-        :class="{'-active': c === color}"
+        :class="{ '-active': c === color }"
         :style="`background: ${c}`"
         @click="color = c"
       />
-      <button
-        class="tool"
-        @click="doTrash">
+      <button class="tool" @click="doTrash">
         <i data-f7-icon="trash"></i>
       </button>
-      <button
-        class="tool"
-        @click="doUndo">
+      <button class="tool" @click="doUndo">
         <i data-f7-icon="arrow_uturn_left"></i>
       </button>
-      <button
-        class="tool"
-        @click="doRedo">
+      <button class="tool" @click="doRedo">
         <i data-f7-icon="arrow_uturn_right"></i>
       </button>
     </div>
@@ -60,7 +54,10 @@
     align-self: start;
 
     &.-teacher {
-      background-image: radial-gradient(rgba(0, 0, 0, 0.2) 1px, transparent 1px);
+      background-image: radial-gradient(
+        rgba(0, 0, 0, 0.2) 1px,
+        transparent 1px
+      );
       background-position: 0 0;
       background-size: 2% 2%;
 
@@ -77,7 +74,8 @@
 
     padding: 1rem;
 
-    .color, .tool {
+    .color,
+    .tool {
       display: block;
       border-radius: 2rem;
       height: 2rem;
@@ -101,20 +99,19 @@
     }
   }
 }
-
 </style>
 
 <script>
-import * as Y from 'yjs'
-import { assert } from '../lib/assert'
-import { sync, whiteboardUndoManager } from '../state'
+import * as Y from "yjs"
+import { assert } from "../lib/assert"
+import { sync, whiteboardUndoManager } from "../state"
 
-const log = require('debug')('app:app-whiteboard')
+const log = require("debug")("app:app-whiteboard")
 
 let currPath = null
 
 export default {
-  name: 'app-whiteboard',
+  name: "app-whiteboard",
   components: {},
   props: {
     editable: {
@@ -124,13 +121,8 @@ export default {
   },
   data() {
     return {
-      color: 'black',
-      colorPresets: [
-        'black',
-        'red',
-        'green',
-        'blue',
-      ],
+      color: "black",
+      colorPresets: ["black", "red", "green", "blue"],
     }
   },
   methods: {
@@ -146,13 +138,16 @@ export default {
     drawStart(event) {
       if (!this.editable) return false
       // log('drawStart')
-      if (sync.whiteboard && (event.target == null || event.target.nodeName === 'CANVAS')) {
+      if (
+        sync.whiteboard &&
+        (event.target == null || event.target.nodeName === "CANVAS")
+      ) {
         const drawElement = new Y.Map()
-        drawElement.set('color', this.color)
-        drawElement.set('type', 'path')
-        drawElement.set('coordinate', this.calculateCoordinateFromEvent(event))
+        drawElement.set("color", this.color)
+        drawElement.set("type", "path")
+        drawElement.set("coordinate", this.calculateCoordinateFromEvent(event))
         currPath = new Y.Array()
-        drawElement.set('path', currPath)
+        drawElement.set("path", currPath)
         // log('push', drawElement)
         sync.whiteboard.push([drawElement])
       }
@@ -165,7 +160,7 @@ export default {
     },
     moveDraw(event) {
       if (!this.editable) return false
-      if (event.target == null || event.target.nodeName === 'CANVAS') {
+      if (event.target == null || event.target.nodeName === "CANVAS") {
         if (currPath !== null) {
           // log('moveDraw')
           currPath.push([this.calculateCoordinateFromEvent(event)])
@@ -188,10 +183,10 @@ export default {
     onStateChange() {
       // log('onStateChange')
       const drawingCanvas = this.$refs.canvas
-      const ctx = drawingCanvas.getContext('2d')
+      const ctx = drawingCanvas.getContext("2d")
       const yDrawingContent = sync.whiteboard
 
-      assert('syncobj', yDrawingContent)
+      assert("syncobj", yDrawingContent)
 
       const requestAnimationFrame = window.requestAnimationFrame || setTimeout
 
@@ -204,28 +199,33 @@ export default {
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
           const width = ctx.canvas.width
           const height = ctx.canvas.height
-          yDrawingContent.forEach(drawElement => {
-            if (drawElement.get('type') === 'path') {
-              const coordinate = (drawElement.get('coordinate'))
-              const color = (drawElement.get('color'))
-              const path = (drawElement.get('path'))
+          yDrawingContent.forEach((drawElement) => {
+            if (drawElement.get("type") === "path") {
+              const coordinate = drawElement.get("coordinate")
+              const color = drawElement.get("color")
+              const path = drawElement.get("path")
               if (path) {
                 ctx.beginPath()
                 ctx.lineWidth = 5
-                ctx.lineJoin = ctx.lineCap = 'round'
+                ctx.lineJoin = ctx.lineCap = "round"
                 // ctx.shadowBlur = 2
                 // ctx.shadowColor = color
                 ctx.beginPath()
                 ctx.moveTo(coordinate.x * width, coordinate.y * height)
                 ctx.strokeStyle = color
                 let lastPoint = coordinate
-                path.forEach(c => {
+                path.forEach((c) => {
                   // @todo this can be optimized by considering the previous coordinates too
                   const pointBetween = {
                     x: (c.x + lastPoint.x) / 2,
                     y: (c.y + lastPoint.y) / 2,
                   }
-                  ctx.quadraticCurveTo(lastPoint.x * width, lastPoint.y * height, pointBetween.x * width, pointBetween.y * height)
+                  ctx.quadraticCurveTo(
+                    lastPoint.x * width,
+                    lastPoint.y * height,
+                    pointBetween.x * width,
+                    pointBetween.y * height
+                  )
                   lastPoint = c
                 })
                 ctx.lineTo(lastPoint.x * width, lastPoint.y * height)

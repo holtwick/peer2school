@@ -1,19 +1,20 @@
 <template>
   <div>
     <div class="jitsi">
-
-      <jitsi-peer
-        v-if="!state.teacher" :id="teacherJitsiID"
-      >
+      <jitsi-peer v-if="!state.teacher" :id="teacherJitsiID">
         {{ teacherName }}
       </jitsi-peer>
 
       <jitsi-peer
         v-if="studentJitsiID && studentJitsiID !== state.jitsiID"
-        :id="studentJitsiID" @click="stopVideo"
+        :id="studentJitsiID"
+        @click="stopVideo"
       >
         {{ studentName }}
-        <i v-if="state.teacher" data-f7-icon="person_crop_circle_fill_badge_xmark"></i>
+        <i
+          v-if="state.teacher"
+          data-f7-icon="person_crop_circle_fill_badge_xmark"
+        ></i>
       </jitsi-peer>
 
       <jitsi-peer
@@ -24,7 +25,6 @@
         {{ name }}
         <i v-if="!hasName" data-f7-icon="pencil"></i>
       </jitsi-peer>
-
     </div>
   </div>
 </template>
@@ -44,16 +44,16 @@
 </style>
 
 <script>
-import { LOCAL_NAME } from '../config'
-import { getLocal } from '../lib/local'
-import JitsiPeer from './jitsi-peer'
-import JitsiVideo from './jitsi-video'
-import { queue } from './state'
+import { LOCAL_NAME } from "../config"
+import { getLocal } from "../lib/local"
+import JitsiPeer from "./jitsi-peer"
+import JitsiVideo from "./jitsi-video"
+import { queue } from "./state"
 
-const log = require('debug')('jitsi:main')
+const log = require("debug")("jitsi:main")
 
 export default {
-  name: 'jitsi-main',
+  name: "jitsi-main",
   components: { JitsiPeer, JitsiVideo },
   data() {
     return {}
@@ -66,10 +66,17 @@ export default {
       return this.state.tracks[this.state.teacherID]
     },
     hasName() {
-      return this.state.profiles[this.state.peerID]?.name != null || getLocal(LOCAL_NAME) != null
+      return (
+        this.state.profiles[this.state.peerID]?.name != null ||
+        getLocal(LOCAL_NAME) != null
+      )
     },
     name() {
-      return this.state.profiles[this.state.peerID]?.name || getLocal(LOCAL_NAME) || this.l.set_name
+      return (
+        this.state.profiles[this.state.peerID]?.name ||
+        getLocal(LOCAL_NAME) ||
+        this.l.set_name
+      )
     },
     teacherName() {
       return this.state.profiles[this.state.teacherID]?.name || this.l.teacher
@@ -80,15 +87,12 @@ export default {
   },
   methods: {
     stopVideo() {
-      queue.emit('action', { action: 'stop' })
+      queue.emit("action", { action: "stop" })
     },
     editProfile() {
-      queue.emit('action', { action: 'edit' })
+      queue.emit("action", { action: "edit" })
     },
   },
-  async mounted() {
-
-  },
+  async mounted() {},
 }
 </script>
-

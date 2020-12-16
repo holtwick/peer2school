@@ -19,5 +19,4 @@ You should also consider [BigBlueButton](https://bigbluebutton.org/) as an alter
 - Erste [Konzeption](docs-de/konzept.md)
 - [Setup](docs-de/setup.md) um mit der Entwicklung loszulegen
 
-> Anmerkung: Wenn der einfache Betrieb, die Anonymität und die Ende-zu-Ende-Verschlüsselung der Lösung nicht im Vordergrund steht, sollte auch [BigBlueButton](https://bigbluebutton.org/) in Betracht gezogen werden. Das Projekt ist ebenfalls frei und verfolgt ansonsten ein sehr ähnliches Konzept. 
-
+> Anmerkung: Wenn der einfache Betrieb, die Anonymität und die Ende-zu-Ende-Verschlüsselung der Lösung nicht im Vordergrund steht, sollte auch [BigBlueButton](https://bigbluebutton.org/) in Betracht gezogen werden. Das Projekt ist ebenfalls frei und verfolgt ansonsten ein sehr ähnliches Konzept.

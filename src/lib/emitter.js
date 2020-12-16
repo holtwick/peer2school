@@ -1,7 +1,6 @@
-const log = require('debug')('app:emitter')
+const log = require("debug")("app:emitter")
 
 export class Emitter {
-
   subscribers = {}
 
   emit(key, info) {
@@ -12,11 +11,11 @@ export class Emitter {
         try {
           fn(info)
         } catch (err) {
-          console.warn('emit warning:', err)
+          console.warn("emit warning:", err)
         }
       }
     } catch (err) {
-      console.error('emit exception', err)
+      console.error("emit exception", err)
     }
   }
 
@@ -27,7 +26,8 @@ export class Emitter {
   }
 
   off(key, fn) {
-    this.subscribers = (this.subscribers[key] || []).filter(f => fn && f !== fn)
+    this.subscribers = (this.subscribers[key] || []).filter(
+      (f) => fn && f !== fn
+    )
   }
-
 }

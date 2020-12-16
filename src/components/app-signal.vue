@@ -1,10 +1,6 @@
 <template>
-  <button
-    @click="toggleSignal"
-    class="signal"
-    :class="{ '-active': active }"
-  >
-    <img src="../assets/img/aufzeigen.png">
+  <button @click="toggleSignal" class="signal" :class="{ '-active': active }">
+    <img src="../assets/img/aufzeigen.png" />
   </button>
 </template>
 
@@ -43,7 +39,6 @@
     }
   }
 
-
   &.-active {
     background: rgba(54, 202, 76, 0.4);
 
@@ -55,10 +50,10 @@
 </style>
 
 <script>
-import { toggleSignal } from '../state'
+import { toggleSignal } from "../state"
 
 export default {
-  name: 'app-signal',
+  name: "app-signal",
   computed: {
     active() {
       return this.state.signals[this.state.peerID] === true
@@ -69,8 +64,6 @@ export default {
       toggleSignal()
     },
   },
-  async mounted() {
-  },
+  async mounted() {},
 }
 </script>
-

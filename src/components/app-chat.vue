@@ -3,14 +3,14 @@
     <form @submit.prevent.stop="doSend">
       <div v-for="msg in messages" class="item">
         <div class="name">
-          {{msg.name}}
+          {{ msg.name }}
         </div>
         <div class="message">
-          {{msg.msg}}
+          {{ msg.msg }}
         </div>
       </div>
       <div ref="chat">
-        <input :placeholder="l.send_message" v-model="message">
+        <input :placeholder="l.send_message" v-model="message" />
       </div>
     </form>
   </div>
@@ -18,7 +18,6 @@
 
 <style lang="scss">
 .chat {
-
   .item {
     margin-bottom: 0.5rem;
   }
@@ -35,18 +34,17 @@
     background: white;
     border-radius: 0.25rem;
   }
-
 }
 </style>
 
 <script>
-import { addChatMessage } from '../state'
+import { addChatMessage } from "../state"
 
 export default {
-  name: 'app-chat',
+  name: "app-chat",
   data() {
     return {
-      message: '',
+      message: "",
     }
   },
   computed: {
@@ -54,7 +52,7 @@ export default {
       return this.state.chat.map(({ sender, msg }) => {
         return {
           sender,
-          name: this.state.profiles[sender]?.name || 'Unnamed',
+          name: this.state.profiles[sender]?.name || "Unnamed",
           msg,
         }
       })
@@ -63,13 +61,11 @@ export default {
   methods: {
     async doSend() {
       addChatMessage(this.message)
-      this.message = ''
+      this.message = ""
       await this.$nextTick()
       this.$refs.chat.scrollIntoView(false)
     },
   },
-  async mounted() {
-  },
+  async mounted() {},
 }
 </script>
-

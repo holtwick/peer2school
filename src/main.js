@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import App from './app.vue'
-import locale from './lib/locale'
-import de from './locales/de'
-import en from './locales/en'
-import it from './locales/it'
-import fr from './locales/fr'
-import { state } from './state'
+import Vue from "vue"
+import App from "./app.vue"
+import locale from "./lib/locale"
+import de from "./locales/de"
+import en from "./locales/en"
+import it from "./locales/it"
+import fr from "./locales/fr"
+import { state } from "./state"
 
 Vue.config.productionTip = false
 
-require('debug').enable('app:*,mq*')
+require("debug").enable("app:*,mq*")
 
 Vue.mixin({
   data() {
@@ -22,5 +22,5 @@ Vue.use(locale, {
 })
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app")

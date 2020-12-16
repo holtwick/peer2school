@@ -1,5 +1,5 @@
 <template>
-  <div class="share-container ">
+  <div class="share-container">
     <p>
       {{ l.share.link_info }}
     </p>
@@ -11,7 +11,8 @@
           :value="url"
           ref="input"
           readonly
-          @click="selectAll">
+          @click="selectAll"
+        />
       </p>
       <p>
         <sea-button @action="doShare">{{ l.share.button_copy }}</sea-button>
@@ -28,8 +29,8 @@
 
 <style lang="scss">
 .share-container {
-
-  p, .p {
+  p,
+  .p {
     margin-bottom: 1rem;
   }
 
@@ -49,20 +50,20 @@
 </style>
 
 <script>
-import { qrcode } from '../lib/qrcode'
-import { createLinkForRoom, shareLink } from '../lib/share'
-import { toggleMediaServer } from '../state'
-import SeaButton from '../ui/sea-button'
+import { qrcode } from "../lib/qrcode"
+import { createLinkForRoom, shareLink } from "../lib/share"
+import { toggleMediaServer } from "../state"
+import SeaButton from "../ui/sea-button"
 
-const log = require('debug')('app:app-share')
+const log = require("debug")("app:app-share")
 
 export default {
-  name: 'app-share',
+  name: "app-share",
   components: { SeaButton },
   data() {
     return {
-      url: '',
-      qrcode: '',
+      url: "",
+      qrcode: "",
     }
   },
   methods: {
@@ -82,7 +83,7 @@ export default {
   async mounted() {
     this.url = createLinkForRoom(this.state.room)
     const typeNumber = 0
-    const errorCorrectionLevel = 'H'
+    const errorCorrectionLevel = "H"
     const qr = qrcode(typeNumber, errorCorrectionLevel)
     qr.addData(this.url)
     qr.make()
@@ -92,4 +93,3 @@ export default {
   },
 }
 </script>
-

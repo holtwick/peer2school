@@ -1,11 +1,8 @@
 <template>
-  <div class="peer" :class="{'-active': active}" @click="$emit('click')">
-    <app-video
-      :stream="stream || state.streams[id]"
-      class="video"
-    />
+  <div class="peer" :class="{ '-active': active }" @click="$emit('click')">
+    <app-video :stream="stream || state.streams[id]" class="video" />
     <div class="peer-footer" v-if="slotted">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -48,13 +45,13 @@
 
   @keyframes blink {
     from {
-      opacity: 1.0;
+      opacity: 1;
     }
     50% {
       opacity: 0.5;
     }
     to {
-      opacity: 1.0;
+      opacity: 1;
     }
   }
 
@@ -66,16 +63,15 @@
       color: white;
       animation: blink 1000ms infinite;
     }
-
   }
 }
 </style>
 
 <script>
-import AppVideo from './app-video'
+import AppVideo from "./app-video"
 
 export default {
-  name: 'app-peer',
+  name: "app-peer",
   components: { AppVideo },
   props: {
     id: {
@@ -104,8 +100,6 @@ export default {
     },
   },
   methods: {},
-  async mounted() {
-  },
+  async mounted() {},
 }
 </script>
-

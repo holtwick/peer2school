@@ -1,7 +1,15 @@
 <!-- Copyright (c) 2020 Dirk Holtwick. All rights reserved. https://holtwick.de/copyright -->
 
 <template>
-  <div class="sea-modal " :class="{active}" id="modal-id" tabindex="-1" v-trap-focus aria-modal="true" :role="role">
+  <div
+    class="sea-modal"
+    :class="{ active }"
+    id="modal-id"
+    tabindex="-1"
+    v-trap-focus
+    aria-modal="true"
+    :role="role"
+  >
     <a @click="doCancel" class="sea-modal-overlay" aria-label="Close"></a>
     <div class="sea-modal-container vstack">
       <header class="sea-modal-header modal-header -fix" v-if="title || close">
@@ -9,7 +17,13 @@
           <div class="sea-modal-title -fit">
             <slot name="title">{{ title }}</slot>
           </div>
-          <sea-link v-if="close" xtooltip="Close" @click="doCancel" class="-fix" symbol="xmark"/>
+          <sea-link
+            v-if="close"
+            xtooltip="Close"
+            @click="doCancel"
+            class="-fix"
+            symbol="xmark"
+          />
         </div>
       </header>
       <section class="sea-modal-body modal-body -fit -scrollable">
@@ -27,22 +41,22 @@
 </style>
 
 <script>
-import trapFocus from './lib/directives/trapFocus'
-import { removeElement } from './lib/helpers'
-import SeaLink from './sea-link'
-import SeaSymbol from './sea-symbol'
+import trapFocus from "./lib/directives/trapFocus"
+import { removeElement } from "./lib/helpers"
+import SeaLink from "./sea-link"
+import SeaSymbol from "./sea-symbol"
 
-const log = require('debug')('ui:sea-modal')
+const log = require("debug")("ui:sea-modal")
 
 export default {
-  name: 'sea-modal',
+  name: "sea-modal",
   props: {
     active: {
       type: Boolean,
     },
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     close: {
       type: Boolean,
@@ -53,7 +67,7 @@ export default {
       default: false,
     },
     role: {
-      default: 'dialog',
+      default: "dialog",
     },
     canCancel: {
       type: Boolean,
@@ -62,7 +76,7 @@ export default {
     onCancel: {
       type: Function,
       default: () => {
-        log('onCancel not defined')
+        log("onCancel not defined")
       },
     },
   },
@@ -75,8 +89,8 @@ export default {
   },
   methods: {
     doCancel() {
-      log('do cancel')
-      this.$emit('cancel')
+      log("do cancel")
+      this.$emit("cancel")
       let onCancel = this?.$parent?.onCancel || this?.onCancel
       if (onCancel) {
         onCancel.apply(null, arguments)
@@ -84,8 +98,8 @@ export default {
       this.doClose()
     },
     doClose() {
-      this.$emit('close', false)
-      this.$emit('update:active', false)
+      this.$emit("close", false)
+      this.$emit("update:active", false)
 
       if (this.standalone) {
         // Timeout for the animation complete before destroying
@@ -97,30 +111,31 @@ export default {
       }
     },
     keyPress(event) {
-      if (this.active && event.keyCode === 27) { // Esc key
-        this.doCancel('escape')
+      if (this.active && event.keyCode === 27) {
+        // Esc key
+        this.doCancel("escape")
       }
     },
   },
   created() {
-    document?.addEventListener('keyup', this.keyPress)
+    document?.addEventListener("keyup", this.keyPress)
   },
   beforeMount() {
     // Insert the Dialog component in the element container
-    if (this.standalone && typeof window !== 'undefined') {
+    if (this.standalone && typeof window !== "undefined") {
       this.$nextTick(() => {
-        const container = /* document.querySelector(this.container) || */ document.body
+        const container =
+          /* document.querySelector(this.container) || */ document.body
         container.appendChild(this.$el)
       })
     }
   },
   beforeDestroy() {
-    if (typeof window !== 'undefined') {
-      document?.removeEventListener('keyup', this.keyPress)
+    if (typeof window !== "undefined") {
+      document?.removeEventListener("keyup", this.keyPress)
       // reset scroll
       // document?.documentElement.classList.remove('is-clipped')
     }
   },
-
 }
 </script>

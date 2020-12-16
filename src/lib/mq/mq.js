@@ -2,27 +2,27 @@
 
 // Inspied by https://github.com/diamondio/better-queue
 
-import { UUID } from '../uuid'
+import { UUID } from "../uuid"
 
-const log = require('debug')('mq')
+const log = require("debug")("mq")
 
 export function now() {
   return performance.now() || new Date().getTime() // ms
 }
 
 export function immediate(fn) {
-  if (typeof setImmediate !== 'undefined') {
+  if (typeof setImmediate !== "undefined") {
     setImmediate(fn)
   } else {
     setTimeout(fn, 0)
   }
 }
 
-export const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout))
-export const nextTick = _ => new Promise(resolve => setTimeout(resolve, 0))
+export const delay = (timeout) =>
+  new Promise((resolve) => setTimeout(resolve, timeout))
+export const nextTick = (_) => new Promise((resolve) => setTimeout(resolve, 0))
 
 export class TaskHandler {
-
   _tasks = []
   _name
   _fn
@@ -42,20 +42,25 @@ export class TaskHandler {
 
   queue = null
 
-  constructor(name, fn, {
-    queue = null,
-    defer = 0,
-    debounce = 0,
-    persist = false,
-    latest = false,
-    batch = 1,
-    filter = null,
-    sort = null,
-    merge = null,
-  } = {}) {
+  constructor(
+    name,
+    fn,
+    {
+      queue = null,
+      defer = 0,
+      debounce = 0,
+      persist = false,
+      latest = false,
+      batch = 1,
+      filter = null,
+      sort = null,
+      merge = null,
+    } = {}
+  ) {
     this._name = name
 
-    this._fn = async (task) => { // , backChannel?
+    this._fn = async (task) => {
+      // , backChannel?
       // log(`Task for ${name} starts.`)
       let error, result
       task.started = now()
@@ -66,10 +71,16 @@ export class TaskHandler {
         }
       } catch (err) {
         error = err
-        log('Execution error', err)
+        log("Execution error", err)
       }
       task.ended = now()
-      log(`*** Task for ${name} finished. ${(task.started - task.added).toFixed(2)}ms until start. ${(task.ended - task.started).toFixed(2)}ms execution time. Info=${result}, error=${error}`)
+      log(
+        `*** Task for ${name} finished. ${(task.started - task.added).toFixed(
+          2
+        )}ms until start. ${(task.ended - task.started).toFixed(
+          2
+        )}ms execution time. Info=${result}, error=${error}`
+      )
       this.remove(task.id)
 
       this.response(task, result, error)
@@ -90,7 +101,7 @@ export class TaskHandler {
 
   response(task, info, error) {
     if (task.response && this.queue) {
-      log('task response', task)
+      log("task response", task)
       this.queue.emit(task.response, {
         info,
         error,
@@ -99,34 +110,33 @@ export class TaskHandler {
   }
 
   isEmpty() {
-    const empty = this._tasks.filter(task => task.started == null).length <= 0
+    const empty = this._tasks.filter((task) => task.started == null).length <= 0
     // log('isEmpty', empty)
     return empty
   }
 
   remove(taskID) {
-    let index = this._tasks.findIndex(task => task.id === taskID)
+    let index = this._tasks.findIndex((task) => task.id === taskID)
     if (index !== -1) this._tasks.slice(index, 1)
   }
 
   async _performNext() {
-    log('perform next')
+    log("perform next")
     const max = Math.max(1, this.batch)
 
-    let currentTasks = (
-      this._tasks
-        .filter(task => task.ended == null)
-        .slice(0, max)
-        .map(task => this._fn(task))) // error handling
-    log('current tasks', currentTasks)
+    let currentTasks = this._tasks
+      .filter((task) => task.ended == null)
+      .slice(0, max)
+      .map((task) => this._fn(task)) // error handling
+    log("current tasks", currentTasks)
     await Promise.all(currentTasks)
 
     this._delayTimer = null
     if (!this.isEmpty()) {
-      log('perform enqueued for next batch')
+      log("perform enqueued for next batch")
       this._delayTimer = setTimeout(() => this._performNext(), this.debounce)
     } else {
-      log('perform finished, now empty')
+      log("perform finished, now empty")
       if (this._waitFn) {
         this._waitFn()
         this._waitFn = null
@@ -145,7 +155,10 @@ export class TaskHandler {
 
   _persist() {
     if (this.persist) {
-      localStorage.setItem(`mq-handler-${name}`, JSON.stringify(this._tasks, null, 2))
+      localStorage.setItem(
+        `mq-handler-${name}`,
+        JSON.stringify(this._tasks, null, 2)
+      )
     }
   }
 
@@ -154,7 +167,7 @@ export class TaskHandler {
       try {
         this._tasks = JSON.parse(localStorage.getItem(`mq-handler-${name}`))
       } catch (err) {
-        console.error('Exception:', err)
+        console.error("Exception:", err)
       }
     }
   }
@@ -222,11 +235,9 @@ export class TaskHandler {
   destroy() {
     this.queue = null // circular reference
   }
-
 }
 
 export class TaskQueue {
-
   _name
   _handlers = {}
 
@@ -235,7 +246,7 @@ export class TaskQueue {
   }
 
   on(name, fn, opt) {
-    log('task handler', name, window)
+    log("task handler", name, window)
     let handler = new TaskHandler(name, fn, {
       ...opt,
       queue: this,
@@ -250,7 +261,7 @@ export class TaskQueue {
   }
 
   once(name, fn) {
-    this.on(name, info => {
+    this.on(name, (info) => {
       this.off(name)
       fn(info)
     })
@@ -258,7 +269,7 @@ export class TaskQueue {
 
   // Returns the Task if handler was available
   _emit(name, info, props = {}) {
-    log('task emit', name, window)
+    log("task emit", name, window)
     let handler = this._handlers[name]
     if (handler) {
       return handler.add(info, props)
@@ -275,7 +286,7 @@ export class TaskQueue {
       const id = UUID()
       const response = `--${name}-${id}`
       this.once(response, ({ info, error }) => {
-        log('response', info, error)
+        log("response", info, error)
         if (error) reject(error)
         else resolve(info)
       })
@@ -289,33 +300,38 @@ export class TaskQueue {
 
   async wait(name = null) {
     if (!name) {
-      return Promise.all(Object.keys(this._handlers).map(name => this.wait(name)))
+      return Promise.all(
+        Object.keys(this._handlers).map((name) => this.wait(name))
+      )
     }
     let handler = this.handler(name)
     if (handler) {
       await handler.wait(name)
     }
   }
-
 }
 
 export class ChannelTaskQueue extends TaskQueue {
-
   _channel
 
   constructor(channel) {
     super()
     this._channel = channel
-    log('Subscribe', this._name, this._channel._name)
+    log("Subscribe", this._name, this._channel._name)
     this._channel.subscribe(({ name, info, props }) => {
-      log('Message via channel', name, info, this._name, Object.keys(this._handlers))
+      log(
+        "Message via channel",
+        name,
+        info,
+        this._name,
+        Object.keys(this._handlers)
+      )
       this._emit(name, info, props)
     })
   }
 
   emit(name, info, props) {
-    log('Publish on channel', name, info, this._name, this._channel._name) // , Object.keys(this._handlers))
+    log("Publish on channel", name, info, this._name, this._channel._name) // , Object.keys(this._handlers))
     this._channel.publish({ name, info, props })
   }
-
 }

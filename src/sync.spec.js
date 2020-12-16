@@ -1,5 +1,4 @@
-describe('Sync', () => {
-
+describe("Sync", () => {
   function encode(v) {
     return JSON.stringify(Array.from(v))
   }
@@ -8,7 +7,7 @@ describe('Sync', () => {
     return Uint8Array.from(JSON.parse(v))
   }
 
-  it('should encode and decode', () => {
+  it("should encode and decode", () => {
     const sample = [1, 2, 3]
     let arr = new Uint8Array(sample)
     let data = encode(arr)
@@ -16,5 +15,4 @@ describe('Sync', () => {
     let arr2 = decode(data)
     expect(arr).toEqual(arr2)
   })
-
 })

@@ -1,12 +1,12 @@
 <template>
-  <div class="peer" :class="{'-active': active}" @click="$emit('click')">
+  <div class="peer" :class="{ '-active': active }" @click="$emit('click')">
     <jitsi-video
       :stream="stream || state.streams[id]"
       :audioStream="stream ? null : state.audioStreams[id]"
       class="video"
     />
     <div class="peer-footer" v-if="slotted">
-      <slot/>
+      <slot />
     </div>
   </div>
 </template>
@@ -49,13 +49,13 @@
 
   @keyframes blink {
     from {
-      opacity: 1.0;
+      opacity: 1;
     }
     50% {
       opacity: 0.5;
     }
     to {
-      opacity: 1.0;
+      opacity: 1;
     }
   }
 
@@ -67,16 +67,15 @@
       color: white;
       animation: blink 1000ms infinite;
     }
-
   }
 }
 </style>
 
 <script>
-import JitsiVideo from './jitsi-video'
+import JitsiVideo from "./jitsi-video"
 
 export default {
-  name: 'jitsi-peer',
+  name: "jitsi-peer",
   components: { JitsiVideo },
   props: {
     id: {
@@ -105,8 +104,6 @@ export default {
     },
   },
   methods: {},
-  async mounted() {
-  },
+  async mounted() {},
 }
 </script>
-

@@ -1,12 +1,11 @@
 // Copyright (c) 2020 Dirk Holtwick. All rights reserved. https://holtwick.de/copyright
 
-import { assert } from '../assert'
-import { UUID } from '../uuid'
+import { assert } from "../assert"
+import { UUID } from "../uuid"
 
-const log = require('debug')('mq:channel')
+const log = require("debug")("mq:channel")
 
 export class Channel {
-
   _name = UUID()
   _channel
   _subscriber
@@ -24,18 +23,18 @@ export class Channel {
   }
 
   connect(channel) {
-    assert(channel, 'Channel missing')
-    assert(!this._channel, 'Already connected to a channel')
+    assert(channel, "Channel missing")
+    assert(!this._channel, "Already connected to a channel")
     this._channel = channel
     this._connectChannel()
   }
 
   publishBuffered() {
     if (this.isConnected()) {
-      log('publishBuffered', this._name)
+      log("publishBuffered", this._name)
       let data
       while ((data = this.buffer.shift())) {
-        log('send buffered', this._name, data)
+        log("send buffered", this._name, data)
         this.send(data)
       }
     }
@@ -59,7 +58,7 @@ export class Channel {
   }
 
   publish(obj) {
-    log('publish', this._name, obj)
+    log("publish", this._name, obj)
     const data = this.encode(obj)
     if (this.isConnected()) {
       this.send(data)
@@ -73,7 +72,7 @@ export class Channel {
   }
 
   receive(data) {
-    log('receive channel', this._name, data)
+    log("receive channel", this._name, data)
     let obj = this.decode(data)
     if (this._subscriber) {
       this._subscriber(obj)
@@ -82,17 +81,15 @@ export class Channel {
 
   // Override this in a subclass!
   send(data) {
-    log('send', this._name, data)
+    log("send", this._name, data)
     this._channel.receive(data)
   }
-
 }
 
-const HANDSHAKE_PING = '__handshake__ping__'
-const HANDSHAKE_PONG = '__handshake__pong__'
+const HANDSHAKE_PING = "__handshake__ping__"
+const HANDSHAKE_PONG = "__handshake__pong__"
 
 export class HandshakeChannel extends Channel {
-
   _handshake = false
 
   isConnected() {
@@ -100,13 +97,13 @@ export class HandshakeChannel extends Channel {
   }
 
   _connectChannel() {
-    log('_connectChannel HandshakeChannel', this._name)
+    log("_connectChannel HandshakeChannel", this._name)
     // super._connectChannel()
     this.send(HANDSHAKE_PING)
   }
 
   receive(data) {
-    log('receive handshake', this._name, data)
+    log("receive handshake", this._name, data)
     if (data === HANDSHAKE_PING) {
       if (this._channel && !this._handshake) {
         this._handshake = true
@@ -122,28 +119,28 @@ export class HandshakeChannel extends Channel {
       super.receive(data)
     }
   }
-
 }
 
 export class PostChannel extends HandshakeChannel {
-
   _connectChannel() {
-    this._channel.addEventListener('message', e => {
-      log('receive postchannel', this._name, e)
-      this.receive(e.data)
-    }, false)
+    this._channel.addEventListener(
+      "message",
+      (e) => {
+        log("receive postchannel", this._name, e)
+        this.receive(e.data)
+      },
+      false
+    )
     super._connectChannel()
   }
 
   send(data) {
-    log('send postmessage', this._name, data)
+    log("send postmessage", this._name, data)
     this._channel.postMessage(data)
   }
-
 }
 
 export class JSONPostChannel extends PostChannel {
-
   encode(obj) {
     return JSON.stringify(obj)
   }
@@ -151,5 +148,4 @@ export class JSONPostChannel extends PostChannel {
   decode(obj) {
     return JSON.parse(obj)
   }
-
 }

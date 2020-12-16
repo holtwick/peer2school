@@ -1,7 +1,7 @@
 <template>
   <div v-if="stream || audioStream">
-    <video autoplay ref="video" v-if="stream"/>
-    <audio autoplay ref="audio" v-if="audioStream"/>
+    <video autoplay ref="video" v-if="stream" />
+    <audio autoplay ref="audio" v-if="audioStream" />
   </div>
   <div v-else class="video-placeholder -content-placeholder">
     <i data-f7-icon="rectangle_stack_person_crop"></i>
@@ -25,14 +25,13 @@ video {
     animation: blink 1000ms infinite;
   }
 }
-
 </style>
 
 <script>
-const log = require('debug')('app:app-video')
+const log = require("debug")("app:app-video")
 
 export default {
-  name: 'jitsi-video',
+  name: "jitsi-video",
   props: {
     stream: {
       type: MediaStream | Object,
@@ -72,4 +71,3 @@ export default {
   },
 }
 </script>
-

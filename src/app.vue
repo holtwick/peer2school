@@ -1,12 +1,12 @@
 <template>
-  <app-main class="app"/>
+  <app-main class="app" />
 </template>
 
 <script>
-import AppMain from './components/app-main'
+import AppMain from "./components/app-main"
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     AppMain,
   },
@@ -54,5 +54,4 @@ export default {
     }
   }
 }
-
 </style>

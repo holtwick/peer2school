@@ -1,8 +1,8 @@
 <template>
   <div class="vstack">
     <div class="-fit hstack">
-      <app-sidebar/>
-      <app-whiteboard class="-fit" :editable="state.teacher"/>
+      <app-sidebar />
+      <app-whiteboard class="-fit" :editable="state.teacher" />
     </div>
   </div>
 </template>
@@ -31,11 +31,11 @@
 </style>
 
 <script>
-import AppSidebar from './app-sidebar'
-import AppWhiteboard from './app-whiteboard'
+import AppSidebar from "./app-sidebar"
+import AppWhiteboard from "./app-whiteboard"
 
 export default {
-  name: 'app-main',
+  name: "app-main",
   components: {
     AppWhiteboard,
     AppSidebar,
@@ -44,8 +44,6 @@ export default {
     return {}
   },
   methods: {},
-  async mounted() {
-  },
+  async mounted() {},
 }
 </script>
-

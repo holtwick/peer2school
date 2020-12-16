@@ -37,7 +37,7 @@
 
     &:before {
       display: inline-block;
-      content: ' ';
+      content: " ";
       height: 0.5rem;
       width: 0.5rem;
       background: gray;
@@ -47,13 +47,13 @@
 
     @keyframes blink {
       from {
-        opacity: 1.0;
+        opacity: 1;
       }
       50% {
         opacity: 0.5;
       }
       to {
-        opacity: 1.0;
+        opacity: 1;
       }
     }
 
@@ -70,19 +70,19 @@
 </style>
 
 <script>
-import { setStudent } from '../state'
+import { setStudent } from "../state"
 
 export default {
-  name: 'app-students',
+  name: "app-students",
   data() {
     return {}
   },
   computed: {
     students() {
-      return this.state.peers.map(id => {
+      return this.state.peers.map((id) => {
         return {
           id,
-          name: this.state.profiles[id]?.name || 'Unnamed',
+          name: this.state.profiles[id]?.name || "Unnamed",
           active: this.state.signals[id] === true,
         }
       })
@@ -93,8 +93,6 @@ export default {
       setStudent(peerID, allowWhiteboard)
     },
   },
-  async mounted() {
-  },
+  async mounted() {},
 }
 </script>
-

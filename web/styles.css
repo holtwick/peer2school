@@ -1,7 +1,9 @@
 body {
   text-align: center;
   margin-top: 3rem;
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Hiragino Sans, Hiragino Kaku Gothic Pro, Yu Gothic, YuGothic, Meiryo, Helvetica Neue, sans-serif;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto,
+    Hiragino Sans, Hiragino Kaku Gothic Pro, Yu Gothic, YuGothic, Meiryo,
+    Helvetica Neue, sans-serif;
   background: white;
   color: #333;
 }

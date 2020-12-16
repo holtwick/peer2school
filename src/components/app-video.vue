@@ -1,5 +1,5 @@
 <template>
-  <video autoplay playsinline ref="video" v-if="stream" @click="handleClick"/>
+  <video autoplay playsinline ref="video" v-if="stream" @click="handleClick" />
   <div v-else class="video-placeholder -content-placeholder">
     <i data-f7-icon="rectangle_stack_person_crop"></i>
   </div>
@@ -22,13 +22,12 @@ video {
     animation: blink 1000ms infinite;
   }
 }
-
 </style>
 
 <script>
 export function connectStreamToVideoElement(stream, video) {
   if (stream) {
-    if ('srcObject' in video) {
+    if ("srcObject" in video) {
       video.srcObject = stream
     } else {
       video.src = window.URL.createObjectURL(stream) // for older browsers
@@ -37,10 +36,10 @@ export function connectStreamToVideoElement(stream, video) {
   }
 }
 
-const log = require('debug')('app:app-video')
+const log = require("debug")("app:app-video")
 
 export default {
-  name: 'app-video',
+  name: "app-video",
   props: {
     stream: {
       type: MediaStream | Object,
@@ -52,30 +51,32 @@ export default {
   methods: {
     playVideo(video) {
       let startPlayPromise = video.play()
-      log('play', startPlayPromise)
+      log("play", startPlayPromise)
       if (startPlayPromise !== undefined) {
-        startPlayPromise.then(() => {
-          // Start whatever you need to do only after playback
-          // has begun.
-        }).catch(error => {
-          if (error.name === 'NotAllowedError') {
-            this.showPlayButton = true
-          } else {
-            console.error(error)
-          }
-        })
+        startPlayPromise
+          .then(() => {
+            // Start whatever you need to do only after playback
+            // has begun.
+          })
+          .catch((error) => {
+            if (error.name === "NotAllowedError") {
+              this.showPlayButton = true
+            } else {
+              console.error(error)
+            }
+          })
       }
     },
     async doConnectStream(stream) {
-      log('doConnectStream', this.title, stream)
+      log("doConnectStream", this.title, stream)
       if (stream) {
         try {
           await this.$nextTick()
 
           let video = this.$refs.video
-          log('connectStreamToVideoElement', stream, video)
+          log("connectStreamToVideoElement", stream, video)
           if (stream) {
-            if ('srcObject' in video) {
+            if ("srcObject" in video) {
               video.srcObject = stream
             } else {
               video.src = window.URL.createObjectURL(stream) // for older browsers
@@ -84,8 +85,8 @@ export default {
             // Keep in mind https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
             // But if the user allows to access camera it should be fine
             // https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
-            video.onloadedmetadata = e => this.playVideo(video)
-            video.onloadeddata = e => this.playVideo(video)
+            video.onloadedmetadata = (e) => this.playVideo(video)
+            video.onloadeddata = (e) => this.playVideo(video)
           }
         } catch (err) {
           console.error(err)
@@ -97,7 +98,7 @@ export default {
     },
     async doPlay() {
       try {
-        log('force play manually')
+        log("force play manually")
         this.$refs?.video?.play()
         this.showPlayButton = false
       } catch (err) {
@@ -117,4 +118,3 @@ export default {
   },
 }
 </script>
-

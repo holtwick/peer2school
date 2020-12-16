@@ -1,27 +1,32 @@
-import Vue from 'vue'
-import * as Y from 'yjs'
-import { ENABLE_MEDIASERVER, ENABLE_VIDEO, LOCAL_ID, LOCAL_NAME } from './config'
-import { getLocal, setLocal } from './lib/local'
-import { ToIFrameChannel } from './lib/mq/iframe'
-import { ChannelTaskQueue } from './lib/mq/mq'
-import { UUID, UUID_length } from './lib/uuid'
-import { setupSync } from './sync'
+import Vue from "vue"
+import * as Y from "yjs"
+import {
+  ENABLE_MEDIASERVER,
+  ENABLE_VIDEO,
+  LOCAL_ID,
+  LOCAL_NAME,
+} from "./config"
+import { getLocal, setLocal } from "./lib/local"
+import { ToIFrameChannel } from "./lib/mq/iframe"
+import { ChannelTaskQueue } from "./lib/mq/mq"
+import { UUID, UUID_length } from "./lib/uuid"
+import { setupSync } from "./sync"
 
-const log = require('debug')('app:state')
+const log = require("debug")("app:state")
 
 // ROOM
 
-const testToken = '.test'
-const teacherToken = '.teacher'
+const testToken = ".test"
+const teacherToken = ".teacher"
 
 const hash = (location.hash || `#${UUID()}${teacherToken}`).substr(1)
 let room = hash
 
 const TEST = hash.endsWith(testToken)
-if (TEST) room = room.replace(testToken, '')
+if (TEST) room = room.replace(testToken, "")
 
 const teacher = hash.endsWith(teacherToken)
-if (teacher) room = room.replace(teacherToken, '')
+if (teacher) room = room.replace(teacherToken, "")
 
 room = room.substr(0, UUID_length)
 location.hash = `#${hash}`
@@ -33,10 +38,8 @@ export let profileID = getLocal(LOCAL_ID, UUID)
 // STATE
 
 let synched = {
-
   // Flags
   info: {
-
     // Teacher's peer ID that is used for video stream
     teacherID: null,
 
@@ -48,7 +51,6 @@ let synched = {
 
     // Use the media server
     useMediaServer: false,
-
   },
 
   // Simple chat
@@ -64,7 +66,6 @@ let synched = {
 }
 
 export let state = {
-
   useJitsi: ENABLE_MEDIASERVER,
 
   // ID of this room
@@ -95,18 +96,20 @@ export let sync = setupSync({
   room,
 })
 
-sync.whiteboard = sync.doc.getArray('whiteboard')
+sync.whiteboard = sync.doc.getArray("whiteboard")
 export const whiteboardUndoManager = new Y.UndoManager(sync.whiteboard)
 
 for (const [name, dft] of Object.entries(synched)) {
-  sync[name] = Array.isArray(dft) ? sync.doc.getArray(name) : sync.doc.getMap(name)
-  sync[name].observe(event => {
+  sync[name] = Array.isArray(dft)
+    ? sync.doc.getArray(name)
+    : sync.doc.getMap(name)
+  sync[name].observe((event) => {
     state[name] = sync[name].toJSON()
-    if (name === 'info') updateState()
+    if (name === "info") updateState()
   })
 }
 
-sync.on('ready', ({ peerID }) => {
+sync.on("ready", ({ peerID }) => {
   updateState()
 })
 
@@ -114,12 +117,11 @@ function updateState() {
   state.peers = sync.getPeerList()
 }
 
-sync.on('peers', updateState)
+sync.on("peers", updateState)
 
-sync.on('peerID', peerID => {
-  log('peerID', peerID)
+sync.on("peerID", (peerID) => {
+  log("peerID", peerID)
   if (peerID) {
-
     state.peerID = peerID
     let name = getLocal(LOCAL_NAME)
     if (name) {
@@ -127,7 +129,7 @@ sync.on('peerID', peerID => {
     }
 
     if (teacher) {
-      sync.info.set('teacherID', peerID)
+      sync.info.set("teacherID", peerID)
     }
 
     if (jitsiID) {
@@ -139,10 +141,12 @@ sync.on('peerID', peerID => {
 // UTILS
 
 export function addChatMessage(msg) {
-  sync.chat.push([{
-    sender: sync.peerID,
-    msg,
-  }])
+  sync.chat.push([
+    {
+      sender: sync.peerID,
+      msg,
+    },
+  ])
 }
 
 export function toggleSignal() {
@@ -156,12 +160,12 @@ export function setProfileName(name) {
 }
 
 export function setStudent(peerID = null, allowWhiteboard = false) {
-  sync.info.set('studentID', peerID)
-  sync.info.set('allowWhiteboard', allowWhiteboard)
+  sync.info.set("studentID", peerID)
+  sync.info.set("allowWhiteboard", allowWhiteboard)
 }
 
 export function toggleMediaServer() {
-  sync.info.set('useMediaServer', !sync.info.get('useMediaServer'))
+  sync.info.set("useMediaServer", !sync.info.get("useMediaServer"))
 }
 
 //
@@ -172,27 +176,26 @@ export let queue
 let jitsiID = null
 
 if (ENABLE_MEDIASERVER) {
-
-  channel = new ToIFrameChannel('jitsi')
+  channel = new ToIFrameChannel("jitsi")
   queue = new ChannelTaskQueue(channel)
 
-  queue.emit('state', { teacher })
+  queue.emit("state", { teacher })
 
-  queue.on('jitsi', ({ id }) => {
+  queue.on("jitsi", ({ id }) => {
     let peerID = state.peerID
-    log('joined', peerID, id)
+    log("joined", peerID, id)
     jitsiID = id
     if (peerID) {
-      log('set jitsi id via joined', peerID, jitsiID)
+      log("set jitsi id via joined", peerID, jitsiID)
       sync.tracks.set(state.peerID, jitsiID)
     }
   })
 
-  queue.on('action', ({ action }) => {
-    if (action === 'stop') {
+  queue.on("action", ({ action }) => {
+    if (action === "stop") {
       setStudent()
-    } else if (action === 'edit') {
-      let name = prompt('What\'s your name?')
+    } else if (action === "edit") {
+      let name = prompt("What's your name?")
       if (name) {
         setProfileName(name)
       }
@@ -200,10 +203,8 @@ if (ENABLE_MEDIASERVER) {
       alert(`Unknown command ${action}`)
     }
   })
-
 } else if (ENABLE_VIDEO) {
-
-  sync.on('stream', ({ peerID, stream }) => {
+  sync.on("stream", ({ peerID, stream }) => {
     Vue.set(state.streams, peerID, stream)
     updateState() // todo
   })
@@ -215,7 +216,7 @@ if (ENABLE_MEDIASERVER) {
       const opt = {
         audio: true,
         video: {
-          facingMode: 'user',
+          facingMode: "user",
           video: {
             width: { ideal: 320 },
             height: { ideal: 240 },
@@ -228,16 +229,17 @@ if (ENABLE_MEDIASERVER) {
           },
         },
       }
-      navigator.mediaDevices.getUserMedia(opt).then(fn).catch(err => log('error', err))
+      navigator.mediaDevices
+        .getUserMedia(opt)
+        .then(fn)
+        .catch((err) => log("error", err))
     } catch (err) {
-      console.warn('getUserMedia err', err)
+      console.warn("getUserMedia err", err)
     }
   }
 
-  getUserMedia(stream => {
+  getUserMedia((stream) => {
     state.stream = new MediaStream(stream.getVideoTracks())
     sync.setStream(stream)
   })
-
 }
-

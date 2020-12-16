@@ -7,8 +7,9 @@
       marginwidth="0"
       scrolling="no"
       class="iframe"
-      style="overflow: hidden;"
-      ref="iframe"></iframe>
+      style="overflow: hidden"
+      ref="iframe"
+    ></iframe>
   </div>
 </template>
 
@@ -23,14 +24,14 @@
 </style>
 
 <script>
-import { channel, queue } from '../state'
+import { channel, queue } from "../state"
 
-const log = require('debug')('app:app-jitsi')
+const log = require("debug")("app:app-jitsi")
 
 const minHeight = 100
 
 export default {
-  name: 'app-jitsi',
+  name: "app-jitsi",
   data() {
     return {
       timer: null,
@@ -54,10 +55,11 @@ export default {
     this.clearTimer()
     let iFrame = this.$refs.iframe
     if (iFrame) {
-      iFrame.style.height = minHeight + 'px'
+      iFrame.style.height = minHeight + "px"
       const iFrameWindow = iFrame.contentWindow
       const iFrameDocument = iFrameWindow.document
-      iFrame.style.height = Math.max(minHeight, iFrameDocument.body.offsetHeight + 1) + 'px'
+      iFrame.style.height =
+        Math.max(minHeight, iFrameDocument.body.offsetHeight + 1) + "px"
       let prevHeight = 0
       this.timer = setInterval(() => {
         const iFrameDocument = iFrameWindow.document
@@ -72,13 +74,13 @@ export default {
         // const currentHeight = Math.ceil(Math.max(childrenHeight, bodyHeight))
         const currentHeight = Math.ceil(childrenHeight)
         prevHeight = currentHeight
-        iFrame.style.height = Math.max(minHeight, currentHeight) + 'px'
+        iFrame.style.height = Math.max(minHeight, currentHeight) + "px"
       }, 500)
 
-      log('iframe connect', iFrameWindow)
+      log("iframe connect", iFrameWindow)
       channel.connect(iFrameWindow)
 
-      queue.emit('state', {
+      queue.emit("state", {
         peerID: this.state.peerID,
         teacherID: this.state.info.teacherID,
         studentID: this.state.info.studentID,
@@ -89,28 +91,27 @@ export default {
     this.clearTimer()
   },
   watch: {
-    'state.peerID'(value) {
-      queue.emit('state', { peerID: value })
+    "state.peerID"(value) {
+      queue.emit("state", { peerID: value })
     },
-    'state.info.teacherID'(value) {
-      queue.emit('state', { teacherID: value })
+    "state.info.teacherID"(value) {
+      queue.emit("state", { teacherID: value })
     },
-    'state.info.studentID'(value) {
-      queue.emit('state', { studentID: value })
+    "state.info.studentID"(value) {
+      queue.emit("state", { studentID: value })
     },
-    'state.tracks': {
+    "state.tracks": {
       handler(value) {
-        queue.emit('state', { tracks: value })
+        queue.emit("state", { tracks: value })
       },
       deep: true,
     },
-    'state.profiles': {
+    "state.profiles": {
       handler(value) {
-        queue.emit('state', { profiles: value })
+        queue.emit("state", { profiles: value })
       },
       deep: true,
     },
   },
 }
 </script>
-

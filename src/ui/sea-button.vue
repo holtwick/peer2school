@@ -10,10 +10,18 @@
     @click="doClick"
     @contextmenu="doClick"
   >
-    <sea-symbol v-if="symbol || symbolLeft" :name="symbol || symbolLeft" class="sea-button-symbol-left"/>
+    <sea-symbol
+      v-if="symbol || symbolLeft"
+      :name="symbol || symbolLeft"
+      class="sea-button-symbol-left"
+    />
     {{ title }}
     <slot></slot>
-    <sea-symbol v-if="symbolRight" :name="symbolRight" class="sea-button-symbol-right"/>
+    <sea-symbol
+      v-if="symbolRight"
+      :name="symbolRight"
+      class="sea-button-symbol-right"
+    />
   </button>
 </template>
 
@@ -23,22 +31,22 @@
 
 <script>
 // import Popover from './sea-popover'
-import SeaSymbol from './sea-symbol'
+import SeaSymbol from "./sea-symbol"
 
-const log = require('debug')('ui:button')
+const log = require("debug")("ui:button")
 
 // @action, @click
 
 export default {
-  name: 'sea-button',
+  name: "sea-button",
   components: { SeaSymbol },
   props: {
     title: {
       type: String,
-      default: '',
+      default: "",
     },
     theme: {
-      default: 'primary',
+      default: "primary",
     },
     symbol: {
       type: String,
@@ -51,16 +59,18 @@ export default {
     },
     role: {
       type: String,
-      default: 'button',
+      default: "button",
       validator(value) {
-        return ['button', 'link'].includes(value)
+        return ["button", "link"].includes(value)
       },
     },
-    active: { // active state for selections
+    active: {
+      // active state for selections
       type: Boolean,
       default: false,
     },
-    passive: { // do not loose focus
+    passive: {
+      // do not loose focus
       type: Boolean,
       default: false,
     },
@@ -80,8 +90,8 @@ export default {
       return {
         [`sea-${this.role}`]: true,
         [`-${this.theme}`]: true,
-        '-active': this.active === true,
-        '-has-title': this.slotted,
+        "-active": this.active === true,
+        "-has-title": this.slotted,
       }
     },
   },
@@ -93,17 +103,17 @@ export default {
       try {
         // ev.waitUntil = async () => null
         await this.$nextTick()
-        this.$emit('click', ev)
-        this.$emit('action', ev)
-        this.$emit('update:active', !this.active)
+        this.$emit("click", ev)
+        this.$emit("action", ev)
+        this.$emit("update:active", !this.active)
         if (ev.waitUntil) {
           await ev.waitUntil
         }
       } catch (err) {
-        console.error('Exception:', err)
+        console.error("Exception:", err)
       }
       this.disabled = false
-      log('click done', ev.waitUntil)
+      log("click done", ev.waitUntil)
     },
     async doClick(ev) {
       if (!this.passive) {
@@ -119,4 +129,3 @@ export default {
   },
 }
 </script>
-
