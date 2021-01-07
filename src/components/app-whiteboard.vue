@@ -25,6 +25,7 @@
         :class="{ '-active': c === color }"
         :style="`background: ${c}`"
         @click="color = c"
+        :key="c"
       />
       <button class="tool" @click="doTrash">
         <i data-f7-icon="trash"></i>

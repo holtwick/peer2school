@@ -61,7 +61,6 @@ const peerSettings = {
 }
 
 export class Sync extends Emitter {
-  chat
   stream
   indexeddbPersistence
   webrtcProvider
